@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>Using Collections Effectively - Phillip的技术博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="Swift 提供了Array, Set, Dictionary 三种基本的集合类型用来存储数据。Array是有序数据的集合，Set是无序无重复数据的集合，Dictionary是无序的键值对的集合。 集合非常普遍并且共享非常多的常见特性和算法，因为在Swift中它们都遵守一个通用协议Collection。在Swift中，集合就是序列，其中的元素可以以非破坏性的方式多次遍历，并且其元素可以通过下标访问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Using Collections Effectively">
+<meta property="og:url" content="http://yoursite.com/2019/04/16/using-collections-effectively/index.html">
+<meta property="og:site_name" content="Phillip的技术博客">
+<meta property="og:description" content="Swift 提供了Array, Set, Dictionary 三种基本的集合类型用来存储数据。Array是有序数据的集合，Set是无序无重复数据的集合，Dictionary是无序的键值对的集合。 集合非常普遍并且共享非常多的常见特性和算法，因为在Swift中它们都遵守一个通用协议Collection。在Swift中，集合就是序列，其中的元素可以以非破坏性的方式多次遍历，并且其元素可以通过下标访问">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/og_image.png">
+<meta property="og:updated_time" content="2019-05-24T06:00:21.698Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Using Collections Effectively">
+<meta name="twitter:description" content="Swift 提供了Array, Set, Dictionary 三种基本的集合类型用来存储数据。Array是有序数据的集合，Set是无序无重复数据的集合，Dictionary是无序的键值对的集合。 集合非常普遍并且共享非常多的常见特性和算法，因为在Swift中它们都遵守一个通用协议Collection。在Swift中，集合就是序列，其中的元素可以以非破坏性的方式多次遍历，并且其元素可以通过下标访问">
+<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/logo.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Using Collections Effectively" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/awind/">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-04-16T02:29:09.000Z">2019-04-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    21 minutes read (About 3079 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Using Collections Effectively
+            
+        </h1>
+        <div class="content">
+            <p>Swift 提供了<code>Array</code>, <code>Set</code>, <code>Dictionary</code> 三种基本的集合类型用来存储数据。<code>Array</code>是有序数据的集合，<code>Set</code>是无序无重复数据的集合，<code>Dictionary</code>是无序的键值对的集合。</p>
+<p>集合非常普遍并且共享非常多的常见特性和算法，因为在Swift中它们都遵守一个通用协议<code>Collection</code>。在Swift中，集合就是序列，其中的元素可以以非破坏性的方式多次遍历，并且其元素可以通过下标访问。</p>
+<p><img src="/images/collection_subscript_index.png" alt="collection_subscript_index"></p>
+<p>这可能是一个在连续内存中定义的数组，哈希表，红黑树，链表或者你可以想象的任何其他东西。作为集合它们都支持起始索引（<code>startIndex</code>）和结束索引（<code>endIndex</code>），可以用来访问集合的初始元素和用来标识集合的结束。集合支持从其<code>startIndex</code>到<code>endIndex</code>直接遍历元素，同时也支持使用下标（<code>subscript[index]</code>）来获取集合中的元素。</p>
+<h2 id="Collection-集合"><a href="#Collection-集合" class="headerlink" title="Collection 集合"></a>Collection 集合</h2><h3 id="集合的定义"><a href="#集合的定义" class="headerlink" title="集合的定义"></a>集合的定义</h3><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">Collection</span> : <span class="hljs-title">Sequence</span> </span>&#123; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 集合中元素的类型</span></span><br><span class="line">    <span class="hljs-keyword">associatedtype</span> <span class="hljs-type">Element</span> </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 索引类型, 需要遵守Comparable协议</span></span><br><span class="line">    <span class="hljs-keyword">associatedtype</span> <span class="hljs-type">Index</span> : <span class="hljs-type">Comparable</span> </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 遍历时所用到的方法了, 即通过索引查询到对应的元素</span></span><br><span class="line">    <span class="hljs-keyword">subscript</span>(position: <span class="hljs-type">Index</span>) -&gt; <span class="hljs-type">Element</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 开始索引</span></span><br><span class="line">    <span class="hljs-keyword">var</span> startIndex: <span class="hljs-type">Index</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 结束索引</span></span><br><span class="line">    <span class="hljs-keyword">var</span> endIndex: <span class="hljs-type">Index</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 通过一个索引, 获取它后面的索引</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">index</span><span class="hljs-params">(after i: Index)</span></span> -&gt; <span class="hljs-type">Index</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里用到了<code>associatedtype</code>关键字, 在Swift协议定义的时候, 会看到使用这个关键字, 你可以认为这是一个占位符, 具体的类型直到被用到的时候才会确定. 但是有时候我们需要规定这个占位符要有一些能力, 比如这里的<code>Index</code>, 他就需要遵守<code>Comparable</code>协议.</p>
+<h3 id="集合协议的扩展"><a href="#集合协议的扩展" class="headerlink" title="集合协议的扩展"></a>集合协议的扩展</h3><p><img src="/images/collection_protocol_extensions.png" alt="collection_protocol_extensions"></p>
+<p>通过遵守<code>Collection</code>协议，你可以访问集合中各种丰富的功能, 有一些我们常用的<code>first</code>, <code>last</code>，<code>isEmpty</code>,<code>count</code>等属性，以及<code>dropFirst</code>，<code>dropLast</code>,<code>reversed</code>，<code>split</code>等函数以及一些<code>map</code>，<code>filter</code>之类的高阶函数。</p>
+<p>我们也可以通过自定义一些协议扩展来实现更加强大的功能。</p>
+<p>如隔元素遍历的功能：</p>
+<p><img src="/images/collection_extension_every_other_element.png" alt="collection_extension_every_other_element"></p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">Collection</span> </span>&#123; <span class="hljs-comment">// 扩展集合协议  </span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">everyOther</span><span class="hljs-params">(<span class="hljs-number">_</span> body: <span class="hljs-params">(Element)</span></span></span> -&gt; <span class="hljs-type">Void</span>) &#123; </span><br><span class="line">        <span class="hljs-comment">// 获取首元素索引</span></span><br><span class="line">        <span class="hljs-keyword">let</span> start = <span class="hljs-keyword">self</span>.startIndex </span><br><span class="line">        <span class="hljs-comment">// 获取末尾元素索引</span></span><br><span class="line">        <span class="hljs-keyword">let</span> end = <span class="hljs-keyword">self</span>.endIndex </span><br><span class="line">        <span class="hljs-keyword">var</span> iter = start </span><br><span class="line">        <span class="hljs-comment">// 未走到末尾</span></span><br><span class="line">        <span class="hljs-keyword">while</span> iter != end &#123;</span><br><span class="line">            <span class="hljs-comment">// 执行外部的闭包 </span></span><br><span class="line">            body(<span class="hljs-keyword">self</span>[iter])</span><br><span class="line">            <span class="hljs-comment">// 获取当前元素的下一个索引</span></span><br><span class="line">            <span class="hljs-keyword">let</span> next = index(after: iter) </span><br><span class="line">            <span class="hljs-comment">// 检查索引是否走到末尾</span></span><br><span class="line">            <span class="hljs-keyword">if</span> next == end &#123; <span class="hljs-keyword">break</span> &#125; </span><br><span class="line">            <span class="hljs-comment">// 将当前索引指向next的下一个</span></span><br><span class="line">            iter = index(after: next) </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">(<span class="hljs-number">1</span>...<span class="hljs-number">10</span>).everyOther &#123; <span class="hljs-built_in">print</span>($<span class="hljs-number">0</span>) &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="集合的继承结构"><a href="#集合的继承结构" class="headerlink" title="集合的继承结构"></a>集合的继承结构</h3><p><img src="/images/collection_protocol_hierarchy.png" alt="collection_protocol_hierarchy"></p>
+<p>除了强大的Collection本身，Swift中还有其他很多继承自Collection的协议。</p>
+<ul>
+<li><code>BidirectionalCollection</code> 双向集合，可以向前访问元素</li>
+<li><code>RandomAccessCollection</code> 随机访问集合，提供了复杂度O(1)的访问方法，因为继承自<code>BidirectionalCollection</code>,也可以向前向后访问元素</li>
+<li><code>MutableCollection</code>  可变集合，提供了修改集合元素的能力</li>
+<li><code>RangeReplaceableCollection</code>  范围替换集合，可以通过指定范围替换元素</li>
+</ul>
+<h3 id="Indces-索引"><a href="#Indces-索引" class="headerlink" title="Indces 索引"></a>Indces 索引</h3><p>集合可以通过索引的方式来访问其中的元素，其中</p>
+<ul>
+<li>每个集合都有自己的索引</li>
+<li>索引必须满足<code>Comparable</code></li>
+<li>将索引作为不透明的类型(索引可能是正数，也可能是其他类型)</li>
+</ul>
+<h4 id="如何访问第一个元素"><a href="#如何访问第一个元素" class="headerlink" title="如何访问第一个元素"></a>如何访问第一个元素</h4><h5 id="通过下标进行直接访问"><a href="#通过下标进行直接访问" class="headerlink" title="通过下标进行直接访问"></a>通过下标进行直接访问</h5><p>使用<code>array[0]</code>访问第一个元素, 当然没有问题, 可是如果我们扩展开来, 如果给的集合不是数组, 而是一个set, 那么, 这样的方式就行不通了.</p>
+<h5 id="通过索引进行访问"><a href="#通过索引进行访问" class="headerlink" title="通过索引进行访问"></a>通过索引进行访问</h5><p>使用<code>set[set.startIndex]</code>进行访问, 这样就可以了。 这个方法普遍适用于其他集合类型，如<code>array[array.startIndex]</code></p>
+<p>但是, 你同样需要注意一些潜在的问题, 如需要判空, 需要判断越界, 诸如此类</p>
+<h5 id="first"><a href="#first" class="headerlink" title="first"></a>first</h5><p>我们可以使用<code>set.first</code>进行获取. 而且不用担心那些潜在的问题</p>
+<h4 id="如何访问集合的第二个元素"><a href="#如何访问集合的第二个元素" class="headerlink" title="如何访问集合的第二个元素"></a>如何访问<em>集合</em>的第二个元素</h4><p>我们可以通过向集合来添加一个新属性来实现</p>
+<p><img src="/images/collection_access_second_1.png" alt="collection_access_second_1"></p>
+<p><img src="/images/collection_access_second_startindex.png" alt="collection_access_second_startindex"></p>
+<p>显然我们不能通过这两种方式来进行获取，因为我们之前说过，Collection的索引类型并不一定是Int，而是一个遵守<code>Comparable</code>协议的类型。</p>
+<p><img src="/images/collection_access_second_element.png" alt="collection_access_second_element"></p>
+<h3 id="Slice-切片"><a href="#Slice-切片" class="headerlink" title="Slice 切片"></a>Slice 切片</h3><p>切片是仅描述集合一部分元素的类型，每个切片都有自己的起始和结束索引，并且切片与其原始集合分开存在。切片不占用额外的存储空间，只是引用原始集合，因此非常高效。当使用切片下标时，它将读出原始缓冲区中的数据，切片能这么做的原因是因为它与其原始集合共享同样的索引。</p>
+<p><img src="/images/collection_forming_slice.png" alt="collection_forming_slice"></p>
+<p>通过切片，我们可以更优雅的实现访问第二个元素的功能。 我们去掉首元素，然后再获取新得到的集合的第一个元素就可以实现了。</p>
+<p><img src="/images/collection_slice_find_the_second_element.png" alt="collection_slice_find_the_second_element"></p>
+<p>切片与源集合共享索引<br><img src="/images/collection_slice_share_indices.png" alt="collection_slice_share_indices"></p>
+<p>每个类型都可以自由定义自己的切片类型</p>
+<p><img src="/images/collection_slice_types.png" alt="collection_slice_types"></p>
+<h3 id="内存问题"><a href="#内存问题" class="headerlink" title="内存问题"></a>内存问题</h3><p>值得注意的是, 持有切片, 将使得即便将原来的集合置空, 内存也不会释放。切片是一个 原有集合 + 映射关系 的产物. 所以, 除非将切片也置空, 否则, 原有集合并不会被释放.</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">Array</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> firstHalf: <span class="hljs-type">ArraySlice</span>&lt;<span class="hljs-type">Element</span>&gt; &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>.<span class="hljs-built_in">dropLast</span>(<span class="hljs-keyword">self</span>.<span class="hljs-built_in">count</span> / <span class="hljs-number">2</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>]</span><br><span class="line"><span class="hljs-keyword">var</span> firstHalf = array.firstHalf <span class="hljs-comment">// [1, 2, 3, 4]</span></span><br><span class="line"><span class="hljs-comment">// 将数组设置为空</span></span><br><span class="line">array = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">print</span>(firstHalf.first!) <span class="hljs-comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> copy = <span class="hljs-type">Array</span>(firstHalf) <span class="hljs-comment">// [1, 2, 3, 4]</span></span><br><span class="line"><span class="hljs-comment">// 将切片置为空</span></span><br><span class="line">firstHalf = []</span><br><span class="line"><span class="hljs-built_in">print</span>(copy.first!) <span class="hljs-comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>在这里，只有将源数组array设置为空且将切片firstHalf也设置为空之后，底层的存储才会真正消失。</p>
+<p>过程如下</p>
+<p><img src="/images/collection_slide_copy_a_slice.png" alt="collection_slide_copy_a_slice"></p>
+<p>切片的工作方式有点像延迟拷贝，可以选择何时自己创建元素的副本，事实证明这种”懒”行为和延迟做某事的概念，在其他情况下也非常有用。</p>
+<p>一种情况是函数调用。</p>
+<h3 id="Lazy-Function"><a href="#Lazy-Function" class="headerlink" title="Lazy Function"></a>Lazy Function</h3><p>默认情况下，Swift中的函数是”Eager(急切)”的，也就是说它们接收了输入并按照要求返回输出。</p>
+<p><img src="/images/collection_eager_function.png" alt="collection_eager_function"></p>
+<p>经过这样的一套操作, 我们计算了4004个元素, 如果我们后面还有一些其他的操作, 更糟糕的是, 如果我们最终只是取取first, 这样, 前面生成的那些元素, 都成为了浪费.</p>
+<p><img src="/images/collection_lazy_functions.png" alt="collection_lazy_functions"></p>
+<p>我们可以通过<code>lazy</code>关键字来规避这样的浪费。可以看到, 使用<code>lazy</code>后, 刚才的遍历过程, 变成了组织一个新集合的过程,</p>
+<p><img src="/images/collection_lazy_functions_filter.png" alt="collection_lazy_functions_filter"></p>
+<p>只有在<code>first</code>进行计算的时候，才进行计算。</p>
+<p>使用<code>lazy</code>时如何避免重复计算的过程</p>
+<p><img src="/images/collection_lazy_function_avoid_multi_computation.png" alt="collection_lazy_function_avoid_multi_computation"></p>
+<p><code>lazy</code>的目的是只根据需要进行计算，但它避免的另一件事是创建中间存储。</p>
+<h4 id="何时使用-Lazy"><a href="#何时使用-Lazy" class="headerlink" title="何时使用 Lazy"></a>何时使用 Lazy</h4><ul>
+<li>链式计算</li>
+<li>只需要结果中的一部分</li>
+<li>没有其他副作用 No side effects</li>
+<li>避免跨越API边界时</li>
+</ul>
+<h3 id="MutableCollection"><a href="#MutableCollection" class="headerlink" title="MutableCollection"></a>MutableCollection</h3><p>当尝试修改集合时，使用了失效的索引：</p>
+<p><img src="/images/collection_mutating_array.png" alt="collection_mutating_array"></p>
+<p><img src="/images/collection_avoid_index_invalidation.png" alt="collection_avoid_index_invalidation"></p>
+<p><img src="/images/collection_reuse_invalid_dict_indices.png" alt="collection_reuse_invalid_dict_indices"></p>
+<p><img src="/images/collection_dict_up_to_date_indices.png" alt="collection_dict_up_to_date_indices"></p>
+<h4 id="如何避免"><a href="#如何避免" class="headerlink" title="如何避免"></a>如何避免</h4><ul>
+<li>在持有索引和切片时, 处理要谨慎</li>
+<li>集合发生改变时, 要更新索引后再使用</li>
+<li>在需要索引和切片的情况下才对其进行计算</li>
+</ul>
+<h3 id="多线程访问"><a href="#多线程访问" class="headerlink" title="多线程访问"></a>多线程访问</h3><p><img src="/images/collection_thread_unsafe_pratices.png" alt="collection_thread_unsafe_pratices"></p>
+<p><img src="/images/collection_avoid_concurrent_mutation.png" alt="collection_avoid_concurrent_mutation"></p>
+<h4 id="如何避免-1"><a href="#如何避免-1" class="headerlink" title="如何避免"></a>如何避免</h4><ul>
+<li>隔离数据使其只能被单个线程访问</li>
+<li>实现适当形式的互斥，如串行调度队列或锁</li>
+<li>使用Thread Sanitizer来检查</li>
+</ul>
+<h4 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h4><p>首选不可变集合来避免之前提到的问题</p>
+<ul>
+<li>如果可以避免，就不要使用可变集合</li>
+<li>可以使用切片和<code>lazy</code>操作符来模拟想要执行的改变</li>
+<li>当尝试修改不可变集合石，编译器会提示你</li>
+</ul>
+<p>如果可以, 尽量使用带<code>capacity</code>的初始化函数去初始化你的集合, 因为这样节省一些不必要的内存开销, 虽然这并不能节省多少, 但是想象你的项目中有成千上万个集合对象, 他们可以省出一个相当可观的内存数量.</p>
+<h2 id="Foundation-Collection"><a href="#Foundation-Collection" class="headerlink" title="Foundation Collection"></a>Foundation Collection</h2><p>引用类型的集合：</p>
+<p><img src="/images/collection_reference_type_collections.png" alt="collection_reference_type_collections"></p>
+<h3 id="值类型和引用类型"><a href="#值类型和引用类型" class="headerlink" title="值类型和引用类型"></a>值类型和引用类型</h3><p><img src="/images/collection_value_and_reference_type.png" alt="collection_value_and_reference_type"></p>
+<p><img src="/images/collection_value_and_reference_type_2.png" alt="collection_value_and_reference_type_2"></p>
+<p>对于值类型来说, 这样有什么好处呢? 因为在现代CPU在设计的时候, 采用了缓存机制, 可以快速的访问连续区域的地址. 而值类型的这种操作, 各个元素之间的内存是相连的, 而引用类型的则不是.</p>
+<p>在Swift中使用Foundation集合时，通过桥接的方式将Objective-C中的API以Swift原生的值类型。桥接使我们可以在两种不同的运行时表示之间进行转换。尽管已经对Swift和Objective-C之间的桥接进行了优化，但是两种语言之间桥接时总会产生一些开销。</p>
+<p><img src="/images/collection_how_bridging_works.png" alt="collection_how_bridging_works"></p>
+<p>当在语言之间桥接时，必须先建立新的对等的存储空间，然后需要逐个元素的在它们之间进行转换。当桥接发生在两种语言的边界时，称之为”Eager”桥接，当集合中元素也需要桥接时，集合本身将总是进行”Eager”桥接，这种情况最常出现在以字符串作为键的字典中。当集合桥接并不急切时，我们称之为’lazy’桥接。当集合元素的类型并不需要桥接时，就会发生这种情况，比如NSView，在这种情况下，桥接将会被推迟到首次使用该集合时。</p>
+<p><img src="/images/collection_bridging_examples.png" alt="collection_bridging_examples"></p>
+<p>发生桥接的地方和所需开销：</p>
+<p><img src="/images/collection_bridging_time.png" alt="collection_bridging_time"></p>
+<p><img src="/images/collection_bridging_happens.png" alt="collection_bridging_happens"></p>
+<p>这里的桥接发生在</p>
+<ul>
+<li><code>NSMutableAttributedString</code>取<code>string</code>上, return bridge.</li>
+<li>需要传入一个<code>NSString</code>, 参数类型桥接 param bridge</li>
+</ul>
+<p><img src="/images/collection_bridging_happens_2.png" alt="collection_bridging_happens_2"></p>
+<p>其中 “Brown” 这里也会有一个小的桥接，这里的”Brown”是一个Swift值类型的字符串，每当我们调用NSString的range(of:)时，实际上会把这个字符串桥接回NSString。</p>
+<p><img src="/images/collection_bridging_happens_final.png" alt="collection_bridging_happens_final"></p>
+<h3 id="建议-1"><a href="#建议-1" class="headerlink" title="建议"></a>建议</h3><p>什么时候应该使用Foundation Collection？</p>
+<p><img src="/images/collection_when_to_use_foundation_collection.png" alt="collection_when_to_use_foundation_collection"></p>
+<p>现在我们对Swift中强大的集合世界的探索已经接近尾声，希望你能够使用这种新视角来检视你现在使用集合的方式，寻找可以通过更有效地使用索引和切片来改进代码的地方，寻找可以通过惰性或者调整桥接方式而受益的地方，用ThreadSanitizer辅助审查可变状态。并通过应用今天讨论的所有概念在自己的App或者Playground中进一步锻炼你对集合的掌握.</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/17/two-sum/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">[LeetCode] 1. 两数之和</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/04/06/understanding-swift-performance/">
+                <span class="level-item">Understanding Swift Performance</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Using Collections Effectively" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 Phillip&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("en");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Entradas',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categorias',
+                TAGS: 'Etiquetas',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>iOS 多线程的使用与总结 - Phillip的技术博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="Grand Central Dispatch(GCD) 是用来管理并发操作的底层API。  允许将一个程序切分为多个单一任务，然后提交到工作队列中并发或者串行地执行 为多核的并行运算提出了解决方案，自动合理的利用CPU内核（比如双核，四核） 自动的管理线程的生命周期（创建线程、调度任务、销毁线程），完全不需要我们管理，只需要告诉它任务是什么就行 配合Block，使得使用起来更加方便灵活  相对于线">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 多线程的使用与总结">
+<meta property="og:url" content="http://yoursite.com/2019/04/03/ios-gcd-understanding/index.html">
+<meta property="og:site_name" content="Phillip的技术博客">
+<meta property="og:description" content="Grand Central Dispatch(GCD) 是用来管理并发操作的底层API。  允许将一个程序切分为多个单一任务，然后提交到工作队列中并发或者串行地执行 为多核的并行运算提出了解决方案，自动合理的利用CPU内核（比如双核，四核） 自动的管理线程的生命周期（创建线程、调度任务、销毁线程），完全不需要我们管理，只需要告诉它任务是什么就行 配合Block，使得使用起来更加方便灵活  相对于线">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/og_image.png">
+<meta property="og:updated_time" content="2019-05-24T06:00:00.028Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 多线程的使用与总结">
+<meta name="twitter:description" content="Grand Central Dispatch(GCD) 是用来管理并发操作的底层API。  允许将一个程序切分为多个单一任务，然后提交到工作队列中并发或者串行地执行 为多核的并行运算提出了解决方案，自动合理的利用CPU内核（比如双核，四核） 自动的管理线程的生命周期（创建线程、调度任务、销毁线程），完全不需要我们管理，只需要告诉它任务是什么就行 配合Block，使得使用起来更加方便灵活  相对于线">
+<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/logo.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="iOS 多线程的使用与总结" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/awind/">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-04-03T01:16:54.000Z">2019-04-03</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    an hour read (About 7444 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                iOS 多线程的使用与总结
+            
+        </h1>
+        <div class="content">
+            <p>Grand Central Dispatch(GCD) 是用来管理并发操作的底层API。</p>
+<ol>
+<li>允许将一个程序切分为多个单一任务，然后提交到工作队列中并发或者串行地执行</li>
+<li>为多核的并行运算提出了解决方案，自动合理的利用CPU内核（比如双核，四核）</li>
+<li>自动的管理线程的生命周期（创建线程、调度任务、销毁线程），完全不需要我们管理，只需要告诉它任务是什么就行</li>
+<li>配合Block，使得使用起来更加方便灵活</li>
+</ol>
+<p>相对于线程和锁来说，GCD 提供了一个更加易用的模板，从而避免发生并发问题。</p>
+<p>在了解GCD之前，我们需要了解一些跟并发和线程的概念。</p>
+<h3 id="Concurrency-并发"><a href="#Concurrency-并发" class="headerlink" title="Concurrency 并发"></a>Concurrency 并发</h3><p>iOS应用中包含一个或者多个线程，这些线程由系统的调度器彼此独立的管理。每个线程可以被并发的执行，但是如何实现并发却是由系统决定的。</p>
+<p><img src="/images/Concurrency_vs_Parallelism.png" alt="Concurrency_vs_Parallelism.png"></p>
+<p>单核设备通过 时间切片(time-slicing) 的方式来实现并发，它们运行在一个线程上，当切换其它线程时就执行上下文切换。这种切换一般进行得非常快，让用户感觉像是同时在运行多个线程一样。</p>
+<p>而在多核设备上，可以通过并行的方式同时执行多个线程。</p>
+<p>GCD 建立在线程之上，它负责管理共享线程池。使用 GCD，我们可以添加code block或者工作项(work items)来调度队列，GCD 决定执行它们的线程。</p>
+<p>所以，虽然你可以使用 GCD 的接口来编写并发代码，但是 GCD 才是真正决定是否使用并行实现的人。并行要求并发，但是并发并不一定能够保证并行。</p>
+<p>更深一层地说，并发设计其实是结构的设计。如果你带着 GCD 的思维去编写代码，你就得小心地设计代码的结构，暴露的接口要考虑可以同时执行和不可以同时执行的代码。</p>
+<p>根本上来说，并发(concurrency)是关于结构而并行(parallelism)是关于执行。</p>
+<h3 id="Queues-队列"><a href="#Queues-队列" class="headerlink" title="Queues 队列"></a>Queues 队列</h3><p>GCD 通过<code>DispatchQueue</code>类来操作调度队列。当我们提交工作项单元到队列中，GCD将以FIFO顺序执行它们，它会保证第一个任务是第一个启动的。</p>
+<p>调度队列本身是线程安全的，因此你可以同时从多个线程访问它们。当了解调度队列如何为代码提供线程安全时，你就可以认识到GCD的好处是显而易见的。关键是要选择正确类型的调度队列和正确的调度函数，将你的工作提交到队列。</p>
+<p>队列可以是并行(serial)或者串行(concurrent)的。<br>DispatchQueue的默认初始化方法创建的是一个同步队列，如果要创建并行队列，需要在<code>attributes</code>中声明<code>concurrent</code>。第一个参数表示队列的标签，这个标签在调试器中是可见的。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 同步队列</span></span><br><span class="line"><span class="hljs-keyword">let</span> serialQueue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"queuename"</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 并发队列</span></span><br><span class="line"><span class="hljs-keyword">let</span> concurrentQueue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"queuename"</span>, attributes: .concurrent)</span><br></pre></td></tr></table></figure>
+<p>串行可以保证在任何给定时间只运行一个任务，由 GCD 来控制执行的时间点，你也无法知道一个任务结束和下一个任务开始之间的时间量。</p>
+<p><img src="/images/Serial-Queue-Swift.png" alt="Serial-Queue-Swift"></p>
+<p>而并发队列允许多个任务同时运行。队列保证它们以添加的顺序来执行，但是它们会以任何可能的顺序完成。</p>
+<p><img src="/images/Concurrent-Queue-Swift.png" alt="Concurrent-Queue-Swift"></p>
+<p>何时开始任务完全取决于 GCD。如果一个任务的执行时间与另一个任务的执行时间重叠，则由 GCD 决定是否应该在不同的核心上运行，如果是单核设备，则执行上下文切换以运行不同的任务。</p>
+<p>下面通过代码来看下串行和并发的区别：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> serialDispatchQueue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"custom_queue"</span>)</span><br><span class="line"></span><br><span class="line">serialDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 1 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 1 is end"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">serialDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 2 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 2 is end"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">serialDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 3 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 3 is end"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-string">"🤠Welcome to the main thread from serialDispatchQueue"</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// output: </span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 1 is begin.</span></span><br><span class="line"><span class="hljs-comment">// 🤠Welcome to the main thread from serialDispatchQueue</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 1 is end</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 2 is begin.</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 2 is end</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 3 is begin.</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 3 is end</span></span><br></pre></td></tr></table></figure>
+<p>关于并发：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> concurrentDispatchQueue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"custom_queue"</span>, attributes: .concurrent)</span><br><span class="line"></span><br><span class="line">concurrentDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"concurrentDispatchQueue async 1 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"concurrentDispatchQueue async 1 is over."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">concurrentDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"concurrentDispatchQueue async 2 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"concurrentDispatchQueue async 2 is over."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-string">"🤠Welcome to the main thread from concurrentDispatchQueue"</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// output:</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 1 is begin.</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 2 is begin.</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 3 is begin.</span></span><br><span class="line"><span class="hljs-comment">// 🤠Welcome to the main thread from concurrentDispatchQueue</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 1 is over.</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 2 is over.</span></span><br><span class="line"><span class="hljs-comment">//  concurrentDispatchQueue async 3 is over.</span></span><br></pre></td></tr></table></figure>
+<h3 id="Synchronous-vs-Asynchronous-同步与异步"><a href="#Synchronous-vs-Asynchronous-同步与异步" class="headerlink" title="Synchronous vs. Asynchronous  同步与异步"></a>Synchronous vs. Asynchronous  同步与异步</h3><p>使用GCD，我们可以同步或异步分配任务。</p>
+<p>任务完成后，同步函数会将控制权返回给调用者。 您可以通过调用<code>DispatchQueue.sync（execute :)</code>来同步调度工作单元。</p>
+<p>异步函数立即返回，命令任务开始但不等待它完成。 因此，异步函数不会阻塞当前执行线程继续执行下一个函数。 您可以通过调用<code>DispatchQueue.async（execute :)</code>来异步调度工作单元。</p>
+<h4 id="GCD-提供了三种主要类型的队列："><a href="#GCD-提供了三种主要类型的队列：" class="headerlink" title="GCD 提供了三种主要类型的队列："></a>GCD 提供了三种主要类型的队列：</h4><ul>
+<li>Main queue 主队列，在主线程上运行，是一个串行队列</li>
+<li>Global queues 全局队列，整个系统共享的并发队列。全局队列有四种不同的优先级：<code>high</code>,<code>default</code>,<code>low</code>和<code>background</code>。<code>background</code>优先级最低，在任何I/O活动中受到限制，以最大限度地减少对系统地负面影响。</li>
+<li>Custom queue 自定义队列，由开发创建的队列，可以是串行或者并发的队列。而在这个队列上的请求最终会在全局队列中的一个上执行。</li>
+</ul>
+<p>而将任务发送到全局并发队列时，不直接指定优先级，而是指定服务质量(QoS)属性。QoS用来标志任务的重要性，并指导GCD赋予任务优先级。</p>
+<p><img src="/images/gcd_using_a_quality_of_service.png" alt="gcd_using_a_quality_of_service"></p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">queue.async(qos: .background) &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Maintenance work"</span>)</span><br><span class="line">&#125;</span><br><span class="line">queue.async(qos: .userInitiated) &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(“<span class="hljs-type">Button</span> tapped”)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面介绍一下在创建队列时，可以设置的一些更丰富的属性。创建队列的完整方法如下：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">convenience</span> <span class="hljs-keyword">init</span>(label: <span class="hljs-type">String</span>, qos: <span class="hljs-type">DispatchQoS</span> = <span class="hljs-keyword">default</span>, attributes: <span class="hljs-type">DispatchQueue</span>.<span class="hljs-type">Attributes</span> = <span class="hljs-keyword">default</span>, autoreleaseFrequency: <span class="hljs-type">DispatchQueue</span>.<span class="hljs-type">AutoreleaseFrequency</span> = <span class="hljs-keyword">default</span>, target: <span class="hljs-type">DispatchQueue?</span> = <span class="hljs-keyword">default</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>label</code> 表示队列的标识符，在debug的时候可以通过label来分辨。</p>
+<h4 id="QoS"><a href="#QoS" class="headerlink" title="QoS"></a>QoS</h4><p>队列在执行上是有优先级的，更高的优先级可以享受更多的计算资源，从高到低包括：</p>
+<ul>
+<li>userInteractive 用户交互，表示需要立即完成的任务，用以提供良好的用户体验。将其用于UI更新，事件处理和需要低延迟地小型工作负载。在执行您的应用程序期间，此类中完成的工作总量应该很小。这应该在主线程上运行。</li>
+<li>userInitiated 用户活动 用户从UI启动这些异步任务。当用户等待立即结果以及继续用户交互所需地任务时使用它们。它们在高优先级全局队列中执行。</li>
+<li>utility 表示需要长时间运行的任务，伴有用户可见进度指示器。经常会用来做计算，I/O，网络，持续的数据填充等任务。这个任务节能。</li>
+<li>background 这表示用户不需要直接了解的任务。用于预取，维护和其他不需要用户交互且时间不敏感的任务。这将被映射到后台优先级全局队列。</li>
+</ul>
+<h4 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h4><p>包含两个属性：</p>
+<ul>
+<li>concurrent 标识队列为并发队列</li>
+<li>initiallyInactive 标识队列中的任务需要手动触发（为添加该标识时，向队列中添加任务会自动运行），触发时通过queue.activate()方法</li>
+</ul>
+<h4 id="AutoreleaseFrequency"><a href="#AutoreleaseFrequency" class="headerlink" title="AutoreleaseFrequency"></a>AutoreleaseFrequency</h4><p>这个属性表示 autorelease pool的自动释放频率，autorelease pool 管理着任务对象的内存周期。</p>
+<p>包含三个属性：</p>
+<ul>
+<li>inherit 继承目标队列的该属性</li>
+<li>workItem 跟随每个任务的执行周期进行自动创建和释放</li>
+<li>never 不会自动创建 autorelease pool，需要手动管理</li>
+</ul>
+<p>一般任务采用 .workItem 就够了，特殊任务如在任务内部大量重复创建对象的操作可选择 .never属性手动创建 autorelease pool。</p>
+<h4 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h4><p>这个属性设置的是一个队列的目标队列，即实际将该队列的任务放入指定队列中运行。目标队列最终约束了队列优先级等属性。</p>
+<p>在程序中手动创建的队列，其实最后都指向系统自带的 主队列 或 全局并发队列。</p>
+<p>你也许会问，为什么不直接将任务添加至系统队列中，而是自定义队列，因为这样的好处是可以将任务进行分组管理。如单独阻塞队列中的任务，而不是阻塞系统队列中的全部任务。如果阻塞了目标队列，所有指向它的原队列也将被阻塞。</p>
+<p>在 Swift 3 及之后，对目标队列的设置进行了约束，只有两种情况可以显式地设置目标队列（<a href="https://bugs.swift.org/browse/SR-1859" target="_blank" rel="noopener">原因参考</a>）：</p>
+<p>初始化方法中，指定目标队列。<br>初始化方法中，attributes 设定为 initiallyInactive，然后在队列执行 activate() 之前可以指定目标队列。<br>在其他地方都不能再改变目标队列。</p>
+<h3 id="推迟时间后执行"><a href="#推迟时间后执行" class="headerlink" title="推迟时间后执行"></a>推迟时间后执行</h3><p>有时候你并不需要立即将任务加入队列中运行，而是需要等待一段时间后再进入队列中，这时候可以使用 asyncAfter 方法。<br>可以用静态方法now获得当前时间，然后再通过加上一个DispatchTimeInterval枚举来获得一个需要延迟的时间。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> delay = <span class="hljs-type">DispatchTime</span>.now() + <span class="hljs-type">DispatchTimeInterval</span>.seconds(<span class="hljs-number">60</span>)</span><br><span class="line"><span class="hljs-type">DispatchQueue</span>.main.asyncAfter(deadline: delay) &#123; </span><br><span class="line">    <span class="hljs-comment">// 延迟执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里也可以直接加上一个秒数。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> three = <span class="hljs-type">DispatchTime</span>.now() + <span class="hljs-number">3.0</span></span><br></pre></td></tr></table></figure></p>
+<p>因为DispatchTime中自定义了+号。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> +<span class="hljs-params">(time: DispatchTime, seconds: Double)</span></span> -&gt; <span class="hljs-type">DispatchTime</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="同步锁"><a href="#同步锁" class="headerlink" title="同步锁"></a>同步锁</h3><p>如果一段代码所在的进程中有多个线程在同时运行，那么这些线程就有可能会同时运行这段代码。假如多个线程每次运行结果和单线程运行的结果是一样的，而且其他的变量的值也和预期的是一样的，就是线程安全的。<br>由于可读写的全局变量及静态变量（在 Objective-C 中还包括属性和实例变量）可以在不同线程修改，所以这两者也通常是引起线程安全问题的所在。</p>
+<p>注意，pthread_mutex_t，pthread_rwlock_t 和 OSSpinLock 是值类型，而不是引用类型。这意味着如果你用 = 进行赋值操作，实际上会复制一个副本。这会造成严重的后果，因为这些类型无法复制！如果你不小心复制了它们中的任意一个，这个副本无法使用，如果使用可能会直接崩溃。这些类型的 pthread 函数会假定它们的内存地址与初始化时一样，因此如果将它们移动到其他地方就可能会出问题。OSSpinLock 不会崩溃，但复制操作会生成一个完全独立的锁，这不是你想要的。</p>
+<p>如果使用这些类型，就必须注意不要去复制它们，无论是显式的使用 = 操作符还是隐式地操作。<br>例如，将它们嵌入到结构中或在闭包中捕获它们。</p>
+<p>另外，由于锁本质上是可变对象，需要用 var 来声明它们。</p>
+<p>其他锁都是是引用类型，它们可以随意传递，并且可以用 let 声明。</p>
+<p>在 Swift 中可以使用 Darwin 中传统的锁的方式。<br>但是 pthread 类型很难在 swift 中使用。它们在被定义为不透明的结构体中包含了一堆存储变量。所以，很不建议在 Swift 中使用这一类型的锁。</p>
+<p><img src="/images/gcd_traditional_c_locks.png" alt="gcd_traditional_c_locks"></p>
+<p>如果想要使用传统类型的锁，我们可以使用<code>Foundation.Lock</code>, 因为不同于传统的基于C语言锁的结构，它是一个类，因此不会产生之前提到的那个问题。</p>
+<p><img src="/images/gcd_correct_use_of_traditional_locks.png" alt="gcd_correct_use_of_traditional_locks"></p>
+<p>同时我们推荐使用调度队列来进行同步</p>
+<p><img src="/images/gcd_use_gcd_for_synchronization.png" alt="gcd_use_gcd_for_synchronization"></p>
+<p>如何使用调度队列来实现同步：</p>
+<p><img src="/images/gcd_use_explicit_synchronization.png" alt="gcd_use_explicit_synchronization"></p>
+<p>同时，可以使用预设条件来确保代码运行在特定的队列中运行。</p>
+<p><img src="/images/gcd_preconditions.png" alt="gcd_preconditions"></p>
+<h3 id="DispatchGroup"><a href="#DispatchGroup" class="headerlink" title="DispatchGroup"></a>DispatchGroup</h3><p>当有多个任务需要处理时，你可以异步的一个个处理这些任务， 你还可以将它们组合在一起然后等待这个组合工作的结束。</p>
+<p>DispatchGroup相当于一系列任务的松散集合，它可以来自相同或者不同队列，扮演者组织者的角色。它可以通知外部队列，组内的任务是否都已完成。或者阻塞当前的线程，直到组内的任务都完成。所有适合组内执行的任务都可以使用任务组，且任务组更适合集合异步任务(如果都是同步任务，直接使用串行队列即可)。</p>
+<p><img src="/images/gcd_chaining_vs_grouping_work.png" alt="gcd_chaining_vs_grouping_work"></p>
+<p>通过创建的DispatchGroup对象，当你向调度器提交工作的时候，可以向异步调用增加这个group作为一个可选的参数。你可以向这个group添加更多的工作以及在不同的队列中使用同一个group将它们联系起来。</p>
+<p>每次向group提交工作，它都会增加需要完成的项目的数量。最后当你提交了所有的工作，可以让group在所有工作被完成时在指定的队列上通知你。</p>
+<p><img src="/images/gcd_grouping_work_together.png" alt="gcd_grouping_work_together"></p>
+<p>有两种方式加入任务组：</p>
+<ul>
+<li>添加任务时指定任务组</li>
+</ul>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> group = <span class="hljs-type">DispatchGroup</span>()</span><br><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>.global()</span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用 group.enter(), group.leave() 配对方法，标识任务加入任务组。<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> group = <span class="hljs-type">DispatchGroup</span>()</span><br><span class="line">group.enter()</span><br><span class="line">queue.async() &#123;</span><br><span class="line">    <span class="hljs-comment">// do something</span></span><br><span class="line">    group.leave()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>两种加入方式在对任务处理的特性上是没有区别的，只是便利之处不同。如果任务所在的队列是自己创建或系统队列，那么直接使用第一种方式直接加入即可。如果任务是由系统或第三方的API创建的，由于无法获取对应的队列，只能使用第二种方式将任务加入组内，例如将 URLSession 的 addDataTask 方法加入任务组中。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">URLSession</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">addDataTask</span><span class="hljs-params">(to group: DispatchGroup,</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">                     with request: URLRequest,</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">                     completionHandler: @escaping <span class="hljs-params">(Data?, URLResponse?, Error?)</span></span></span> -&gt; <span class="hljs-type">Void</span>) -&gt; <span class="hljs-type">URLSessionDataTask</span> &#123;</span><br><span class="line">            group.enter() <span class="hljs-comment">// 进入任务组</span></span><br><span class="line">            <span class="hljs-keyword">return</span> dataTask(with: request) &#123; (data, response, error) <span class="hljs-keyword">in</span></span><br><span class="line">                completionHandler(data, response, error)</span><br><span class="line">                group.leave() <span class="hljs-comment">// 离开任务组</span></span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们也可以等待任务组中的任务全部完成后，可以统一对外发送通知，有两种方式：</p>
+<ul>
+<li><p>group.notify() 方法，它可以在所有任务完成后通知指定队列并执行一个指定任务，这个通知的操作是异步的（意味着通知后续的代码不需要等待任务，可以继续执行）：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> group = <span class="hljs-type">DispatchGroup</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> queueBook = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"book"</span>)</span><br><span class="line">queueBook.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something 1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> queueVideo = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"video"</span>)</span><br><span class="line">queueVideo.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something 2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group.notify(queue: <span class="hljs-type">DispatchQueue</span>.main) &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"all task done"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-string">"do something else."</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 执行结果</span></span><br><span class="line"><span class="hljs-comment">// do something else.</span></span><br><span class="line"><span class="hljs-comment">// do something 1(任务 1、2 完成顺序不固定)</span></span><br><span class="line"><span class="hljs-comment">// do something 2</span></span><br><span class="line"><span class="hljs-comment">// all task done</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>group.wait() 方法， 它会在所有任务完成后再执行当前线程中后续的代码，因此这个操作是有阻塞作用。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> group = <span class="hljs-type">DispatchGroup</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> queueBook = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"book"</span>)</span><br><span class="line">queueBook.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something 1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> queueVideo = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"video"</span>)</span><br><span class="line">queueVideo.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something 2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group.wait()</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-string">"do something else."</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 执行结果</span></span><br><span class="line"><span class="hljs-comment">// do something 1(任务 1、2 完成顺序不固定)</span></span><br><span class="line"><span class="hljs-comment">// do something 2</span></span><br><span class="line"><span class="hljs-comment">// do something else.</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>wait 方法中还可以指定具体的时间，它表示将等待不超过这个时间，如果任务组在指定时间之内完成则立即恢复当前线程，否则将等到时间结束时再恢复当前线程。</p>
+<ul>
+<li><p>方式1，使用 DispatchTime，它表示一个时间间隔，精确到纳秒（1/1000,000,000 秒）：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> waitTime = <span class="hljs-type">DispatchTime</span>.now() + <span class="hljs-number">2.0</span> <span class="hljs-comment">// 表示从当前时间开始后 2 秒，数字字面量也可以改为使用 TimeInterval 类型变量</span></span><br><span class="line">group.wait(timeout: waitTime)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方式2，使用 DispatchWallTime，它表示当前的绝对时间戳，精确到微秒（1/1000,000 秒），通常使用字面量即可设置延时时间，也可以使用 timespec 结构体来设置一个精确的时间戳，具体参见附录章节的《时间相关的结构体说明 - DispatchWallTime》：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用字面量设置</span></span><br><span class="line"><span class="hljs-keyword">var</span> wallTime = <span class="hljs-type">DispatchWallTime</span>.now() + <span class="hljs-number">2.0</span> <span class="hljs-comment">// 表示从当前时间开始后 2 秒，数字字面量也可以改为使用 TimeInterval 类型变量</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h4><p>DispatchSemaphore 是传统计数信号量的封装，用来控制资源被多任务访问的情况。<br>简单来说就是控制访问资源的数量，比如系统有两个资源可以被利用，同时有三个线程要访问，只能允许两个线程访问，第三个应当等待资源被释放后再访问。例如，控制同一时间写文件的任务数量、控制端口访问数量、控制下载任务数量等。</p>
+<p>信号量的使用非常的简单：</p>
+<ul>
+<li>首先创建一个初始数量的信号对象</li>
+<li>使用 wait 方法让信号量减 1，再安排任务。如果此时信号量仍大于或等于 0，则任务可执行，如果信号量小于 0，则任务需要等待其他地方释放信号。</li>
+<li>任务完成后，使用 signal 方法增加一个信号量。</li>
+<li>等待信号有两种方式：永久等待、可超时的等待。</li>
+</ul>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>(</span><br><span class="line">    label: <span class="hljs-string">"com.sinkingsoul.DispatchQueueTest.concurrentQueue"</span>,</span><br><span class="line">    attributes: .concurrent)</span><br><span class="line"><span class="hljs-keyword">let</span> semaphore = <span class="hljs-type">DispatchSemaphore</span>(value: <span class="hljs-number">2</span>) <span class="hljs-comment">// 设置数量为 2 的信号量</span></span><br><span class="line"></span><br><span class="line">semaphore.wait()</span><br><span class="line">queue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 1 start"</span>)</span><br><span class="line">    sleep(<span class="hljs-number">2</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 1 finish"</span>)</span><br><span class="line">    semaphore.signal()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">semaphore.wait()</span><br><span class="line">queue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 2 start"</span>)</span><br><span class="line">    sleep(<span class="hljs-number">2</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 2 finish"</span>)</span><br><span class="line">    semaphore.signal()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">semaphore.wait()</span><br><span class="line">queue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 3 start"</span>)</span><br><span class="line">    sleep(<span class="hljs-number">2</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 3 finish"</span>)</span><br><span class="line">    semaphore.signal()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 运行结果：</span></span><br><span class="line"><span class="hljs-comment">// Task 1 start</span></span><br><span class="line"><span class="hljs-comment">// Task 2 start</span></span><br><span class="line"><span class="hljs-comment">// Task 1 finish</span></span><br><span class="line"><span class="hljs-comment">// Task 2 finish</span></span><br><span class="line"><span class="hljs-comment">// Task 3 start</span></span><br><span class="line"><span class="hljs-comment">// Task 3 finish</span></span><br></pre></td></tr></table></figure>
+<p>运行结果中可以看到任务 3 在前两个任务完成后才开始运行。</p>
+<h4 id="DispatchWorkItem"><a href="#DispatchWorkItem" class="headerlink" title="DispatchWorkItem"></a>DispatchWorkItem</h4><p>DispatchQueue执行操作除了直接传递一个闭包外，还可以传入一个DispatchWorkItem。 DispatchWorkItem 的初始化方法可以配置 QoS 和 DispatchWorkItemFlags, 但是这两个参数都有默认参数，所以也可以只传入一个闭包。</p>
+<p>DispatchWorkItemFlags 枚举中 assignCurrentContext 表示 QoS 根据创建时的 context 决定，这个 workItem 会从负责执行该任务的调度队列或者线程继承其QoS设置。</p>
+<p><img src="/images/gcd_dispatch_work_item.png" alt="gcd_dispatch_work_item"></p>
+<p>另外，DispatchWorkItem 也有 wait 方法，调用会等待这个 workItem 执行完。</p>
+<p><img src="/images/gcd_waiting_for_work_items.png" alt="gcd_waiting_for_work_items"></p>
+<p>DispatchWorkItemFlags 枚举中还有其他选项，如 barrier, detached, enforceQos, inheritQos, noQos。</p>
+<p>.barrier: 如果DispatchWorkItem被提交到.concurrent并发队列，那么这个DispatchWorkItem中的操作会具有独占性(防止此DispatchWorkItem中的block内的操作与其他操作同时执行)。执行该任务时，它会先等待队列中已有的任务全部执行完成，然后它再执行，在它之后加入的任务也必须等栅栏任务执行完成后才能执行。</p>
+<p><img src="/images/gcd_dispatch_work_item_flags_barrier.png" alt="gcd_dispatch_work_item_flags_barrier"></p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"BarrierWorkItem"</span>, attributes: .concurrent)</span><br><span class="line">queue.async &#123;</span><br><span class="line">    sleep(<span class="hljs-number">4</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"async task 1 finish."</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> task = <span class="hljs-type">DispatchWorkItem</span>(flags: .barrier) &#123;</span><br><span class="line">    sleep(<span class="hljs-number">2</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"barrier task finish."</span>)</span><br><span class="line">&#125;</span><br><span class="line">queue.async(execute: task)</span><br><span class="line">queue.async &#123;</span><br><span class="line">    sleep(<span class="hljs-number">1</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"async task 2 finish."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//async task 1 finish.</span></span><br><span class="line"><span class="hljs-comment">//barrier task finish.</span></span><br><span class="line"><span class="hljs-comment">//async task 2 finish.</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>.detached 表明DispatchWorkItem会无视当前执行上下文的参数。</li>
+<li>.noQos 不指定QoS，由调用线程或队列来指定。</li>
+<li>.inheritQos 表明DispatchWorkItem会采用队列的QoS class，而不是当前的。</li>
+<li>.enforceQos 表明DispatchWorkItem会采用当前的QoS class，而不是队列的。</li>
+</ul>
+<h3 id="DispatchSource"><a href="#DispatchSource" class="headerlink" title="DispatchSource"></a>DispatchSource</h3><p>Dispatch Source是GCD中的一个基本类型，从字面意思可称为调度源，它的作用是当有一些特定的较底层的系统事件发生时，调度源会捕捉到这些事件，然后可以做其他的逻辑处理，调度源有多种类型，分别监听对应类型的系统事件。</p>
+<p>可监听的对象的具体类型：</p>
+<ul>
+<li>Timer Dispatch Source：定时调度源。</li>
+<li>Signal Dispatch Source：监听UNIX信号调度源，比如监听代表挂起指令的SIGSTOP信号。</li>
+<li>Descriptor Dispatch Source：监听文件相关操作和Socket相关操作的调度源。</li>
+<li>Process Dispatch Source：监听进程相关状态的调度源。</li>
+<li>Mach port Dispatch Source：监听Mach相关事件的调度源。</li>
+<li>Custom Dispatch Source：监听自定义事件的调度源。</li>
+</ul>
+<p>下面以文件监听为例看下使用方法，下面例子中监听了一个指定目录下文件的写入事件，创建监听主要有几个步骤：</p>
+<ul>
+<li>通过 makeFileSystemObjectSource 方法创建 source</li>
+<li>通过 setEventHandler 设定事件处理程序，setCancelHandler 设定取消监听的处理。</li>
+<li>执行 resume() 方法开始接收事件</li>
+</ul>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>.global()</span><br><span class="line"><span class="hljs-keyword">let</span> filePath = <span class="hljs-string">"..."</span></span><br><span class="line"><span class="hljs-keyword">let</span> fileURL = <span class="hljs-type">URL</span>(fileURLWithPath: filePath)</span><br><span class="line"><span class="hljs-keyword">let</span> fd = <span class="hljs-keyword">open</span>(fileURL.path, <span class="hljs-type">O_EVTONLY</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> source = <span class="hljs-type">DispatchSource</span>.makeFileSystemObjectSource(fileDescriptor: fd, eventMask: .write, queue: queue)</span><br><span class="line">source.setEventHandler(handler: closure)</span><br><span class="line">source.setCancelHandler &#123;</span><br><span class="line">    close(fd)</span><br><span class="line">&#125;</span><br><span class="line">source.resume()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/gcd_dispatch_source_cancellation.png" alt="gcd_dispatch_source_cancellation"></p>
+<p>DispatchSourceTimer 的例子：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printTime</span><span class="hljs-params">(withComment comment: String)</span></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> date = <span class="hljs-type">Date</span>()</span><br><span class="line">    <span class="hljs-keyword">let</span> formatter = <span class="hljs-type">DateFormatter</span>()</span><br><span class="line">    </span><br><span class="line">    formatter.dateFormat = <span class="hljs-string">"yyyy-MM-dd HH:mm:ss"</span></span><br><span class="line">    </span><br><span class="line">    <span class="hljs-built_in">print</span>(comment + <span class="hljs-string">": "</span> + formatter.string(from: date))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> timer = <span class="hljs-type">DispatchSource</span>.makeTimerSource()</span><br><span class="line">timer.schedule(deadline: .now() + .seconds(<span class="hljs-number">10</span>),</span><br><span class="line">               repeating: .seconds(<span class="hljs-number">5</span>),</span><br><span class="line">               leeway: .seconds(<span class="hljs-number">5</span>))</span><br><span class="line">timer.setEventHandler &#123;</span><br><span class="line">    printTime(withComment: <span class="hljs-string">"hello world"</span>)</span><br><span class="line">&#125;</span><br><span class="line">timer.activate()</span><br><span class="line">printTime(withComment: <span class="hljs-string">"3"</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 运行结果：</span></span><br><span class="line"><span class="hljs-comment">// 3: 2019-04-25 16:43:53</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:03</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:08</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:13</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:18</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:23</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="表明DispatchWorkItem会采用当前的QoS"><a href="#表明DispatchWorkItem会采用当前的QoS" class="headerlink" title="表明DispatchWorkItem会采用当前的QoS"></a>表明DispatchWorkItem会采用当前的QoS</h3><p>DispatchIO 对象提供一个操作文件描述符的通道。简单讲就是你可以利用多线程异步高效的读写文件。</p>
+<p>发起读写操作一般步奏如下：</p>
+<ul>
+<li>创建 DispatchIO 对象，或者说创建一个通道，并设置结束处理闭包。</li>
+<li>调用 read/write 方法。</li>
+<li>调用 close 方法关闭通道。</li>
+<li>在 clone 方法后系统将自动调用结束处理闭包。</li>
+</ul>
+<p>初始化方法</p>
+<p>一般使用两种方式初始化： 文件描述符，或者文件路径</p>
+<p>文件描述符方式</p>
+<p>文件描述符使用 open 方法创建： <code>open(_ path: UnsafePointer&lt;CChar&gt;, _ oflag: Int32, _ mode: mode_t) -&gt; Int32</code>, 第一个参数是 UnsafePointer<int8> 类型的路径，oflag 、mode 指文件的操作权限，一个是系统 API 级的，一个是文件系统级的，可选项如下:</int8></p>
+<p>oflag：</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>备注</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O_RDONLY</td>
+<td>以只读方式打开文件</td>
+<td>此三种读写类型只能有一种</td>
+</tr>
+<tr>
+<td>O_WRONLY</td>
+<td>以只写方式打开文件</td>
+<td>此三种读写类型只能有一种</td>
+</tr>
+<tr>
+<td>O_RDWR</td>
+<td>以读和写的方式打开文件</td>
+<td>此三种读写类型只能有一种</td>
+</tr>
+<tr>
+<td>O_CREAT</td>
+<td>打开文件，如果文件不存在则创建文件</td>
+<td>创建文件时会使用Mode参数与Umask配合设置文件权限</td>
+</tr>
+<tr>
+<td>O_EXCL</td>
+<td>如果已经置O_CREAT且文件存在，则强制open()失败</td>
+<td>可以用来检测多个进程之间创建文件的原子操作</td>
+</tr>
+<tr>
+<td>O_TRUNC</td>
+<td>将文件的长度截为0</td>
+<td>无论打开方式是RD,WR,RDWR，只要打开就会把文件清空</td>
+</tr>
+<tr>
+<td>O_APPEND</td>
+<td>强制write()从文件尾开始不care当前文件偏移量所处位置，只会在文件末尾开始添加</td>
+<td>如果不使用的话，只会在文件偏移量处开始覆盖原有内容写文件</td>
+</tr>
+</tbody>
+</table>
+<p>mode：包含 User、Group、Other 三个组对应的权限掩码。</p>
+<table>
+<thead>
+<tr>
+<th>User</th>
+<th>Group</th>
+<th>Other</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S_IRWXU</td>
+<td>S_IRWXG</td>
+<td>S_IRWXO</td>
+<td>可读、可写、可执行</td>
+</tr>
+<tr>
+<td>S_IRUSR</td>
+<td>S_IRGRP</td>
+<td>S_IROTH</td>
+<td>可读</td>
+</tr>
+<tr>
+<td>S_IWUSR</td>
+<td>S_IWGR</td>
+<td>S_IWOTH</td>
+<td>可写</td>
+</tr>
+<tr>
+<td>S_IXUSR</td>
+<td>S_IXGRP</td>
+<td>S_IXOTH</td>
+<td>可执行</td>
+</tr>
+</tbody>
+</table>
+<p>创建的通道有两种类型：</p>
+<p>连续数据流：<code>DispatchIO.StreamType.stream</code>，这个方式是对文件从头到尾完整操作的。<br>随机片段数据：<code>DispatchIO.StreamType.random</code>，这个方式是在文件的任意一个位置（偏移量）开始操作的。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> filePath: <span class="hljs-type">NSString</span> = <span class="hljs-string">"test.zip"</span></span><br><span class="line"><span class="hljs-comment">// 创建一个可读写的文件描述符</span></span><br><span class="line"><span class="hljs-keyword">let</span> fileDescriptor = <span class="hljs-keyword">open</span>(filePath.utf8String!, (<span class="hljs-type">O_RDWR</span> | <span class="hljs-type">O_CREAT</span> | <span class="hljs-type">O_APPEND</span>), (<span class="hljs-type">S_IRWXU</span> | <span class="hljs-type">S_IRWXG</span>))</span><br><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"com.sinkingsoul.DispatchQueueTest.serialQueue"</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> cleanupHandler: (<span class="hljs-type">Int32</span>) -&gt; <span class="hljs-type">Void</span> = &#123; errorNumber <span class="hljs-keyword">in</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> io = <span class="hljs-type">DispatchIO</span>(type: .stream, fileDescriptor: fileDescriptor, queue: queue, cleanupHandler: cleanupHandler)</span><br></pre></td></tr></table></figure>
+<p>文件路径方式</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> io = <span class="hljs-type">DispatchIO</span>(type: .stream, path: filePath.utf8String!, oflag: (<span class="hljs-type">O_RDWR</span> | <span class="hljs-type">O_CREAT</span> | <span class="hljs-type">O_APPEND</span>), mode: (<span class="hljs-type">S_IRWXU</span> | <span class="hljs-type">S_IRWXG</span>), queue: queue, cleanupHandler: cleanupHandler)</span><br></pre></td></tr></table></figure>
+<p>数据块大小阀值<br>DispatchIO 支持多线程操作的原因之一就是它将文件拆分为数据块进行并行操作，你可以设置数据块大小的上下限，系统会采取合适的大小，使用这两个方法即可：setLimit(highWater: Int)、setLimit(lowWater: Int)，单位是 byte。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.setLimit(highWater: <span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>)</span><br></pre></td></tr></table></figure></p>
+<p>数据块如果设置小一点（如 1M），则可以节省 App 的内存，如果内存足够则可以大一点换取更快速度。在进行读写操作时，有一个性能问题需要注意，如果同时读写的话一般分两个通道，且读到一个数据块就立即写到另一个数据块中，那么写通道的数据块上限不要小于读通道的，否则会造成内存大量积压无法及时释放。</p>
+<p>读操作<br>方法示例：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ioRead.read(offset: <span class="hljs-number">0</span>, length: <span class="hljs-type">Int</span>.<span class="hljs-built_in">max</span>, queue: ioReadQueue) &#123; doneReading, data, error <span class="hljs-keyword">in</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (error &gt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">            <span class="hljs-built_in">print</span>(<span class="hljs-string">"读取发生错误了，错误码：\(error)"</span>)</span><br><span class="line">            <span class="hljs-keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> (data != <span class="hljs-literal">nil</span>) &#123;</span><br><span class="line">            <span class="hljs-comment">// 使用数据</span></span><br><span class="line">       &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> (doneReading) &#123;</span><br><span class="line">           ioRead.close()</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>offset 指定读取的偏移量，如果通道是 stream 类型，值不起作用，写为 0 即可，将从文件开头读起；如果是 random 类型，则指相对于创建通道时文件的起始位置的偏移量。</p>
+<p>length 指定读取的长度，如果是读取文件全部内容，设置 Int.max 即可，否则设置一个小于文件大小的值（单位是 byte）。</p>
+<p>每读取到一个数据块都会调用你设置的处理闭包，系统会提供三个入参给你：结束标志、本次读取到的数据块、错误码：</p>
+<p>在所有数据读取完成后，会额外再调用一个闭包，通过结束标志告诉你操作结束了，此时 data 大小是 0，错误码也是 0。<br>如果读取中间发生了错误，则会停止读取，结束标志会被设置为 true，并返回相应的错误码，错误码表参考稍后的【关闭通道】小节：<br>写操作<br>方法示例：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ioWrite.write(offset: <span class="hljs-number">0</span>, data: data!, queue: ioWriteQueue) &#123; doneWriting, data, error <span class="hljs-keyword">in</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (error &gt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">        <span class="hljs-built_in">print</span>(<span class="hljs-string">"写入发生错误了，错误码：\(error)"</span>)</span><br><span class="line">        <span class="hljs-keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> doneWriting &#123;</span><br><span class="line">        <span class="hljs-comment">//...</span></span><br><span class="line">        ioWrite.close()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写操作与读操作的唯一区别是：每当写完一个数据块时，回调闭包返回的 data 是剩余的全部数据。同时注意如果是 stream 类型，将接着文件的末尾写数据。</p>
+<p>关闭通道<br>当读写正常完成，或者你需要中途结束操作时，需要调用 close 方法，这个方法带一个 DispatchIO.CloseFlags 类型参数，如果不指定将默认值为 <code>DispatchIO.CloseFlags.stop</code>。</p>
+<p>这个方法传入 stop 标志时将会停止所有未完成的读写操作，影响范围是所有 I/O channel，其他 DispatchIO 对象进行中的读写操作将会收到一个 ECANCELED 错误码，rawValue 值是 89，这个错误码是 POSIXError 结构的一个属性，而 POSIXError 又是 NSError 中预定义的一个错误域。</p>
+<p>因此如果要在不同 DispatchIO 对象中并行读取操作互不影响， close 方法标志可以设置一个空值：<code>DispatchIO.CloseFlags()</code>。如果设置了 stop 标志，则要做好不同 IO 之间的隔离，通过任务组的enter、leave、wait 方法可以做到较好的隔离。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ioWrite.close() <span class="hljs-comment">// 停止标志</span></span><br><span class="line">ioWrite.close(flags: <span class="hljs-type">DispatchIO</span>.<span class="hljs-type">CloseFlags</span>()) <span class="hljs-comment">// 空标志</span></span><br></pre></td></tr></table></figure></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/06/swift-method-dispathch-mechanism/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Swift的派发机制</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/23/hello-world/">
+                <span class="level-item">Hello World</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="iOS 多线程的使用与总结" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 Phillip&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("en");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Entradas',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categorias',
+                TAGS: 'Etiquetas',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

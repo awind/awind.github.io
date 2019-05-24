@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>Understanding Swift Performance - Phillip的技术博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="理解 Swift 的性能，首先要搞清楚 Swift 的数据结构，组件关系和它们的内在实现，从而通过选择最合适的抽象机制来提升性能。 当你在创建一个抽象并选择一个抽象机制时，你应该问问自己  我的实例时分配给堆栈还是堆？  当我传递这个实例时，我要产生多少开销？ 当我在这个实例中调用方法时，是静态还是动态发送?   当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Understanding Swift Performance">
+<meta property="og:url" content="http://yoursite.com/2019/04/06/understanding-swift-performance/index.html">
+<meta property="og:site_name" content="Phillip的技术博客">
+<meta property="og:description" content="理解 Swift 的性能，首先要搞清楚 Swift 的数据结构，组件关系和它们的内在实现，从而通过选择最合适的抽象机制来提升性能。 当你在创建一个抽象并选择一个抽象机制时，你应该问问自己  我的实例时分配给堆栈还是堆？  当我传递这个实例时，我要产生多少开销？ 当我在这个实例中调用方法时，是静态还是动态发送?   当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/og_image.png">
+<meta property="og:updated_time" content="2019-05-24T05:48:18.723Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Understanding Swift Performance">
+<meta name="twitter:description" content="理解 Swift 的性能，首先要搞清楚 Swift 的数据结构，组件关系和它们的内在实现，从而通过选择最合适的抽象机制来提升性能。 当你在创建一个抽象并选择一个抽象机制时，你应该问问自己  我的实例时分配给堆栈还是堆？  当我传递这个实例时，我要产生多少开销？ 当我在这个实例中调用方法时，是静态还是动态发送?   当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们">
+<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/logo.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Understanding Swift Performance" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/awind/">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-04-06T05:37:26.000Z">2019-04-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    an hour read (About 7773 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Understanding Swift Performance
+            
+        </h1>
+        <div class="content">
+            <p>理解 Swift 的性能，首先要搞清楚 Swift 的数据结构，组件关系和它们的内在实现，从而通过选择最合适的抽象机制来提升性能。</p>
+<p>当你在创建一个抽象并选择一个抽象机制时，你应该问问自己</p>
+<ul>
+<li>我的实例时分配给堆栈还是堆？ </li>
+<li>当我传递这个实例时，我要产生多少开销？</li>
+<li>当我在这个实例中调用方法时，是静态还是动态发送?</li>
+</ul>
+<p><img src="/images/dimensions_of_performance.png" alt="dimensions_of_performance"></p>
+<p>当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们需要学习何时以及如何在这些不同维度之间切换来获得更好的性能。</p>
+<p>下面我们将从不同维度来评估不同的抽象机制选项。</p>
+<h2 id="Allocation-内存分配"><a href="#Allocation-内存分配" class="headerlink" title="Allocation 内存分配"></a>Allocation 内存分配</h2><p>Swift 会替你自动分配和回收内存的分配。</p>
+<p>有些内存会分配给栈(Stack)，有些则会分配到堆(Heap)上。</p>
+<p>栈时一种非常简单的数据结构，你可以将元素压到栈底或者弹出栈底。因为你只能添加或移出栈底，所以只需要通过保存的栈底指针就可以实现栈的入栈和出栈。 这意味着当调用函数时, 只需要通过递减栈底指针数值来获取空间。当函数执行完毕后，同样只需要把栈底指针增加至调用函数之前的的数值即可达到释放内存的目的。因此栈的分配速度非常快，它其实仅仅是分配一个整数的消耗。</p>
+<p><img src="/images/allocation_of_stack.png" alt="allocation_of_stack"></p>
+<p>那么，这就与堆形成了对比。 堆更动态化，但比栈效率低。堆可以让你实现栈不能实现的功能，比如动态周期性的分配内存，但它同时也需要更高级的数据结构。如果你要在堆上分配内存，实际上要去搜索堆数据结构，寻找适当大小的闲置内存块，用完之后要释放内存，还需要把那个内存块插回到正确的位置。很显然，相比在栈中实现的，这涉及的东西更多。同时，因为涉及到多线程分配内存，堆需要使用锁或其它同步机制来保护它的完整性，这是一个很大的消耗。</p>
+<p><img src="/images/allocation_of_heap.png" alt="allocation_of_heap"></p>
+<p>下面通过一些代码来看看 Swift 都替我们做了什么</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">var</span> x, y: <span class="hljs-type">Double</span> </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> point1 = <span class="hljs-type">Point</span>(x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>) </span><br><span class="line"><span class="hljs-keyword">var</span> point2 = point1 </span><br><span class="line">point2.x = <span class="hljs-number">5</span> </span><br><span class="line"><span class="hljs-comment">// use `point1` </span></span><br><span class="line"><span class="hljs-comment">// use `point2`</span></span><br></pre></td></tr></table></figure>
+<p>上面定义了一个<code>Point</code>的结构体, 有<code>x</code>和<code>y</code>存储属性, 还有<code>draw</code>方法。用<code>(0, 0)</code> 构造点，把<code>point1</code> 赋值给<code>point2</code>, 并把<code>point2.x</code>赋一个为5的值。</p>
+<p>在执行任何代码之前, 系统已为<code>point1</code>和<code>point2</code>实例在堆栈上分配了一个空间，因为<code>Point</code>是一个结构体，而x和y属性被存储在栈中。当把<code>point1</code>赋值给<code>point2</code>时，我们仅仅是复制了那个点，并初始化了<code>point2</code>的内存，也就是之前已经分配到栈上的内存。请注意，<code>point1</code>和<code>point2</code>是独立的实例，意思就是，当我们给<code>point2.x</code>赋一个为5的值时，<code>point2.x</code>是5，但<code>point1.x</code>仍然是0，这就是值语义。</p>
+<p><img src="/images/allocate_of_stuct.png" alt="allocate_of_stuct"></p>
+<p>然后我们继续使用<code>point1</code>和<code>point2</code>，并完成函数的执行之后，只需要通过把堆栈指针的值增至进入函数之前的值就可以释放<code>point1</code>和<code>point2</code>的内存。<br><img src="/images/deallocate_of_stack.png" alt="deallocate_of_stack"></p>
+<p>同之前的代码比较，下面使用 class 来定义<code>Point</code><br> <figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">var</span> x, y: <span class="hljs-type">Double</span> </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> point1 = <span class="hljs-type">Point</span>(x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>) </span><br><span class="line"><span class="hljs-keyword">var</span> point2 = point1 </span><br><span class="line">point2.x = <span class="hljs-number">5</span> </span><br><span class="line"><span class="hljs-comment">// use `point1` </span></span><br><span class="line"><span class="hljs-comment">// use `point2`</span></span><br></pre></td></tr></table></figure></p>
+<p>跟之前的一样，我们给栈分配内存，但并不实际存储’Point’的属性。我们要给<code>point1</code>和<code>point2</code>分配内存引用，引用要分配到堆上的内存。当用<code>(0, 0)</code>进行初始化时，Swift会锁住堆并寻找堆上适当大小的闲置内存块。在得到合适的内存块后，我们要以<code>x</code>为0，<code>y</code>为0进行初始化, 并且把<code>point1</code>初始化为那个堆上分配的内存地址。请注意，当在堆上分配时，Swift其实是为<code>Point</code>类分配了四个字的存储，这跟<code>Point</code>是结构体时所分配的两个字形成了对比。Swift 会多出的两个字进行管理，这两个字通过图中的这些蓝色框来指示。</p>
+<p><img src="/images/allocation_of_point_class.png" alt="allocation_of_point_class"></p>
+<blockquote>
+<p>注： 多出的第一个字可以简单的说就是指向 Class 的指针，第二个字存放的是引用计数。 <a href="https://juejin.im/post/5a7b04c86fb9a0634b4d632a" target="_blank" rel="noopener">https://juejin.im/post/5a7b04c86fb9a0634b4d632a</a></p>
+</blockquote>
+<p>当把<code>point1</code>赋值给<code>point2</code>时，我们并不是要复制<code>point1</code>的内容，相反它是复制引用。<code>point1</code>和<code>point2</code>其实指的正是堆上的同一个实例。意思是，当我们给<code>point2.x</code>赋一个为5的值时，<code>point1.x</code>和<code>point2.x</code>的值都为5，这就是引用的语义，可导致非计划的状态共享。</p>
+<p>然后Swift会释放这个内存,锁住堆,再分配闲置内存块到适当的位置后就可以出栈了。</p>
+<p>我们看到类的构造比结构的构造消耗更多。由于类是在堆上分配的并且有引用语义，所以类有一些强大的特性，如一致性和间接存储。但是如果我们的抽象不需要这些特性，最好还是用结构体，而且结构不会导致像类那样的非计划的状态共享。</p>
+<h2 id="Reference-Counting-引用计数"><a href="#Reference-Counting-引用计数" class="headerlink" title="Reference Counting 引用计数"></a>Reference Counting 引用计数</h2><p>当我们谈堆式分配时，Swift 是如何了解何时释放在堆上分配的内存是安全的呢？ 答案是 Swift 会保持一个堆中任何实例的引用个数的总计数，并把它存储在实例本身。当你添加引用或移除引用时，就会增加或减少引用计数。当计数为零时，Swift就知道没有指向堆上的这个实例的引用，而且释放那个内存很安全。</p>
+<p>引用计数的关键点是，这是个非常频繁的运算。实际上比只增加和减少一个整数更复杂。首先，涉及到成对出现的间接层级来执行增加和减少计数。更重要的是跟堆式分配一样，需要考虑线程的安全性，因为引用能在多线程的时候被添加或移除到任何堆实例，由于引用计数运算的频率高，这会增加消耗。</p>
+<p><img src="/images/reference_counting.png" alt="reference_counting"></p>
+<p>以 <code>Point</code> 类为例，来看看 Swift 替我们做了什么。这里有用来作为对比的一些伪代码：</p>
+<p><img src="/images/comparison_in_reference_counting.png" alt="comparison_in_reference_counting"></p>
+<p><code>Point</code>获得了一个附加属性<code>refCount</code>,并且 Swift 添加了一对调用 <code>retain</code> 和 <code>release</code>, <code>retain</code>会自动增加引用计数，<code>release</code>会自动减少引用计数，这样 Swift就可以追踪堆上的<code>Point</code>上有多少激活的引用。</p>
+<p><img src="/images/reference_count_of_class.png" alt="reference_count_of_class"></p>
+<p>在堆上构造<code>Point</code>之后，因为有一个实例的实时引用，那个实例就被初始化为引用计数为1。查看整个程序，并把<code>point1</code>赋值给<code>point2</code>，我们现在就有两个引用了，那么Swift添加一个<code>retain</code>调用，来自动增加点实例的引用计数。继续执行，一旦我们不再使用<code>point1</code>，因为<code>point1</code>不再是它所关注的一个激活的引用，Swift 会添加一个<code>release</code>调用来自动减少引用计数。同样地，一旦我们不再使用<code>point2</code>，Swift会添加另一个<code>release</code>调用,自动减少引用计数。在这时，没有对<code>Point</code>的实例引用被使用，所以Swift就知道很安全，会锁住堆并把那个内存块返回给它。</p>
+<p><img src="/images/no_references_of_class.png" alt="no_references_of_class"></p>
+<p>如果是结构体会怎么样呢？结构是否涉及引用计数呢？当我们构造点结构时，不会涉及任何堆式分配，当我们复制时也不会涉及任何堆式分配，每个步骤都不会涉及引用。所以<code>Point</code>结构体没有引用计数。</p>
+<p>那更复杂的结构呢？</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Label</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">var</span> text: <span class="hljs-type">String</span> </span><br><span class="line">    <span class="hljs-keyword">var</span> font: <span class="hljs-type">UIFont</span> </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> label1 = <span class="hljs-type">Label</span>(text: <span class="hljs-string">"Hi"</span>, font: font) </span><br><span class="line"><span class="hljs-keyword">let</span> label2 = label1 </span><br><span class="line"><span class="hljs-comment">// use `label1` </span></span><br><span class="line"><span class="hljs-comment">// use `label2`</span></span><br></pre></td></tr></table></figure>
+<p>在这里有个<code>Label</code>结构体，属性包含字符串类型的<code>text</code>，和类型为<code>UIFont</code>的<code>font</code>。刚才提到过字符串，实际上是把它的字符内容存储在堆上，所以需要引用计数。字体是一个类,也需要引用计数。</p>
+<p><img src="/images/reference_counting_of_complex_struct.png" alt="reference_counting_of_complex_struct"></p>
+<p>当我们复制它时，实际上增加了两个引用。</p>
+<p><img src="/images/increment_of_reference_count_of_complex_struct.png" alt="increment_of_reference_count_of_complex_struct"></p>
+<p>Swift的追踪这些堆式分配的方式是通过保留和释放的调用来实现的。<br><img src="/images/tracking_reference_counting_in_struct.png" alt="tracking_reference_counting_in_struct"></p>
+<p>由于类是在堆上分配的，Swift得管理那个堆式分配的使用期限，这是通过引用计数实现的。 而引用计数的难点在于运算相对频繁,且具备原子性。这也是我们使用结构的另一个原因。</p>
+<p>但是，如果结构包含引用，也会进行引用计数。事实上，结构体会进行引用计数,相应地与它们所包含的引用数量成比例的。所以 如果它们有一个以上的引用，它们会保留一个类以上的引用计数。</p>
+<h2 id="Method-Dispatch-方法派发"><a href="#Method-Dispatch-方法派发" class="headerlink" title="Method Dispatch 方法派发"></a>Method Dispatch 方法派发</h2><p>在运行过程中，当调用一个方法时，Swift 需要执行正确的实现。</p>
+<p>如果能在编译时确定要执行的实现，这就是静态派发。 在运行过程中，我们能直接跳到正确的实现，这很酷。因为编译器实际上可以看到要执行哪些实现，并且也可以做一些如内联之类的优化，这跟动态调度形成了对比。</p>
+<p><img src="/images/static_method_dispatch.png" alt="static_method_dispatch"></p>
+<p>动态调度时，在编译时无法直接决定要执行哪个实现。在运行时，需要去查找实现，然后调到那个。相比静态派发，虽然动态派发增加了一个间接层级，这样做的成本并不高。<br>但是动态派发阻碍了编译器的可见性，编译器无法对动态派发进行一些包括内联的优化操作。</p>
+<p><img src="/images/dynamic_method_dispatch.png" alt="dynamic_method_dispatch"></p>
+<p>我们究竟为什么要这个动态调度呢？原因之一是通过它可以使一些特性成为可能，比如多态。</p>
+<p><img src="/images/inheritance_based_polymorphism.png" alt="inheritance_based_polymorphism"></p>
+<p>我们通过一个传统的面向对象的程序来看下具体原理。有一个可绘制的抽象超类,我可以定义一个<code>Point</code>子类和<code>Line</code>子类，然后用自定义实现来覆盖<code>draw</code>方法。</p>
+<p>然后我可以多态地创建<code>Drawable</code>实例的数组，可能包含<code>Point</code>实例，也可能包含<code>Line</code>实例，可以分别调用draw。</p>
+<p>那么是如何实现的呢？</p>
+<p>因为可绘制的<code>Point</code>和<code>Line</code>都是类，我们可以创建一个包含这些实例的数组, 因为我们保存在数组里的是对它们的引用，因此它们都是相同大小的对象。但当我们查看数组中的元素并且尝试调用<code>draw</code>的时候，因为这个<code>d.draw</code>可以是<code>Point</code>，也可以是个<code>Line</code>,这是不同的代码路径。那么，如何决定调用哪个呢？</p>
+<p><img src="/images/polymorphism_through_reference_semantics.png" alt="polymorphism_through_reference_semantics"></p>
+<p>编译器向类中添加了另一个字段，是这个类的类型信息的指针，指向存储在静态内存中的类型信息。</p>
+<p><img src="/images/polymorphism_through_vtable_dispatch.png" alt="polymorphism_through_vtable_dispatch"></p>
+<p>因此 当调用<code>draw</code>时，编译器实际上生成的了一个对类型信息的查询，查找一个虚拟方法表，在类型和包含指针的静态内存上找到要执行的正确的实现。</p>
+<p><img src="/images/polymorphism_through_vtables_dispatch_search.png" alt="polymorphism_through_vtables_dispatch_search"></p>
+<p>如果我们修改了这个<code>d.draw</code>，编译器替我们做的是查询虚拟方法表，找到要执行的正确的<code>draw</code>实现，然后把那个实际的实例作为隐式的<code>self</code>参数传过来。</p>
+<p>类默认动态地调度它们的方法，这对于它本身并没有什么不同。但是如果形成方法链，会阻碍编译器进行内联及一些其他可添加的优化。</p>
+<p>但是，并不是所有类都需要动态调度。如果你从未打算给一个类创建子类，你可以把它标记为<code>final</code>类，编译器会注意到这一点，并静态地调度这些方法。</p>
+<p>此外 如果编译器可以推理和证明你从不打算在应用中给类建立子类，它将适时地替你把那些动态调度变成静态调度。</p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>因此无论何时，当你读和写Swift代码时你都应该观察和思考：</p>
+<ul>
+<li>这个实例要在堆栈中还是在堆中分配？</li>
+<li>当我传递这个实例时,要引发多少引用计算？</li>
+<li>当我在这个实例中调用方法时是动态调度还是静态调度？</li>
+</ul>
+<p>你可能会问Struct如何实现多态呢?答案是 Protocol Oriented Programming。</p>
+<p>以上分析了影响性能的几个标准，那么不同的算法机制Class，Protocol Types和Generic code，它们在这三方面的表现如何，Protocol Type 和 Generic code 分别是怎么实现的呢？我们带着这个问题看下去。</p>
+<h2 id="Protocol-Types"><a href="#Protocol-Types" class="headerlink" title="Protocol Types"></a>Protocol Types</h2><p>这里我们会讨论Protocol Type如何存储和拷贝变量，以及方法分派是如何实现的。</p>
+<p>这次我们不再用<code>Drawable</code>地抽象基类，我们要用声明了<code>draw</code>方法的<code>Drawable</code>协议，并且我们有数值类型的<code>Point</code>结构体和遵循协议的<code>Line</code>结构体。</p>
+<p>请注意，我们同样还可以有一个遵循协议的<code>SharedLine</code>类。然而，由于类所具有的引用语义会使非计划的共享出现，因此我们决定不再使用它。</p>
+<p>我们程序仍然是多态的，仍然可以在<code>Drawable</code>的协议类型数组中存储<code>Point</code>和<code>Line</code>类型实例。然而 跟以前相比有一个不同点，<code>Point</code>数值类型结构和<code>Line</code>结构并不共享一个使用 v-table 调度所需要的共同的继承关系。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">Drawable</span> </span>&#123; <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> : <span class="hljs-title">Drawable</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">var</span> x, y: <span class="hljs-type">Double</span> </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Line</span> : <span class="hljs-title">Drawable</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> x1, y1, x2, y2: <span class="hljs-type">Double</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> drawables: [<span class="hljs-type">Drawable</span>] </span><br><span class="line"><span class="hljs-keyword">for</span> d <span class="hljs-keyword">in</span> drawables &#123; </span><br><span class="line">    d.draw() </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么 Swift是如何调度正确的方法的呢？在这个例子中，是通过被称为<code>Protocol Witness Table</code>的基于表的机制。每个实现协议的类型中都有这么一张表，并且表中的条目会链接到类型中的具体实现。</p>
+<p><img src="/images/the_protocol_witness_table.png" alt="the_protocol_witness_table"></p>
+<p>那么 现在我们了解了如何找到那个方法，如何把元素从数组中拿到表中仍然有个问题。</p>
+<p><img src="/images/look_up_the_protocol_witness_table.png" alt="look_up_the_protocol_witness_table"></p>
+<p>还有另一个问题，请注意，我们现在有数值类型的<code>Point</code>和<code>Line</code>，<code>Line</code>需要四个字，而<code>Point</code>需要两个字，它们的大小不一样。</p>
+<p>但数组需要以一致的固定偏移量存储元素，那是如何实现的呢？</p>
+<p><img src="/images/how_to_store_values_uniformly_in_pwt.png" alt="how_to_store_values_uniformly_in_pwt"></p>
+<p>这个问题的答案是，Swift使用一个特殊存储布局叫存在容器(Existential Container)。</p>
+<p><img src="/images/the_existential_container.png" alt="the_existential_container"></p>
+<p>存在容器内的前三个字是留给valueBuffer的。小类型，比如我们的<code>Point</code>类型只需要两个字，刚好能放进valueBuffer中。</p>
+<p><img src="/images/the_existential_container_less_words.png" alt="the_existential_container_less_words"></p>
+<p>而<code>Line</code>类型需要四个字，该把它放在哪呢？在这种情况下，Swift会在堆上分配内存，把值存入堆中，并将这块内存的地址指针存储在存在容器中。</p>
+<p><img src="/images/the_existential_container_large_words.png" alt="the_existential_container_large_words"></p>
+<p>现在 你看到了<code>Point</code>和<code>Line</code>之间的不同点，因此，存在容器无论如何得管理这个不同点，那么该如何实现呢？</p>
+<p>嗯，答案是，还是基于表的机制，在这个示例中，我们叫它 值证明表(Value Witness Table)。值证明表会管理值的有效期。</p>
+<p>在程序中，每种类型都有一张表。现在，通过观察局部变量的有效期来看下这个表是如何运作的。</p>
+<p>在协议类型的局部变量有效期的开始，Swift 在那个表内部调用了分配函数。在这个函数中，因为这个例子有一个<code>Line</code>值证明表，我们将在堆上分配内存，并给该内存存一个指针，存在容器的valueBuffer内。</p>
+<p><img src="/images/allocation_of_vwt.png" alt="allocation_of_vwt"></p>
+<p>下一步 Swift要将初始化局部变量的原始值复制到存在容器中，我们在这里有一个<code>Point</code>，所以值证明表的复制条目会做出正确的判断并把它在堆中分配的值复制到valueBuffer中。如果是<code>Line</code>则将值复制到valueBuffer存储的指针对应的堆内存上。</p>
+<p><img src="/images/copy_of_vwt.png" alt="copy_of_vwt"></p>
+<p>我们现在是在局部变量有效期的最后阶段，Swift会调用值证明表的 <code>destruct</code> 条目，这将递减可能包含在类型中的值的引用计数。</p>
+<p><img src="/images/destruct_of_vwt.png" alt="destruct_of_vwt"></p>
+<p>在最后，Swift会调用表中的<code>deallocate</code>函数，这将释放在堆上为值分配的内存。</p>
+<p><img src="/images/deallocate_of_vwt.png" alt="deallocate_of_vwt"></p>
+<p>那么，我们已经看到了 Swift 处理不同种类的值的一般性机制。但无论如何它仍需要进入这些表，对吧？</p>
+<p>嗯，答案很明显,在存在容器(Existential Container)中含有对值证明表(Value Witness Table)的引用。</p>
+<p><img src="/images/vwt_reference_in_existential_container.png" alt="vwt_reference_in_existential_container"></p>
+<p>如何进入协议证明表(Protocol Witness Table)呢？它是在存在容器中进行引用的。</p>
+<p><img src="/images/pwt_reference_in_existential_container.png" alt="pwt_reference_in_existential_container"></p>
+<p>我们已经了解了 Swift 管理协议类型的机制，现在我们来看个例子，看看运行中的存在容器。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Protocol Types </span></span><br><span class="line"><span class="hljs-comment">// The Existential Container in action </span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">drawACopy</span><span class="hljs-params">(local : Drawable)</span></span> &#123; </span><br><span class="line">    local.draw() </span><br><span class="line">&#125; </span><br><span class="line"><span class="hljs-keyword">let</span> val : <span class="hljs-type">Drawable</span> = <span class="hljs-type">Point</span>() </span><br><span class="line">drawACopy(val)</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，我们有一个函数，把协议类型参数当做局部参数，并在局部参数上执行<code>draw</code>方法。 程序会创建一个<code>Drawable</code>的局部变量，并用<code>Point</code>类型对其进行初始化。然后把这个局部变量作为参数传给一个<code>drawACopy</code>函数调用。</p>
+<p>为了显示Swift编译器为我们生成的代码，在这个例子中，我将使用Swift作为伪代码注释。</p>
+<p>那么，对于存在容器(Existential Container)而言，下面这个结构体存储了<code>valueBuffer</code>的三个字，还有一个值证明表(VWT)和协议证明表(PWT)的引用。</p>
+<p><img src="/images/struct_of_existential_container_drawable.png" alt="struct_of_existential_container_drawable"></p>
+<p>当drawACopy函数调用执行时，它会接收实参并把它传给函数。在生成的代码中我们看到，Swift 把存在容器作为实参传给了函数，当函数开始执行时，函数为那个形参创建了一个局部变量，并给它赋了一个实参。</p>
+<p>在所生成的代码中，Swift将在栈上分配一个存在容器。</p>
+<p><img src="/images/exist_cont_drawable_pass_to_function.png" alt="exist_cont_drawable_pass_to_function"></p>
+<p>然后，它将从实参存在容器中读取值证明表和协议证明表，并在局部实参容器中对字段进行初始化。</p>
+<p><img src="/images/acess_pwt_and_vwt_from_exist_cont.png" alt="acess_pwt_and_vwt_from_exist_cont"></p>
+<p>下一步，它将调用值证明函数分配<code>valueBuffer</code>，如果必要的话还会复制值。在这个例子中，我们传了一个<code>Point</code>，所以就不需要任何动态堆式分配了，这个函数只是从实参中把值复制到局部存在容器的<code>valueBuffer</code>中。然而，如果我们传一个<code>Line</code>，这个函数将会分配堆内存，并在堆中复制值。</p>
+<p><img src="/images/allocate_buffer_and_copy_value.png" alt="allocate_buffer_and_copy_value"></p>
+<p>下一步执行<code>draw</code>方法，Swift 会从存在容器字段中查询协议证明表(PWT)，在那个表的固定偏移中查询<code>draw</code>方法，并跳到那个实现。这里还有另一个值证明(VWT)调用，就是<code>projectBuffer</code>。<code>draw</code>方法把值的地址当成了它的输入。如果这里正好能放进<code>valueBuffer</code>的小值，返回的地址为存在容器的开始，若我们有一个大值不适合放进<code>valueBuffer</code>，那个地址就是在堆上分配的内存的开始。</p>
+<p>然后<code>draw</code>方法执行完毕。</p>
+<p><img src="/images/search_in_pwt_and_project_buffer.png" alt="search_in_pwt_and_project_buffer"></p>
+<p>现在，程序执行到函数的末端，也就是说为形参创建的局部变量超出了适用范围，所以Swift调用值证明函数来<code>destruct</code>这个局部变量，如果值还有引用的话，这将递减引用计数，并且如果分配了<code>valueBuffer</code>，同样会释放缓冲区。</p>
+<p>函数执行完毕，移除了栈，同时也移除了在堆栈上创建的局部存在容器。</p>
+<p>一个简单的调用实际做了这么多事情。这些代价都是花在需要动态判断具体struct的信息和跳转到对应的方法上的。</p>
+<p>这项工作是使结合的值类型,如结构体<code>Point</code>和结构体<code>Line</code>还有协议获得动态行为、动态多态性，我们可以存储一条线和一个点在<code>Drawable</code>的协议类型的数组中。如果你需要这个多态性，一切都值得你付出。</p>
+<h3 id="Protocol-Type-Stored-Properties"><a href="#Protocol-Type-Stored-Properties" class="headerlink" title="Protocol Type Stored Properties"></a>Protocol Type Stored Properties</h3><p>我们知道，Swift中Class的实例和属性都存储在堆区，Struct实例在栈区，如果包含指针属性则存储在堆区，Protocol Type如何存储属性？Small Number通过Existential Container内联实现，大数存在堆区。如何处理Copy呢？</p>
+<p><img src="/images/copy_mechanism_in_big_number_struct.png" alt="copy_mechanism_in_big_number_struct"></p>
+<p><img src="/images/expensive_copies_of_large_values.png" alt="expensive_copies_of_large_values"></p>
+<p>所以当出现大数的struct值时，会将新的Exsitential Container的<code>valueBuffer</code>指向同一个value即创建指针引用，但是如果要改变值怎么办?我们知道Struct值的修改和Class不同，Copy是不应该影响原实例的值的。</p>
+<p>这里直接使用引用语义会引发非计划的状态共享问题。<br><img src="/images/references_fit_in_the_value_buffer.png" alt="references_fit_in_the_value_buffer"></p>
+<p>这里用到了一个技术叫做<code>Indirect Storage With Copy-On-Write</code>，即优先使用内存指针。通过提高内存指针的使用，来降低堆区内存的初始化。降低内存消耗。在需要修改值的时候，会先检测引用计数检测，如果有大于1的引用计数，则开辟新内存，创建新的实例。在对内容进行变更的时候，会开启一块新的内存，伪代码如下：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LineStorage</span> </span>&#123; <span class="hljs-keyword">var</span> x1, y1, x2, y2:<span class="hljs-type">Double</span> &#125;</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Line</span> :<span class="hljs-title">Drawable</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> storage: <span class="hljs-type">LineStorage</span></span><br><span class="line">    </span><br><span class="line">    <span class="hljs-keyword">init</span>() &#123; </span><br><span class="line">        storage = <span class="hljs-type">LineStorage</span>(<span class="hljs-type">Point</span>(), <span class="hljs-type">Point</span>()) </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-keyword">mutating</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> !isUniquelyReferencedNonObjc(&amp;storage) &#123; <span class="hljs-comment">//如何存在多份引用，则开启新内存，否则直接修改</span></span><br><span class="line">            storage = <span class="hljs-type">LineStorage</span>(storage)</span><br><span class="line">        &#125;</span><br><span class="line">        storage.start = ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/copy_using_indirect_storage.png" alt="copy_using_indirect_storage"></p>
+<h3 id="Protocol-Type-多态总结"><a href="#Protocol-Type-多态总结" class="headerlink" title="Protocol Type 多态总结"></a>Protocol Type 多态总结</h3><ul>
+<li><p>支持Protocol Type的动态多态（Dynamic Polymorphism）行为。</p>
+</li>
+<li><p>通过使用Witness Table和Existential Container来实现。</p>
+</li>
+<li><p>对于大数的拷贝可以通过Indirect Storage间接存储来进行优化。</p>
+</li>
+</ul>
+<p>说到动态多态Dynamic Polymorphism，我们就要问了，什么是静态多态Static Polymorphism，看看下面示例：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Drawing a copy</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">Drawable</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">drawACopy</span><span class="hljs-params">(local: Drawable)</span></span> &#123;</span><br><span class="line">    local.draw()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> line = <span class="hljs-type">Line</span>()</span><br><span class="line">drawACopy(line)</span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"><span class="hljs-keyword">let</span> point = <span class="hljs-type">Point</span>()</span><br><span class="line">drawACopy(point)</span><br></pre></td></tr></table></figure>
+<p>这种情况我们就可以用到泛型Generic code来实现，进行进一步优化。</p>
+<h2 id="Generic"><a href="#Generic" class="headerlink" title="Generic"></a>Generic</h2><p>我们接下来会讨论泛型属性的存储方式和泛型方法是如何分派的。泛型和Protocol Type的区别在于：</p>
+<ul>
+<li>泛型支持的是静态多态。</li>
+<li>每个调用上下文只有一种类型。查看下面的示例，foo和bar方法是同一种类型。</li>
+<li>在调用链中会通过类型降级进行类型取代。</li>
+</ul>
+<p>对于以下示例：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">foo</span>&lt;T: Drawable&gt;<span class="hljs-params">(local: T)</span></span> &#123;</span><br><span class="line">    bar(local)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">bar</span>&lt;T: Drawable&gt;<span class="hljs-params">(local: T)</span></span> &#123; … &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> point = <span class="hljs-type">Point</span>()</span><br><span class="line">foo(point)</span><br></pre></td></tr></table></figure>
+<p>分析方法foo和bar的调用过程：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">foo(point) --&gt; foo&lt;<span class="hljs-type">T</span> = <span class="hljs-type">Point</span>&gt;(point)   <span class="hljs-comment">//在方法执行时，Swift将泛型T绑定为调用方使用的具体类型，这里为Point</span></span><br><span class="line">bar(local) --&gt; bar&lt;<span class="hljs-type">T</span> = <span class="hljs-type">Point</span>&gt;(local) <span class="hljs-comment">//在调用内部bar方法时，会使用foo已经绑定的变量类型Point，可以看到，泛型T在这里已经被降级，通过类型Point进行取代</span></span><br></pre></td></tr></table></figure>
+<p>泛型方法调用的具体实现为：</p>
+<ul>
+<li>同一种类型的任何实例，都共享同样的实现，即使用同一个Protocol Witness Table。</li>
+<li>使用Protocol/Value Witness Table。</li>
+<li>每个调用上下文只有一种类型：这里没有使用Existential Container(当会在栈上分配<code>valueBuffer</code>存储值)，而是将Protocol/Value Witness Table作为调用方的额外参数进行传递。</li>
+<li>变量初始化和方法调用，都使用传入的VWT和PWT来执行。</li>
+</ul>
+<p>看到这里，我们并不觉得泛型比Protocol Type有什么更快的特性，泛型如何更快呢?静态多态前提下可以进行进一步的优化，称为特定泛型优化。</p>
+<p>泛型特化</p>
+<ul>
+<li>静态多态：在调用栈中只有一种类型。 Swift使用只有一种类型的特点，来进行类型降级取代。</li>
+<li>类型降级后，产生特定类型的方法。</li>
+<li>为泛型的每个类型创造对应的方法。这时候你可能会问，那每一种类型都产生一个新的方法，会生成更多的代码？</li>
+<li>静态多态下进行特定优化 specialization 。 因为是静态多态。所以可以进行很强大的优化，比如进行内联实现，并且通过获取上下文来进行更进一步的优化。从而降低方法数量。优化后可以更精确和具体。</li>
+</ul>
+<p>例如：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">min</span>&lt;T: Comparable&gt;<span class="hljs-params">(x: T, y: T)</span></span> -&gt; <span class="hljs-type">T</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> y &lt; x ? y : x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从普通的泛型展开如下，因为要支持所有类型的min方法，所以需要对泛型类型进行计算，包括初始化地址、内存分配、生命周期管理等。除了对value的操作，还要对方法进行操作。这是一个非常复杂庞大的工程。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">min</span>&lt;T:Comparable&gt;<span class="hljs-params">(x: T, y: T, FTable: FunctionTable)</span></span> -&gt; <span class="hljs-type">T</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> xCopy = <span class="hljs-type">FTable</span>.copy(x)</span><br><span class="line">  <span class="hljs-keyword">let</span> yCopy = <span class="hljs-type">FTable</span>.copy(y)</span><br><span class="line">  <span class="hljs-keyword">let</span> m = <span class="hljs-type">FTable</span>.lessThan(yCopy， xCopy) ? y :x</span><br><span class="line">  <span class="hljs-type">FTable</span>.release(x)</span><br><span class="line">  <span class="hljs-type">FTable</span>.release(y)</span><br><span class="line">  <span class="hljs-keyword">return</span> m</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在确定入参类型时，比如Int，编译器可以通过泛型特化，进行类型取代（Type Substitute），优化为：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">min</span>&lt;Int&gt;<span class="hljs-params">(x: Int, y: Int)</span></span> -&gt; <span class="hljs-type">Int</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> y &lt; x ? y :x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>泛型特化specilization是何时发生的?</p>
+<p>在使用特定优化时，调用方需要进行类型推断，这里需要知晓类型的上下文，例如类型的定义和内部方法实现。如果调用方和类型是单独编译的，就无法在调用方推断类型的内部实行，就无法使用特定优化，保证这些代码一起进行编译，这里就用到了whole module optimization。而whole module optimization是对于调用方和被调用方的方法在不同文件时，对其进行泛型特化优化的前提。</p>
+<p>泛型进一步优化<br>特定泛型的进一步优化：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Pair</span>&lt;<span class="hljs-title">T</span>: <span class="hljs-title">Drawable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">init</span>(<span class="hljs-number">_</span> f: <span class="hljs-type">T</span>， <span class="hljs-number">_</span> s: <span class="hljs-type">T</span>) &#123;</span><br><span class="line">        first = f</span><br><span class="line">        second = s</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">var</span> first: <span class="hljs-type">T</span></span><br><span class="line">    <span class="hljs-keyword">var</span> second: <span class="hljs-type">T</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> pairOfLines = <span class="hljs-type">Pair</span>(<span class="hljs-type">Line</span>(), <span class="hljs-type">Line</span>())</span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"><span class="hljs-keyword">let</span> pairOfPoint = <span class="hljs-type">Pair</span>(<span class="hljs-type">Point</span>(), <span class="hljs-type">Point</span>())</span><br></pre></td></tr></table></figure>
+<p>在用到多种泛型，且确定泛型类型不会在运行时修改时，就可以对成对泛型的使用进行进一步优化。</p>
+<p>优化的方式是将泛型的内存分配由指针指定，变为内存内联，不再有额外的堆初始化消耗。请注意，因为进行了存储内联，已经确定了泛型特定类型的内存分布，泛型的内存内联不能存储不同类型。所以再次强调此种优化只适用于在运行时不会修改泛型类型，即不能同时支持一个方法中包含<code>Line</code>和<code>Point</code>两种类型。</p>
+<p><img src="/images/generic_stored_properties_inline.png" alt="generic_stored_properties_inline"></p>
+<h2 id="Summary-1"><a href="#Summary-1" class="headerlink" title="Summary"></a>Summary</h2><p><img src="/images/specialized_generices_struct_type.png" alt="specialized_generices_struct_type"></p>
+<p><img src="/images/specialized_generices_class_type.png" alt="specialized_generices_class_type"></p>
+<p><img src="/images/specialized_generices_small_value.png" alt="specialized_generices_small_value"></p>
+<p><img src="/images/specialized_generices_large_value.png" alt="specialized_generices_large_value"></p>
+<p><img src="/images/specialized_generices_summary.png" alt="specialized_generices_summary"></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/16/using-collections-effectively/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Using Collections Effectively</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/04/06/swift-method-dispathch-mechanism/">
+                <span class="level-item">Swift的派发机制</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Understanding Swift Performance" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 Phillip&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("en");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Entradas',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categorias',
+                TAGS: 'Etiquetas',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
