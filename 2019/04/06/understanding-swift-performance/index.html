@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
 <title>Understanding Swift Performance - Phillip的技术博客</title>
@@ -13,7 +13,7 @@
 <meta property="og:url" content="http://yoursite.com/2019/04/06/understanding-swift-performance/index.html">
 <meta property="og:site_name" content="Phillip的技术博客">
 <meta property="og:description" content="理解 Swift 的性能，首先要搞清楚 Swift 的数据结构，组件关系和它们的内在实现，从而通过选择最合适的抽象机制来提升性能。 当你在创建一个抽象并选择一个抽象机制时，你应该问问自己  我的实例时分配给堆栈还是堆？  当我传递这个实例时，我要产生多少开销？ 当我在这个实例中调用方法时，是静态还是动态发送?   当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们">
-<meta property="og:locale" content="default">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="og:updated_time" content="2019-05-24T05:48:18.723Z">
 <meta name="twitter:card" content="summary">
@@ -126,7 +126,7 @@
                 
                 
                 
-                <a class="navbar-item search" title="Search" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    an hour read (About 7773 words)
+                    1 小时 读完 (大约 7773 个字)
                 </span>
                 
                 
@@ -375,16 +375,16 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/16/using-collections-effectively/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/06/swift-method-dispathch-mechanism/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Using Collections Effectively</span>
+                <span class="level-item">Swift的派发机制</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/04/06/swift-method-dispathch-mechanism/">
-                <span class="level-item">Swift的派发机制</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/04/03/ios-gcd-understanding/">
+                <span class="level-item">iOS 多线程的使用与总结</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -422,7 +422,7 @@
 </footer>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
-<script>moment.locale("en");</script>
+<script>moment.locale("zh-CN");</script>
 
 
     
@@ -488,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="Back to Top" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="searchbox ins-search">
     <div class="searchbox-container ins-search-container">
         <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
             <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
         </div>
         <div class="searchbox-result-wrapper ins-section-wrapper">
@@ -534,11 +534,11 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Entradas',
-                PAGES: 'Pages',
-                CATEGORIES: 'Categorias',
-                TAGS: 'Etiquetas',
-                UNTITLED: '(Untitled)',
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
             },
             CONTENT_URL: '/content.json',
         };

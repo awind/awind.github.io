@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
 <title>iOS 多线程的使用与总结 - Phillip的技术博客</title>
@@ -13,7 +13,7 @@
 <meta property="og:url" content="http://yoursite.com/2019/04/03/ios-gcd-understanding/index.html">
 <meta property="og:site_name" content="Phillip的技术博客">
 <meta property="og:description" content="Grand Central Dispatch(GCD) 是用来管理并发操作的底层API。  允许将一个程序切分为多个单一任务，然后提交到工作队列中并发或者串行地执行 为多核的并行运算提出了解决方案，自动合理的利用CPU内核（比如双核，四核） 自动的管理线程的生命周期（创建线程、调度任务、销毁线程），完全不需要我们管理，只需要告诉它任务是什么就行 配合Block，使得使用起来更加方便灵活  相对于线">
-<meta property="og:locale" content="default">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="og:updated_time" content="2019-05-24T06:00:00.028Z">
 <meta name="twitter:card" content="summary">
@@ -126,7 +126,7 @@
                 
                 
                 
-                <a class="navbar-item search" title="Search" href="javascript:;">
+                <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                 
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    an hour read (About 7444 words)
+                    1 小时 读完 (大约 7444 个字)
                 </span>
                 
                 
@@ -462,9 +462,9 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/06/swift-method-dispathch-mechanism/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/06/understanding-swift-performance/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Swift的派发机制</span>
+                <span class="level-item">Understanding Swift Performance</span>
             </a>
         </div>
         
@@ -509,7 +509,7 @@
 </footer>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
-<script>moment.locale("en");</script>
+<script>moment.locale("zh-CN");</script>
 
 
     
@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
 
-<a id="back-to-top" title="Back to Top" href="javascript:;">
+<a id="back-to-top" title="回到顶端" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
@@ -609,7 +609,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="searchbox ins-search">
     <div class="searchbox-container ins-search-container">
         <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
             <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
         </div>
         <div class="searchbox-result-wrapper ins-section-wrapper">
@@ -621,11 +621,11 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Entradas',
-                PAGES: 'Pages',
-                CATEGORIES: 'Categorias',
-                TAGS: 'Etiquetas',
-                UNTITLED: '(Untitled)',
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
             },
             CONTENT_URL: '/content.json',
         };
