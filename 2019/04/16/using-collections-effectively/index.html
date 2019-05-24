@@ -15,7 +15,7 @@
 <meta property="og:description" content="Swift 提供了Array, Set, Dictionary 三种基本的集合类型用来存储数据。Array是有序数据的集合，Set是无序无重复数据的集合，Dictionary是无序的键值对的集合。 集合非常普遍并且共享非常多的常见特性和算法，因为在Swift中它们都遵守一个通用协议Collection。在Swift中，集合就是序列，其中的元素可以以非破坏性的方式多次遍历，并且其元素可以通过下标访问">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-05-24T06:00:21.698Z">
+<meta property="og:updated_time" content="2019-05-24T08:37:12.053Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Using Collections Effectively">
 <meta name="twitter:description" content="Swift 提供了Array, Set, Dictionary 三种基本的集合类型用来存储数据。Array是有序数据的集合，Set是无序无重复数据的集合，Dictionary是无序的键值对的集合。 集合非常普遍并且共享非常多的常见特性和算法，因为在Swift中它们都遵守一个通用协议Collection。在Swift中，集合就是序列，其中的元素可以以非破坏性的方式多次遍历，并且其元素可以通过下标访问">
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3079 个字)
+                    21 分钟 读完 (大约 3080 个字)
                 </span>
                 
                 
@@ -171,6 +171,7 @@
 <p>集合非常普遍并且共享非常多的常见特性和算法，因为在Swift中它们都遵守一个通用协议<code>Collection</code>。在Swift中，集合就是序列，其中的元素可以以非破坏性的方式多次遍历，并且其元素可以通过下标访问。</p>
 <p><img src="/images/collection_subscript_index.png" alt="collection_subscript_index"></p>
 <p>这可能是一个在连续内存中定义的数组，哈希表，红黑树，链表或者你可以想象的任何其他东西。作为集合它们都支持起始索引（<code>startIndex</code>）和结束索引（<code>endIndex</code>），可以用来访问集合的初始元素和用来标识集合的结束。集合支持从其<code>startIndex</code>到<code>endIndex</code>直接遍历元素，同时也支持使用下标（<code>subscript[index]</code>）来获取集合中的元素。</p>
+<a id="more"></a>
 <h2 id="Collection-集合"><a href="#Collection-集合" class="headerlink" title="Collection 集合"></a>Collection 集合</h2><h3 id="集合的定义"><a href="#集合的定义" class="headerlink" title="集合的定义"></a>集合的定义</h3><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">Collection</span> : <span class="hljs-title">Sequence</span> </span>&#123; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 集合中元素的类型</span></span><br><span class="line">    <span class="hljs-keyword">associatedtype</span> <span class="hljs-type">Element</span> </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 索引类型, 需要遵守Comparable协议</span></span><br><span class="line">    <span class="hljs-keyword">associatedtype</span> <span class="hljs-type">Index</span> : <span class="hljs-type">Comparable</span> </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 遍历时所用到的方法了, 即通过索引查询到对应的元素</span></span><br><span class="line">    <span class="hljs-keyword">subscript</span>(position: <span class="hljs-type">Index</span>) -&gt; <span class="hljs-type">Element</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 开始索引</span></span><br><span class="line">    <span class="hljs-keyword">var</span> startIndex: <span class="hljs-type">Index</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 结束索引</span></span><br><span class="line">    <span class="hljs-keyword">var</span> endIndex: <span class="hljs-type">Index</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 通过一个索引, 获取它后面的索引</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">index</span><span class="hljs-params">(after i: Index)</span></span> -&gt; <span class="hljs-type">Index</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里用到了<code>associatedtype</code>关键字, 在Swift协议定义的时候, 会看到使用这个关键字, 你可以认为这是一个占位符, 具体的类型直到被用到的时候才会确定. 但是有时候我们需要规定这个占位符要有一些能力, 比如这里的<code>Index</code>, 他就需要遵守<code>Comparable</code>协议.</p>
 <h3 id="集合协议的扩展"><a href="#集合协议的扩展" class="headerlink" title="集合协议的扩展"></a>集合协议的扩展</h3><p><img src="/images/collection_protocol_extensions.png" alt="collection_protocol_extensions"></p>

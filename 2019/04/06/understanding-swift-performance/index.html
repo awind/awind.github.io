@@ -15,7 +15,7 @@
 <meta property="og:description" content="理解 Swift 的性能，首先要搞清楚 Swift 的数据结构，组件关系和它们的内在实现，从而通过选择最合适的抽象机制来提升性能。 当你在创建一个抽象并选择一个抽象机制时，你应该问问自己  我的实例时分配给堆栈还是堆？  当我传递这个实例时，我要产生多少开销？ 当我在这个实例中调用方法时，是静态还是动态发送?   当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-05-24T05:48:18.723Z">
+<meta property="og:updated_time" content="2019-05-24T08:37:04.639Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Understanding Swift Performance">
 <meta name="twitter:description" content="理解 Swift 的性能，首先要搞清楚 Swift 的数据结构，组件关系和它们的内在实现，从而通过选择最合适的抽象机制来提升性能。 当你在创建一个抽象并选择一个抽象机制时，你应该问问自己  我的实例时分配给堆栈还是堆？  当我传递这个实例时，我要产生多少开销？ 当我在这个实例中调用方法时，是静态还是动态发送?   当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们">
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7773 个字)
+                    1 小时 读完 (大约 7774 个字)
                 </span>
                 
                 
@@ -177,6 +177,7 @@
 <p><img src="/images/dimensions_of_performance.png" alt="dimensions_of_performance"></p>
 <p>当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们需要学习何时以及如何在这些不同维度之间切换来获得更好的性能。</p>
 <p>下面我们将从不同维度来评估不同的抽象机制选项。</p>
+<a id="more"></a>
 <h2 id="Allocation-内存分配"><a href="#Allocation-内存分配" class="headerlink" title="Allocation 内存分配"></a>Allocation 内存分配</h2><p>Swift 会替你自动分配和回收内存的分配。</p>
 <p>有些内存会分配给栈(Stack)，有些则会分配到堆(Heap)上。</p>
 <p>栈时一种非常简单的数据结构，你可以将元素压到栈底或者弹出栈底。因为你只能添加或移出栈底，所以只需要通过保存的栈底指针就可以实现栈的入栈和出栈。 这意味着当调用函数时, 只需要通过递减栈底指针数值来获取空间。当函数执行完毕后，同样只需要把栈底指针增加至调用函数之前的的数值即可达到释放内存的目的。因此栈的分配速度非常快，它其实仅仅是分配一个整数的消耗。</p>

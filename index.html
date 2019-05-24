@@ -151,7 +151,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 321 个字)
+                    2 分钟 读完 (大约 322 个字)
                 </span>
                 
                 
@@ -168,11 +168,16 @@
 <p>如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。</p>
 <p>您可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p>
 <p>示例：<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)</span><br><span class="line">输出：7 -&gt; 0 -&gt; 8</span><br><span class="line">原因：342 + 465 = 807</span><br></pre></td></tr></table></figure></p>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>这题做起来并不难，只是有点麻烦，有一些需要注意的地方。<br>使用一个<code>dummyHead</code>用来存储头结点，判断<code>l1</code>和<code>l2</code>为空的情况，以及最后一位的进位的case。</p>
-<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="hljs-comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="hljs-comment"> *     int val;</span></span><br><span class="line"><span class="hljs-comment"> *     ListNode next;</span></span><br><span class="line"><span class="hljs-comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="hljs-comment"> * &#125;</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> ListNode <span class="hljs-title">addTwoNumbers</span><span class="hljs-params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        ListNode temp = <span class="hljs-keyword">new</span> ListNode(<span class="hljs-number">0</span>);</span><br><span class="line">        ListNode cur = temp;</span><br><span class="line">        ListNode left = l1;</span><br><span class="line">        ListNode right = l2;</span><br><span class="line">        <span class="hljs-keyword">int</span> comp = <span class="hljs-number">0</span>;</span><br><span class="line">        <span class="hljs-keyword">while</span>(left != <span class="hljs-keyword">null</span> | right != <span class="hljs-keyword">null</span>) &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (left == <span class="hljs-keyword">null</span>) &#123;</span><br><span class="line">                cur.next = <span class="hljs-keyword">new</span> ListNode((right.val + comp) % <span class="hljs-number">10</span>);</span><br><span class="line">                cur = cur.next;</span><br><span class="line">                comp = (right.val + comp) / <span class="hljs-number">10</span>;</span><br><span class="line">                right = right.next;</span><br><span class="line">                <span class="hljs-keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">if</span> (right == <span class="hljs-keyword">null</span>) &#123;</span><br><span class="line">                cur.next = <span class="hljs-keyword">new</span> ListNode((left.val + comp) % <span class="hljs-number">10</span>);</span><br><span class="line">                cur = cur.next;</span><br><span class="line">                comp = (left.val + comp) / <span class="hljs-number">10</span>;</span><br><span class="line">                left = left.next;</span><br><span class="line">                <span class="hljs-keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cur.next = <span class="hljs-keyword">new</span> ListNode((left.val + right.val + comp) % <span class="hljs-number">10</span>);</span><br><span class="line">            cur = cur.next;</span><br><span class="line">            comp =  (left.val + right.val + comp) / <span class="hljs-number">10</span>;</span><br><span class="line">            left = left.next;</span><br><span class="line">            right = right.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">if</span> (comp &gt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">            cur.next = <span class="hljs-keyword">new</span> ListNode(comp);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> temp.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/05/24/add-two-numbers/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -201,7 +206,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 分钟 读完 (大约 221 个字)
+                    1 分钟 读完 (大约 222 个字)
                 </span>
                 
                 
@@ -220,10 +225,16 @@
 <p>你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。</p>
 <p>示例:</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">给定 nums = [2, 7, 11, 15], target = 9</span><br><span class="line"></span><br><span class="line">因为 nums[0] + nums[1] = 2 + 7 = 9</span><br><span class="line">所以返回 [0, 1]</span><br></pre></td></tr></table></figure>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>将数组中的值作为Key, 索引值作为Value，存入HashMap中，遍历时查找HashMap中是否存在所需要的差值。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span>[] twoSum(<span class="hljs-keyword">int</span>[] nums, <span class="hljs-keyword">int</span> target) &#123;</span><br><span class="line">         Map&lt;Integer, Integer&gt; map = <span class="hljs-keyword">new</span> HashMap&lt;Integer, Integer&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            map.put(nums[i], i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="hljs-keyword">int</span> comp = target - nums[i];</span><br><span class="line">            <span class="hljs-keyword">if</span> (map.containsKey(comp) &amp;&amp; map.get(comp) != i) &#123;</span><br><span class="line">                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[]&#123;i, map.get(comp)&#125;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[]&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/04/17/two-sum/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -252,7 +263,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3079 个字)
+                    21 分钟 读完 (大约 3080 个字)
                 </span>
                 
                 
@@ -269,117 +280,16 @@
 <p>集合非常普遍并且共享非常多的常见特性和算法，因为在Swift中它们都遵守一个通用协议<code>Collection</code>。在Swift中，集合就是序列，其中的元素可以以非破坏性的方式多次遍历，并且其元素可以通过下标访问。</p>
 <p><img src="/images/collection_subscript_index.png" alt="collection_subscript_index"></p>
 <p>这可能是一个在连续内存中定义的数组，哈希表，红黑树，链表或者你可以想象的任何其他东西。作为集合它们都支持起始索引（<code>startIndex</code>）和结束索引（<code>endIndex</code>），可以用来访问集合的初始元素和用来标识集合的结束。集合支持从其<code>startIndex</code>到<code>endIndex</code>直接遍历元素，同时也支持使用下标（<code>subscript[index]</code>）来获取集合中的元素。</p>
-<h2 id="Collection-集合"><a href="#Collection-集合" class="headerlink" title="Collection 集合"></a>Collection 集合</h2><h3 id="集合的定义"><a href="#集合的定义" class="headerlink" title="集合的定义"></a>集合的定义</h3><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">Collection</span> : <span class="hljs-title">Sequence</span> </span>&#123; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 集合中元素的类型</span></span><br><span class="line">    <span class="hljs-keyword">associatedtype</span> <span class="hljs-type">Element</span> </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 索引类型, 需要遵守Comparable协议</span></span><br><span class="line">    <span class="hljs-keyword">associatedtype</span> <span class="hljs-type">Index</span> : <span class="hljs-type">Comparable</span> </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 遍历时所用到的方法了, 即通过索引查询到对应的元素</span></span><br><span class="line">    <span class="hljs-keyword">subscript</span>(position: <span class="hljs-type">Index</span>) -&gt; <span class="hljs-type">Element</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 开始索引</span></span><br><span class="line">    <span class="hljs-keyword">var</span> startIndex: <span class="hljs-type">Index</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 结束索引</span></span><br><span class="line">    <span class="hljs-keyword">var</span> endIndex: <span class="hljs-type">Index</span> &#123; <span class="hljs-keyword">get</span> &#125; </span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 通过一个索引, 获取它后面的索引</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">index</span><span class="hljs-params">(after i: Index)</span></span> -&gt; <span class="hljs-type">Index</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里用到了<code>associatedtype</code>关键字, 在Swift协议定义的时候, 会看到使用这个关键字, 你可以认为这是一个占位符, 具体的类型直到被用到的时候才会确定. 但是有时候我们需要规定这个占位符要有一些能力, 比如这里的<code>Index</code>, 他就需要遵守<code>Comparable</code>协议.</p>
-<h3 id="集合协议的扩展"><a href="#集合协议的扩展" class="headerlink" title="集合协议的扩展"></a>集合协议的扩展</h3><p><img src="/images/collection_protocol_extensions.png" alt="collection_protocol_extensions"></p>
-<p>通过遵守<code>Collection</code>协议，你可以访问集合中各种丰富的功能, 有一些我们常用的<code>first</code>, <code>last</code>，<code>isEmpty</code>,<code>count</code>等属性，以及<code>dropFirst</code>，<code>dropLast</code>,<code>reversed</code>，<code>split</code>等函数以及一些<code>map</code>，<code>filter</code>之类的高阶函数。</p>
-<p>我们也可以通过自定义一些协议扩展来实现更加强大的功能。</p>
-<p>如隔元素遍历的功能：</p>
-<p><img src="/images/collection_extension_every_other_element.png" alt="collection_extension_every_other_element"></p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">Collection</span> </span>&#123; <span class="hljs-comment">// 扩展集合协议  </span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">everyOther</span><span class="hljs-params">(<span class="hljs-number">_</span> body: <span class="hljs-params">(Element)</span></span></span> -&gt; <span class="hljs-type">Void</span>) &#123; </span><br><span class="line">        <span class="hljs-comment">// 获取首元素索引</span></span><br><span class="line">        <span class="hljs-keyword">let</span> start = <span class="hljs-keyword">self</span>.startIndex </span><br><span class="line">        <span class="hljs-comment">// 获取末尾元素索引</span></span><br><span class="line">        <span class="hljs-keyword">let</span> end = <span class="hljs-keyword">self</span>.endIndex </span><br><span class="line">        <span class="hljs-keyword">var</span> iter = start </span><br><span class="line">        <span class="hljs-comment">// 未走到末尾</span></span><br><span class="line">        <span class="hljs-keyword">while</span> iter != end &#123;</span><br><span class="line">            <span class="hljs-comment">// 执行外部的闭包 </span></span><br><span class="line">            body(<span class="hljs-keyword">self</span>[iter])</span><br><span class="line">            <span class="hljs-comment">// 获取当前元素的下一个索引</span></span><br><span class="line">            <span class="hljs-keyword">let</span> next = index(after: iter) </span><br><span class="line">            <span class="hljs-comment">// 检查索引是否走到末尾</span></span><br><span class="line">            <span class="hljs-keyword">if</span> next == end &#123; <span class="hljs-keyword">break</span> &#125; </span><br><span class="line">            <span class="hljs-comment">// 将当前索引指向next的下一个</span></span><br><span class="line">            iter = index(after: next) </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">(<span class="hljs-number">1</span>...<span class="hljs-number">10</span>).everyOther &#123; <span class="hljs-built_in">print</span>($<span class="hljs-number">0</span>) &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="集合的继承结构"><a href="#集合的继承结构" class="headerlink" title="集合的继承结构"></a>集合的继承结构</h3><p><img src="/images/collection_protocol_hierarchy.png" alt="collection_protocol_hierarchy"></p>
-<p>除了强大的Collection本身，Swift中还有其他很多继承自Collection的协议。</p>
-<ul>
-<li><code>BidirectionalCollection</code> 双向集合，可以向前访问元素</li>
-<li><code>RandomAccessCollection</code> 随机访问集合，提供了复杂度O(1)的访问方法，因为继承自<code>BidirectionalCollection</code>,也可以向前向后访问元素</li>
-<li><code>MutableCollection</code>  可变集合，提供了修改集合元素的能力</li>
-<li><code>RangeReplaceableCollection</code>  范围替换集合，可以通过指定范围替换元素</li>
-</ul>
-<h3 id="Indces-索引"><a href="#Indces-索引" class="headerlink" title="Indces 索引"></a>Indces 索引</h3><p>集合可以通过索引的方式来访问其中的元素，其中</p>
-<ul>
-<li>每个集合都有自己的索引</li>
-<li>索引必须满足<code>Comparable</code></li>
-<li>将索引作为不透明的类型(索引可能是正数，也可能是其他类型)</li>
-</ul>
-<h4 id="如何访问第一个元素"><a href="#如何访问第一个元素" class="headerlink" title="如何访问第一个元素"></a>如何访问第一个元素</h4><h5 id="通过下标进行直接访问"><a href="#通过下标进行直接访问" class="headerlink" title="通过下标进行直接访问"></a>通过下标进行直接访问</h5><p>使用<code>array[0]</code>访问第一个元素, 当然没有问题, 可是如果我们扩展开来, 如果给的集合不是数组, 而是一个set, 那么, 这样的方式就行不通了.</p>
-<h5 id="通过索引进行访问"><a href="#通过索引进行访问" class="headerlink" title="通过索引进行访问"></a>通过索引进行访问</h5><p>使用<code>set[set.startIndex]</code>进行访问, 这样就可以了。 这个方法普遍适用于其他集合类型，如<code>array[array.startIndex]</code></p>
-<p>但是, 你同样需要注意一些潜在的问题, 如需要判空, 需要判断越界, 诸如此类</p>
-<h5 id="first"><a href="#first" class="headerlink" title="first"></a>first</h5><p>我们可以使用<code>set.first</code>进行获取. 而且不用担心那些潜在的问题</p>
-<h4 id="如何访问集合的第二个元素"><a href="#如何访问集合的第二个元素" class="headerlink" title="如何访问集合的第二个元素"></a>如何访问<em>集合</em>的第二个元素</h4><p>我们可以通过向集合来添加一个新属性来实现</p>
-<p><img src="/images/collection_access_second_1.png" alt="collection_access_second_1"></p>
-<p><img src="/images/collection_access_second_startindex.png" alt="collection_access_second_startindex"></p>
-<p>显然我们不能通过这两种方式来进行获取，因为我们之前说过，Collection的索引类型并不一定是Int，而是一个遵守<code>Comparable</code>协议的类型。</p>
-<p><img src="/images/collection_access_second_element.png" alt="collection_access_second_element"></p>
-<h3 id="Slice-切片"><a href="#Slice-切片" class="headerlink" title="Slice 切片"></a>Slice 切片</h3><p>切片是仅描述集合一部分元素的类型，每个切片都有自己的起始和结束索引，并且切片与其原始集合分开存在。切片不占用额外的存储空间，只是引用原始集合，因此非常高效。当使用切片下标时，它将读出原始缓冲区中的数据，切片能这么做的原因是因为它与其原始集合共享同样的索引。</p>
-<p><img src="/images/collection_forming_slice.png" alt="collection_forming_slice"></p>
-<p>通过切片，我们可以更优雅的实现访问第二个元素的功能。 我们去掉首元素，然后再获取新得到的集合的第一个元素就可以实现了。</p>
-<p><img src="/images/collection_slice_find_the_second_element.png" alt="collection_slice_find_the_second_element"></p>
-<p>切片与源集合共享索引<br><img src="/images/collection_slice_share_indices.png" alt="collection_slice_share_indices"></p>
-<p>每个类型都可以自由定义自己的切片类型</p>
-<p><img src="/images/collection_slice_types.png" alt="collection_slice_types"></p>
-<h3 id="内存问题"><a href="#内存问题" class="headerlink" title="内存问题"></a>内存问题</h3><p>值得注意的是, 持有切片, 将使得即便将原来的集合置空, 内存也不会释放。切片是一个 原有集合 + 映射关系 的产物. 所以, 除非将切片也置空, 否则, 原有集合并不会被释放.</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">Array</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> firstHalf: <span class="hljs-type">ArraySlice</span>&lt;<span class="hljs-type">Element</span>&gt; &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>.<span class="hljs-built_in">dropLast</span>(<span class="hljs-keyword">self</span>.<span class="hljs-built_in">count</span> / <span class="hljs-number">2</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>]</span><br><span class="line"><span class="hljs-keyword">var</span> firstHalf = array.firstHalf <span class="hljs-comment">// [1, 2, 3, 4]</span></span><br><span class="line"><span class="hljs-comment">// 将数组设置为空</span></span><br><span class="line">array = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">print</span>(firstHalf.first!) <span class="hljs-comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> copy = <span class="hljs-type">Array</span>(firstHalf) <span class="hljs-comment">// [1, 2, 3, 4]</span></span><br><span class="line"><span class="hljs-comment">// 将切片置为空</span></span><br><span class="line">firstHalf = []</span><br><span class="line"><span class="hljs-built_in">print</span>(copy.first!) <span class="hljs-comment">// 1</span></span><br></pre></td></tr></table></figure>
-<p>在这里，只有将源数组array设置为空且将切片firstHalf也设置为空之后，底层的存储才会真正消失。</p>
-<p>过程如下</p>
-<p><img src="/images/collection_slide_copy_a_slice.png" alt="collection_slide_copy_a_slice"></p>
-<p>切片的工作方式有点像延迟拷贝，可以选择何时自己创建元素的副本，事实证明这种”懒”行为和延迟做某事的概念，在其他情况下也非常有用。</p>
-<p>一种情况是函数调用。</p>
-<h3 id="Lazy-Function"><a href="#Lazy-Function" class="headerlink" title="Lazy Function"></a>Lazy Function</h3><p>默认情况下，Swift中的函数是”Eager(急切)”的，也就是说它们接收了输入并按照要求返回输出。</p>
-<p><img src="/images/collection_eager_function.png" alt="collection_eager_function"></p>
-<p>经过这样的一套操作, 我们计算了4004个元素, 如果我们后面还有一些其他的操作, 更糟糕的是, 如果我们最终只是取取first, 这样, 前面生成的那些元素, 都成为了浪费.</p>
-<p><img src="/images/collection_lazy_functions.png" alt="collection_lazy_functions"></p>
-<p>我们可以通过<code>lazy</code>关键字来规避这样的浪费。可以看到, 使用<code>lazy</code>后, 刚才的遍历过程, 变成了组织一个新集合的过程,</p>
-<p><img src="/images/collection_lazy_functions_filter.png" alt="collection_lazy_functions_filter"></p>
-<p>只有在<code>first</code>进行计算的时候，才进行计算。</p>
-<p>使用<code>lazy</code>时如何避免重复计算的过程</p>
-<p><img src="/images/collection_lazy_function_avoid_multi_computation.png" alt="collection_lazy_function_avoid_multi_computation"></p>
-<p><code>lazy</code>的目的是只根据需要进行计算，但它避免的另一件事是创建中间存储。</p>
-<h4 id="何时使用-Lazy"><a href="#何时使用-Lazy" class="headerlink" title="何时使用 Lazy"></a>何时使用 Lazy</h4><ul>
-<li>链式计算</li>
-<li>只需要结果中的一部分</li>
-<li>没有其他副作用 No side effects</li>
-<li>避免跨越API边界时</li>
-</ul>
-<h3 id="MutableCollection"><a href="#MutableCollection" class="headerlink" title="MutableCollection"></a>MutableCollection</h3><p>当尝试修改集合时，使用了失效的索引：</p>
-<p><img src="/images/collection_mutating_array.png" alt="collection_mutating_array"></p>
-<p><img src="/images/collection_avoid_index_invalidation.png" alt="collection_avoid_index_invalidation"></p>
-<p><img src="/images/collection_reuse_invalid_dict_indices.png" alt="collection_reuse_invalid_dict_indices"></p>
-<p><img src="/images/collection_dict_up_to_date_indices.png" alt="collection_dict_up_to_date_indices"></p>
-<h4 id="如何避免"><a href="#如何避免" class="headerlink" title="如何避免"></a>如何避免</h4><ul>
-<li>在持有索引和切片时, 处理要谨慎</li>
-<li>集合发生改变时, 要更新索引后再使用</li>
-<li>在需要索引和切片的情况下才对其进行计算</li>
-</ul>
-<h3 id="多线程访问"><a href="#多线程访问" class="headerlink" title="多线程访问"></a>多线程访问</h3><p><img src="/images/collection_thread_unsafe_pratices.png" alt="collection_thread_unsafe_pratices"></p>
-<p><img src="/images/collection_avoid_concurrent_mutation.png" alt="collection_avoid_concurrent_mutation"></p>
-<h4 id="如何避免-1"><a href="#如何避免-1" class="headerlink" title="如何避免"></a>如何避免</h4><ul>
-<li>隔离数据使其只能被单个线程访问</li>
-<li>实现适当形式的互斥，如串行调度队列或锁</li>
-<li>使用Thread Sanitizer来检查</li>
-</ul>
-<h4 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h4><p>首选不可变集合来避免之前提到的问题</p>
-<ul>
-<li>如果可以避免，就不要使用可变集合</li>
-<li>可以使用切片和<code>lazy</code>操作符来模拟想要执行的改变</li>
-<li>当尝试修改不可变集合石，编译器会提示你</li>
-</ul>
-<p>如果可以, 尽量使用带<code>capacity</code>的初始化函数去初始化你的集合, 因为这样节省一些不必要的内存开销, 虽然这并不能节省多少, 但是想象你的项目中有成千上万个集合对象, 他们可以省出一个相当可观的内存数量.</p>
-<h2 id="Foundation-Collection"><a href="#Foundation-Collection" class="headerlink" title="Foundation Collection"></a>Foundation Collection</h2><p>引用类型的集合：</p>
-<p><img src="/images/collection_reference_type_collections.png" alt="collection_reference_type_collections"></p>
-<h3 id="值类型和引用类型"><a href="#值类型和引用类型" class="headerlink" title="值类型和引用类型"></a>值类型和引用类型</h3><p><img src="/images/collection_value_and_reference_type.png" alt="collection_value_and_reference_type"></p>
-<p><img src="/images/collection_value_and_reference_type_2.png" alt="collection_value_and_reference_type_2"></p>
-<p>对于值类型来说, 这样有什么好处呢? 因为在现代CPU在设计的时候, 采用了缓存机制, 可以快速的访问连续区域的地址. 而值类型的这种操作, 各个元素之间的内存是相连的, 而引用类型的则不是.</p>
-<p>在Swift中使用Foundation集合时，通过桥接的方式将Objective-C中的API以Swift原生的值类型。桥接使我们可以在两种不同的运行时表示之间进行转换。尽管已经对Swift和Objective-C之间的桥接进行了优化，但是两种语言之间桥接时总会产生一些开销。</p>
-<p><img src="/images/collection_how_bridging_works.png" alt="collection_how_bridging_works"></p>
-<p>当在语言之间桥接时，必须先建立新的对等的存储空间，然后需要逐个元素的在它们之间进行转换。当桥接发生在两种语言的边界时，称之为”Eager”桥接，当集合中元素也需要桥接时，集合本身将总是进行”Eager”桥接，这种情况最常出现在以字符串作为键的字典中。当集合桥接并不急切时，我们称之为’lazy’桥接。当集合元素的类型并不需要桥接时，就会发生这种情况，比如NSView，在这种情况下，桥接将会被推迟到首次使用该集合时。</p>
-<p><img src="/images/collection_bridging_examples.png" alt="collection_bridging_examples"></p>
-<p>发生桥接的地方和所需开销：</p>
-<p><img src="/images/collection_bridging_time.png" alt="collection_bridging_time"></p>
-<p><img src="/images/collection_bridging_happens.png" alt="collection_bridging_happens"></p>
-<p>这里的桥接发生在</p>
-<ul>
-<li><code>NSMutableAttributedString</code>取<code>string</code>上, return bridge.</li>
-<li>需要传入一个<code>NSString</code>, 参数类型桥接 param bridge</li>
-</ul>
-<p><img src="/images/collection_bridging_happens_2.png" alt="collection_bridging_happens_2"></p>
-<p>其中 “Brown” 这里也会有一个小的桥接，这里的”Brown”是一个Swift值类型的字符串，每当我们调用NSString的range(of:)时，实际上会把这个字符串桥接回NSString。</p>
-<p><img src="/images/collection_bridging_happens_final.png" alt="collection_bridging_happens_final"></p>
-<h3 id="建议-1"><a href="#建议-1" class="headerlink" title="建议"></a>建议</h3><p>什么时候应该使用Foundation Collection？</p>
-<p><img src="/images/collection_when_to_use_foundation_collection.png" alt="collection_when_to_use_foundation_collection"></p>
-<p>现在我们对Swift中强大的集合世界的探索已经接近尾声，希望你能够使用这种新视角来检视你现在使用集合的方式，寻找可以通过更有效地使用索引和切片来改进代码的地方，寻找可以通过惰性或者调整桥接方式而受益的地方，用ThreadSanitizer辅助审查可变状态。并通过应用今天讨论的所有概念在自己的App或者Playground中进一步锻炼你对集合的掌握.</p>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/04/16/using-collections-effectively/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -408,7 +318,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    19 分钟 读完 (大约 2842 个字)
+                    19 分钟 读完 (大约 2843 个字)
                 </span>
                 
                 
@@ -429,84 +339,16 @@
 <li>消息机制派发 Message Dispatch</li>
 </ul>
 <p>大多数语言都会支持一到两种，Java默认使用函数表派发，但你可以通过<code>final</code>修饰符修改成直接派发。 C++ 默认使用直接派发，但可以加上<code>virtual</code>修饰符来改成函数表派发。而 Objective-C 则总是使用消息机制派发，但允许开发者使用C直接派发来获取性能的提高。这样的方式非常好，但也给很多开发者带来了困扰。</p>
-<h2 id="1-派发方式"><a href="#1-派发方式" class="headerlink" title="1. 派发方式"></a>1. 派发方式</h2><p>程序派发的目的是为了告诉 CPU 需要被调用的函数在哪里，在我们深入 Swift 派发机制之前，先来了解一下这三种派发方式，以及每种方式在动态性和性能之间的取舍。</p>
-<h3 id="直接派发"><a href="#直接派发" class="headerlink" title="直接派发"></a>直接派发</h3><p>直接派发是最快的，由编译器来决定调用的函数，并且编译器还能够有很大的优化空间，例如函数内联等。直接派发也被称为静态调用。</p>
-<p>然而，对于编程来说直接调用也是最大的局限，而且因为缺乏动态性所有没办法支持继承。</p>
-<h3 id="函数表派发"><a href="#函数表派发" class="headerlink" title="函数表派发"></a>函数表派发</h3><p>函数表派发是编译型语言实现动态行为最常见的实现形式。函数表使用了一个数组来存储声明的每一个函数的指针。大部分语言把这个称为<code>virtual table</code>(虚函数表)， Swift 里称为 <code>witness table</code>.每一个类都会维护一个函数表，里面记录着类所有的函数。如果父类函数被override的话，表里面只会保存被override之后的函数。一个子类新添加的函数，都会被插入到这个数组的最后。运行时会根据这一个表去决定实际要被调用的函数。</p>
-<p>查表是一种简单，易实现，而且性能可预知的方式。然而，这种派发方式比起直接派发还是慢一点。从字节码角度来看，多了两次读和一次跳转，由此带来了性能的损耗。另一个慢的原因在于编译器可能会由于函数内执行的任务导致无法优化。</p>
-<p>函数表基于数组实现，缺点在于函数表无法拓展。子类会在虚函数表的最后插入新的函数，但没有位置可以让 extension 安全地插入函数。 </p>
-<h3 id="消息机制派发"><a href="#消息机制派发" class="headerlink" title="消息机制派发"></a>消息机制派发</h3><p>消息机制是调用函数最动态的方式。这种运作方式的关键在于开发者可以在运行时改变函数的行为，不止可以通过<code>swizzling</code>来改变，甚至可以用<code>isa-swizzling</code>修改对象的继承关系，可以在面向对象的基础上实现自定义派发。</p>
-<p>当一个消息被派发，运行时会顺着类的继承关系向上查找应该被调用的函数。如果你觉得这样做效率很低，它确实很低。然而，只要缓存建立了起来，这个查找过程就会通过缓存来把性能提高到和函数表派发一样快。</p>
-<h2 id="Swift-的派发机制"><a href="#Swift-的派发机制" class="headerlink" title="Swift 的派发机制"></a>Swift 的派发机制</h2><p>那么，到底 Swift 是怎么派发的呢？有四个选择具体派发方式的因素存在：</p>
-<ul>
-<li>声明的位置</li>
-<li>引用类型</li>
-<li>特定的行为</li>
-<li>显式的优化(Visibilty Optimizations)</li>
-</ul>
-<p>在解释这些因素之前，我有必要说清楚，Swift 没有在文档里具体写明什么时候会使用函数表什么时候使用消息机制。唯一的承诺是使用<code>dynamic</code>修饰的时候会通过 Objective-C 的运行时进行消息机制派发。</p>
-<h3 id="声明的位置"><a href="#声明的位置" class="headerlink" title="声明的位置"></a>声明的位置</h3><p>在 Swift 里，一个函数有两个可以声明的位置： 类型声明的作用域和 extension。 根据声明类型的不同，也会有不同的派发方式。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">mainMethod</span><span class="hljs-params">()</span></span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">extensionMethod</span><span class="hljs-params">()</span></span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的例子中，<code>mainMethod</code>会使用函数表派发，而<code>extensionMethod</code>则会使用直接派发。</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Initial Declaration</th>
-<th>Extension</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Value Type</td>
-<td>Static</td>
-<td>Static</td>
-</tr>
-<tr>
-<td>Protocol</td>
-<td>Table</td>
-<td>Static</td>
-</tr>
-<tr>
-<td>Class</td>
-<td>Table</td>
-<td>Static</td>
-</tr>
-<tr>
-<td>NSObject subclass</td>
-<td>Table</td>
-<td>Message</td>
-</tr>
-</tbody>
-</table>
-<p>这张表格展示了默认情况下 Swift 使用的派发方式。</p>
-<p>总结起来这么几点：</p>
-<ul>
-<li>值类型总是会使用直接派发，简单易懂</li>
-<li>而协议和类的 <code>extension</code> 都会使用直接派发</li>
-<li><code>NSObject</code> 的 <code>extension</code> 会使用消息机制进行派发</li>
-<li><code>NSObject</code> 声明作用域里的函数都会使用函数表进行派发</li>
-<li>协议里声明的，并且带有默认实现的函数都会使用函数表进行派发</li>
-</ul>
-<h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><p>引用的类型决定了派发的方式。这很显而易见，但也是决定性的差异，一个比较常见的疑惑，发生在一个协议拓展和类型拓展同时实现了同一个函数的时候。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">MyProtocol</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MyStruct</span>: <span class="hljs-title">MyProtocol</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">MyStruct</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">extensionMethod</span><span class="hljs-params">()</span></span> &#123;</span><br><span class="line">        <span class="hljs-built_in">print</span>(<span class="hljs-string">"Struct"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">MyProtocol</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">extensionMethod</span><span class="hljs-params">()</span></span> &#123;</span><br><span class="line">        <span class="hljs-built_in">print</span>(<span class="hljs-string">"Protocol"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> myStruct = <span class="hljs-type">MyStruct</span>()</span><br><span class="line"><span class="hljs-keyword">let</span> myProtocol: <span class="hljs-type">MyProtocol</span> = myStruct</span><br><span class="line"></span><br><span class="line">myStruct.extensionMethod() <span class="hljs-comment">// "Struct"</span></span><br><span class="line">myProtocol.extensionMethod() <span class="hljs-comment">// "Protocol"</span></span><br></pre></td></tr></table></figure>
-<p>引用的类型决定了派发的方式，协议拓展里的函数会使用<code>直接派发</code>方式调用。如果把 <code>extensionMethod</code> 的声明移动到协议的声明位置的话，则会使用函数表派发，最终就会调用结构体里的实现。并且，如果两种声明方式都使用了直接派发的话，基于直接派发的运作方式，我们不可能实现预想的<code>override</code>行为。</p>
-<h3 id="指定派发方式"><a href="#指定派发方式" class="headerlink" title="指定派发方式"></a>指定派发方式</h3><p>Swift 有一些修饰符可以指定派发方式。</p>
-<h4 id="final"><a href="#final" class="headerlink" title="final"></a><code>final</code></h4><p><code>final</code> 允许类里面的函数使用直接派发。这个修饰符会让函数失去动态性。任何函数都可以使用这个修饰符，就算是 <code>extension</code> 里本来就是直接派发的函数。这也会让 Objective-C 的运行时获取不到这个函数，不会生成相应的 selector。</p>
-<h4 id="dynamic"><a href="#dynamic" class="headerlink" title="dynamic"></a><code>dynamic</code></h4><p><code>dynamic</code> 可以让类里面的函数使用消息机制派发。 <code>dynamic</code>可以让声明在 extension 里面的函数能够被 override。 <code>dynamic</code>可以用在所有 <code>NSObject</code>的子类和 Swift 的原生类。</p>
-<h4 id="objc-amp-nonobjc"><a href="#objc-amp-nonobjc" class="headerlink" title="@objc &amp; @nonobjc"></a><code>@objc</code> &amp; <code>@nonobjc</code></h4><p><code>@objc</code>和<code>@nonobjc</code>显式的声明了一个函数是否能被 Objective-C 的运行时捕获到。使用<code>@objc</code>的典型例子就是给 selector 一个命名空间 <code>@objc(methodName)</code>,让这个函数可以被 Objective-C 的运行时调用。 <code>@nonobjc</code>会改变派发的方式，可以用来禁止消息机制派发这个函数，不让这个函数注册到 Objective-C 的运行时里。我不确定这跟 <code>final</code> 有什么区别，因为从使用场景来说也几乎一样，我个人更喜欢<code>final</code>,因为意图更明显。</p>
-<h4 id="final-objc"><a href="#final-objc" class="headerlink" title="final @objc"></a><code>final @objc</code></h4><p>可以在标记为 <code>final</code> 的同时, 也使用 <code>@objc</code> 来让函数可以使用消息机制派发. 这么做的结果就是, 调用函数的时候会使用直接派发, 但也会在 Objective-C 的运行时里注册响应的 selector. 函数可以响应 <code>perform(selector:)</code> 以及别的 Objective-C 特性, 但在直接调用时又可以有直接派发的性能.</p>
-<h4 id="inline"><a href="#inline" class="headerlink" title="@inline"></a><code>@inline</code></h4><p>Swift 也支持 <code>@inline</code>, 告诉编译器可以使用直接派发. 有趣的是, <code>dynamic @inline(__always) func dynamicOrDirect() {}</code> 也可以通过编译! 但这也只是告诉了编译器而已, 实际上这个函数还是会使用消息机制派发. 这样的写法看起来像是一个未定义的行为, 应该避免这么做.</p>
-<h3 id="显式的优化"><a href="#显式的优化" class="headerlink" title="显式的优化"></a>显式的优化</h3><p>Swift 会尽最大能力去优化函数派发的方式。例如，如果你有一个函数从来没有 override，Swift 就会检查并且在可能得情况下使用直接派发。这个优化大多数情况下都表现得很好，但对于使用了 target/action 模式的 Cocoa 开发者就不那么友好了。 </p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">viewDidLoad</span><span class="hljs-params">()</span></span> &#123;</span><br><span class="line">    <span class="hljs-keyword">super</span>.viewDidLoad()</span><br><span class="line">    navigationItem.rightBarButtonItem = <span class="hljs-type">UIBarButtonItem</span>(</span><br><span class="line">        title: <span class="hljs-string">"Sign in"</span>, style: .plain, target: <span class="hljs-literal">nil</span>,</span><br><span class="line">        action: #selector(<span class="hljs-type">ViewController</span>.signInAction)</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">signInAction</span><span class="hljs-params">()</span></span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>这里编译器会抛出一个错误: <code>Argument of &#39;#selector&#39; refers to a method that is not exposed to Objective-C (Objective-C 无法获取 #selector 指定的函数)</code>. 你如果记得 Swift 会把这个函数优化为直接派发的话, 就能理解这件事情了. 这里修复的方式很简单: 加上 <code>@objc</code> 或者 <code>dynamic</code> 就可以保证 Objective-C 的运行时可以获取到函数了. 这种类型的错误也会发生在<code>UIAppearance</code> 上, 依赖于 <code>proxy</code> 和 <code>NSInvocation</code> 的代码.</p>
-<p>另一个需要注意的是, 如果你没有使用 <code>dynamic</code> 修饰的话, 这个优化会默认让 KVO 失效. 如果一个属性绑定了 KVO 的话, 而这个属性的 getter 和 setter 会被优化为直接派发, 代码依旧可以通过编译, 不过动态生成的 KVO 函数就不会被触发.</p>
-<h2 id="2-如何通过减少动态派发来提高性能"><a href="#2-如何通过减少动态派发来提高性能" class="headerlink" title="2. 如何通过减少动态派发来提高性能"></a>2. 如何通过减少动态派发来提高性能</h2><h3 id="使用final关键字修饰肯定不会被重载的声明"><a href="#使用final关键字修饰肯定不会被重载的声明" class="headerlink" title="使用final关键字修饰肯定不会被重载的声明"></a>使用<code>final</code>关键字修饰肯定不会被重载的声明</h3><p>在上面的文章里，使用 <code>final</code> 可以允许类里面的函数使用直接派发。而 <code>final</code> 关键字可以用在 class, 方法和属性里来标识此声明不可以被 override。 这可以让编译器安全的将其优化为静态派发。</p>
-<h3 id="将文件中使用private关键字修饰的声明推断为final。"><a href="#将文件中使用private关键字修饰的声明推断为final。" class="headerlink" title="将文件中使用private关键字修饰的声明推断为final。"></a>将文件中使用<code>private</code>关键字修饰的声明推断为<code>final</code>。</h3><p>使用 <code>private</code> 关键字修饰的声明只能在当前文件中进行访问。这样编译器可以找到所有潜在的重载声明。任何没有被重载的声明编译器自动的将它推断为<code>final</code>类型并且去除间接的方法调用和属性访问。</p>
-<h3 id="使用全局模块优化推断internal声明为final-gt-whole-module-Optimization"><a href="#使用全局模块优化推断internal声明为final-gt-whole-module-Optimization" class="headerlink" title="使用全局模块优化推断internal声明为final -&gt; whole module Optimization"></a>使用全局模块优化推断<code>internal</code>声明为<code>final</code> -&gt; <code>whole module Optimization</code></h3><p>使用<code>internal</code>（如果声明没有使用关键词修饰，默认是<code>internal</code>）关键字修饰的声明的作用域仅限于它被声明的模块中。因为Swift通常的将这些文件作为一个独立的模块进行编译，所以编译器不能确定一个internal声明有没有在其他的文件中被重载。然而如果全局模块优化（Whole Module Optimization，关于全局模块优化参看下文的相关名词解释）是打开的那么所有的模块将要在同一时间被一起编译。这样以来编译器就可以为整个模块一起做出推断，将没有被重载的<code>internal</code>修饰的声明推断为final类型。</p>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/04/06/swift-method-dispathch-mechanism/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -535,7 +377,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7773 个字)
+                    1 小时 读完 (大约 7774 个字)
                 </span>
                 
                 
@@ -558,191 +400,16 @@
 <p><img src="/images/dimensions_of_performance.png" alt="dimensions_of_performance"></p>
 <p>当我们想快速地写Swift代码时, 就要避免为不能利用的动态和运行时间付出代价。我们需要学习何时以及如何在这些不同维度之间切换来获得更好的性能。</p>
 <p>下面我们将从不同维度来评估不同的抽象机制选项。</p>
-<h2 id="Allocation-内存分配"><a href="#Allocation-内存分配" class="headerlink" title="Allocation 内存分配"></a>Allocation 内存分配</h2><p>Swift 会替你自动分配和回收内存的分配。</p>
-<p>有些内存会分配给栈(Stack)，有些则会分配到堆(Heap)上。</p>
-<p>栈时一种非常简单的数据结构，你可以将元素压到栈底或者弹出栈底。因为你只能添加或移出栈底，所以只需要通过保存的栈底指针就可以实现栈的入栈和出栈。 这意味着当调用函数时, 只需要通过递减栈底指针数值来获取空间。当函数执行完毕后，同样只需要把栈底指针增加至调用函数之前的的数值即可达到释放内存的目的。因此栈的分配速度非常快，它其实仅仅是分配一个整数的消耗。</p>
-<p><img src="/images/allocation_of_stack.png" alt="allocation_of_stack"></p>
-<p>那么，这就与堆形成了对比。 堆更动态化，但比栈效率低。堆可以让你实现栈不能实现的功能，比如动态周期性的分配内存，但它同时也需要更高级的数据结构。如果你要在堆上分配内存，实际上要去搜索堆数据结构，寻找适当大小的闲置内存块，用完之后要释放内存，还需要把那个内存块插回到正确的位置。很显然，相比在栈中实现的，这涉及的东西更多。同时，因为涉及到多线程分配内存，堆需要使用锁或其它同步机制来保护它的完整性，这是一个很大的消耗。</p>
-<p><img src="/images/allocation_of_heap.png" alt="allocation_of_heap"></p>
-<p>下面通过一些代码来看看 Swift 都替我们做了什么</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">var</span> x, y: <span class="hljs-type">Double</span> </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> point1 = <span class="hljs-type">Point</span>(x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>) </span><br><span class="line"><span class="hljs-keyword">var</span> point2 = point1 </span><br><span class="line">point2.x = <span class="hljs-number">5</span> </span><br><span class="line"><span class="hljs-comment">// use `point1` </span></span><br><span class="line"><span class="hljs-comment">// use `point2`</span></span><br></pre></td></tr></table></figure>
-<p>上面定义了一个<code>Point</code>的结构体, 有<code>x</code>和<code>y</code>存储属性, 还有<code>draw</code>方法。用<code>(0, 0)</code> 构造点，把<code>point1</code> 赋值给<code>point2</code>, 并把<code>point2.x</code>赋一个为5的值。</p>
-<p>在执行任何代码之前, 系统已为<code>point1</code>和<code>point2</code>实例在堆栈上分配了一个空间，因为<code>Point</code>是一个结构体，而x和y属性被存储在栈中。当把<code>point1</code>赋值给<code>point2</code>时，我们仅仅是复制了那个点，并初始化了<code>point2</code>的内存，也就是之前已经分配到栈上的内存。请注意，<code>point1</code>和<code>point2</code>是独立的实例，意思就是，当我们给<code>point2.x</code>赋一个为5的值时，<code>point2.x</code>是5，但<code>point1.x</code>仍然是0，这就是值语义。</p>
-<p><img src="/images/allocate_of_stuct.png" alt="allocate_of_stuct"></p>
-<p>然后我们继续使用<code>point1</code>和<code>point2</code>，并完成函数的执行之后，只需要通过把堆栈指针的值增至进入函数之前的值就可以释放<code>point1</code>和<code>point2</code>的内存。<br><img src="/images/deallocate_of_stack.png" alt="deallocate_of_stack"></p>
-<p>同之前的代码比较，下面使用 class 来定义<code>Point</code><br> <figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">var</span> x, y: <span class="hljs-type">Double</span> </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> point1 = <span class="hljs-type">Point</span>(x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>) </span><br><span class="line"><span class="hljs-keyword">var</span> point2 = point1 </span><br><span class="line">point2.x = <span class="hljs-number">5</span> </span><br><span class="line"><span class="hljs-comment">// use `point1` </span></span><br><span class="line"><span class="hljs-comment">// use `point2`</span></span><br></pre></td></tr></table></figure></p>
-<p>跟之前的一样，我们给栈分配内存，但并不实际存储’Point’的属性。我们要给<code>point1</code>和<code>point2</code>分配内存引用，引用要分配到堆上的内存。当用<code>(0, 0)</code>进行初始化时，Swift会锁住堆并寻找堆上适当大小的闲置内存块。在得到合适的内存块后，我们要以<code>x</code>为0，<code>y</code>为0进行初始化, 并且把<code>point1</code>初始化为那个堆上分配的内存地址。请注意，当在堆上分配时，Swift其实是为<code>Point</code>类分配了四个字的存储，这跟<code>Point</code>是结构体时所分配的两个字形成了对比。Swift 会多出的两个字进行管理，这两个字通过图中的这些蓝色框来指示。</p>
-<p><img src="/images/allocation_of_point_class.png" alt="allocation_of_point_class"></p>
-<blockquote>
-<p>注： 多出的第一个字可以简单的说就是指向 Class 的指针，第二个字存放的是引用计数。 <a href="https://juejin.im/post/5a7b04c86fb9a0634b4d632a" target="_blank" rel="noopener">https://juejin.im/post/5a7b04c86fb9a0634b4d632a</a></p>
-</blockquote>
-<p>当把<code>point1</code>赋值给<code>point2</code>时，我们并不是要复制<code>point1</code>的内容，相反它是复制引用。<code>point1</code>和<code>point2</code>其实指的正是堆上的同一个实例。意思是，当我们给<code>point2.x</code>赋一个为5的值时，<code>point1.x</code>和<code>point2.x</code>的值都为5，这就是引用的语义，可导致非计划的状态共享。</p>
-<p>然后Swift会释放这个内存,锁住堆,再分配闲置内存块到适当的位置后就可以出栈了。</p>
-<p>我们看到类的构造比结构的构造消耗更多。由于类是在堆上分配的并且有引用语义，所以类有一些强大的特性，如一致性和间接存储。但是如果我们的抽象不需要这些特性，最好还是用结构体，而且结构不会导致像类那样的非计划的状态共享。</p>
-<h2 id="Reference-Counting-引用计数"><a href="#Reference-Counting-引用计数" class="headerlink" title="Reference Counting 引用计数"></a>Reference Counting 引用计数</h2><p>当我们谈堆式分配时，Swift 是如何了解何时释放在堆上分配的内存是安全的呢？ 答案是 Swift 会保持一个堆中任何实例的引用个数的总计数，并把它存储在实例本身。当你添加引用或移除引用时，就会增加或减少引用计数。当计数为零时，Swift就知道没有指向堆上的这个实例的引用，而且释放那个内存很安全。</p>
-<p>引用计数的关键点是，这是个非常频繁的运算。实际上比只增加和减少一个整数更复杂。首先，涉及到成对出现的间接层级来执行增加和减少计数。更重要的是跟堆式分配一样，需要考虑线程的安全性，因为引用能在多线程的时候被添加或移除到任何堆实例，由于引用计数运算的频率高，这会增加消耗。</p>
-<p><img src="/images/reference_counting.png" alt="reference_counting"></p>
-<p>以 <code>Point</code> 类为例，来看看 Swift 替我们做了什么。这里有用来作为对比的一些伪代码：</p>
-<p><img src="/images/comparison_in_reference_counting.png" alt="comparison_in_reference_counting"></p>
-<p><code>Point</code>获得了一个附加属性<code>refCount</code>,并且 Swift 添加了一对调用 <code>retain</code> 和 <code>release</code>, <code>retain</code>会自动增加引用计数，<code>release</code>会自动减少引用计数，这样 Swift就可以追踪堆上的<code>Point</code>上有多少激活的引用。</p>
-<p><img src="/images/reference_count_of_class.png" alt="reference_count_of_class"></p>
-<p>在堆上构造<code>Point</code>之后，因为有一个实例的实时引用，那个实例就被初始化为引用计数为1。查看整个程序，并把<code>point1</code>赋值给<code>point2</code>，我们现在就有两个引用了，那么Swift添加一个<code>retain</code>调用，来自动增加点实例的引用计数。继续执行，一旦我们不再使用<code>point1</code>，因为<code>point1</code>不再是它所关注的一个激活的引用，Swift 会添加一个<code>release</code>调用来自动减少引用计数。同样地，一旦我们不再使用<code>point2</code>，Swift会添加另一个<code>release</code>调用,自动减少引用计数。在这时，没有对<code>Point</code>的实例引用被使用，所以Swift就知道很安全，会锁住堆并把那个内存块返回给它。</p>
-<p><img src="/images/no_references_of_class.png" alt="no_references_of_class"></p>
-<p>如果是结构体会怎么样呢？结构是否涉及引用计数呢？当我们构造点结构时，不会涉及任何堆式分配，当我们复制时也不会涉及任何堆式分配，每个步骤都不会涉及引用。所以<code>Point</code>结构体没有引用计数。</p>
-<p>那更复杂的结构呢？</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Label</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">var</span> text: <span class="hljs-type">String</span> </span><br><span class="line">    <span class="hljs-keyword">var</span> font: <span class="hljs-type">UIFont</span> </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> label1 = <span class="hljs-type">Label</span>(text: <span class="hljs-string">"Hi"</span>, font: font) </span><br><span class="line"><span class="hljs-keyword">let</span> label2 = label1 </span><br><span class="line"><span class="hljs-comment">// use `label1` </span></span><br><span class="line"><span class="hljs-comment">// use `label2`</span></span><br></pre></td></tr></table></figure>
-<p>在这里有个<code>Label</code>结构体，属性包含字符串类型的<code>text</code>，和类型为<code>UIFont</code>的<code>font</code>。刚才提到过字符串，实际上是把它的字符内容存储在堆上，所以需要引用计数。字体是一个类,也需要引用计数。</p>
-<p><img src="/images/reference_counting_of_complex_struct.png" alt="reference_counting_of_complex_struct"></p>
-<p>当我们复制它时，实际上增加了两个引用。</p>
-<p><img src="/images/increment_of_reference_count_of_complex_struct.png" alt="increment_of_reference_count_of_complex_struct"></p>
-<p>Swift的追踪这些堆式分配的方式是通过保留和释放的调用来实现的。<br><img src="/images/tracking_reference_counting_in_struct.png" alt="tracking_reference_counting_in_struct"></p>
-<p>由于类是在堆上分配的，Swift得管理那个堆式分配的使用期限，这是通过引用计数实现的。 而引用计数的难点在于运算相对频繁,且具备原子性。这也是我们使用结构的另一个原因。</p>
-<p>但是，如果结构包含引用，也会进行引用计数。事实上，结构体会进行引用计数,相应地与它们所包含的引用数量成比例的。所以 如果它们有一个以上的引用，它们会保留一个类以上的引用计数。</p>
-<h2 id="Method-Dispatch-方法派发"><a href="#Method-Dispatch-方法派发" class="headerlink" title="Method Dispatch 方法派发"></a>Method Dispatch 方法派发</h2><p>在运行过程中，当调用一个方法时，Swift 需要执行正确的实现。</p>
-<p>如果能在编译时确定要执行的实现，这就是静态派发。 在运行过程中，我们能直接跳到正确的实现，这很酷。因为编译器实际上可以看到要执行哪些实现，并且也可以做一些如内联之类的优化，这跟动态调度形成了对比。</p>
-<p><img src="/images/static_method_dispatch.png" alt="static_method_dispatch"></p>
-<p>动态调度时，在编译时无法直接决定要执行哪个实现。在运行时，需要去查找实现，然后调到那个。相比静态派发，虽然动态派发增加了一个间接层级，这样做的成本并不高。<br>但是动态派发阻碍了编译器的可见性，编译器无法对动态派发进行一些包括内联的优化操作。</p>
-<p><img src="/images/dynamic_method_dispatch.png" alt="dynamic_method_dispatch"></p>
-<p>我们究竟为什么要这个动态调度呢？原因之一是通过它可以使一些特性成为可能，比如多态。</p>
-<p><img src="/images/inheritance_based_polymorphism.png" alt="inheritance_based_polymorphism"></p>
-<p>我们通过一个传统的面向对象的程序来看下具体原理。有一个可绘制的抽象超类,我可以定义一个<code>Point</code>子类和<code>Line</code>子类，然后用自定义实现来覆盖<code>draw</code>方法。</p>
-<p>然后我可以多态地创建<code>Drawable</code>实例的数组，可能包含<code>Point</code>实例，也可能包含<code>Line</code>实例，可以分别调用draw。</p>
-<p>那么是如何实现的呢？</p>
-<p>因为可绘制的<code>Point</code>和<code>Line</code>都是类，我们可以创建一个包含这些实例的数组, 因为我们保存在数组里的是对它们的引用，因此它们都是相同大小的对象。但当我们查看数组中的元素并且尝试调用<code>draw</code>的时候，因为这个<code>d.draw</code>可以是<code>Point</code>，也可以是个<code>Line</code>,这是不同的代码路径。那么，如何决定调用哪个呢？</p>
-<p><img src="/images/polymorphism_through_reference_semantics.png" alt="polymorphism_through_reference_semantics"></p>
-<p>编译器向类中添加了另一个字段，是这个类的类型信息的指针，指向存储在静态内存中的类型信息。</p>
-<p><img src="/images/polymorphism_through_vtable_dispatch.png" alt="polymorphism_through_vtable_dispatch"></p>
-<p>因此 当调用<code>draw</code>时，编译器实际上生成的了一个对类型信息的查询，查找一个虚拟方法表，在类型和包含指针的静态内存上找到要执行的正确的实现。</p>
-<p><img src="/images/polymorphism_through_vtables_dispatch_search.png" alt="polymorphism_through_vtables_dispatch_search"></p>
-<p>如果我们修改了这个<code>d.draw</code>，编译器替我们做的是查询虚拟方法表，找到要执行的正确的<code>draw</code>实现，然后把那个实际的实例作为隐式的<code>self</code>参数传过来。</p>
-<p>类默认动态地调度它们的方法，这对于它本身并没有什么不同。但是如果形成方法链，会阻碍编译器进行内联及一些其他可添加的优化。</p>
-<p>但是，并不是所有类都需要动态调度。如果你从未打算给一个类创建子类，你可以把它标记为<code>final</code>类，编译器会注意到这一点，并静态地调度这些方法。</p>
-<p>此外 如果编译器可以推理和证明你从不打算在应用中给类建立子类，它将适时地替你把那些动态调度变成静态调度。</p>
-<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>因此无论何时，当你读和写Swift代码时你都应该观察和思考：</p>
-<ul>
-<li>这个实例要在堆栈中还是在堆中分配？</li>
-<li>当我传递这个实例时,要引发多少引用计算？</li>
-<li>当我在这个实例中调用方法时是动态调度还是静态调度？</li>
-</ul>
-<p>你可能会问Struct如何实现多态呢?答案是 Protocol Oriented Programming。</p>
-<p>以上分析了影响性能的几个标准，那么不同的算法机制Class，Protocol Types和Generic code，它们在这三方面的表现如何，Protocol Type 和 Generic code 分别是怎么实现的呢？我们带着这个问题看下去。</p>
-<h2 id="Protocol-Types"><a href="#Protocol-Types" class="headerlink" title="Protocol Types"></a>Protocol Types</h2><p>这里我们会讨论Protocol Type如何存储和拷贝变量，以及方法分派是如何实现的。</p>
-<p>这次我们不再用<code>Drawable</code>地抽象基类，我们要用声明了<code>draw</code>方法的<code>Drawable</code>协议，并且我们有数值类型的<code>Point</code>结构体和遵循协议的<code>Line</code>结构体。</p>
-<p>请注意，我们同样还可以有一个遵循协议的<code>SharedLine</code>类。然而，由于类所具有的引用语义会使非计划的共享出现，因此我们决定不再使用它。</p>
-<p>我们程序仍然是多态的，仍然可以在<code>Drawable</code>的协议类型数组中存储<code>Point</code>和<code>Line</code>类型实例。然而 跟以前相比有一个不同点，<code>Point</code>数值类型结构和<code>Line</code>结构并不共享一个使用 v-table 调度所需要的共同的继承关系。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">Drawable</span> </span>&#123; <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> : <span class="hljs-title">Drawable</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">var</span> x, y: <span class="hljs-type">Double</span> </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Line</span> : <span class="hljs-title">Drawable</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> x1, y1, x2, y2: <span class="hljs-type">Double</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> drawables: [<span class="hljs-type">Drawable</span>] </span><br><span class="line"><span class="hljs-keyword">for</span> d <span class="hljs-keyword">in</span> drawables &#123; </span><br><span class="line">    d.draw() </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>那么 Swift是如何调度正确的方法的呢？在这个例子中，是通过被称为<code>Protocol Witness Table</code>的基于表的机制。每个实现协议的类型中都有这么一张表，并且表中的条目会链接到类型中的具体实现。</p>
-<p><img src="/images/the_protocol_witness_table.png" alt="the_protocol_witness_table"></p>
-<p>那么 现在我们了解了如何找到那个方法，如何把元素从数组中拿到表中仍然有个问题。</p>
-<p><img src="/images/look_up_the_protocol_witness_table.png" alt="look_up_the_protocol_witness_table"></p>
-<p>还有另一个问题，请注意，我们现在有数值类型的<code>Point</code>和<code>Line</code>，<code>Line</code>需要四个字，而<code>Point</code>需要两个字，它们的大小不一样。</p>
-<p>但数组需要以一致的固定偏移量存储元素，那是如何实现的呢？</p>
-<p><img src="/images/how_to_store_values_uniformly_in_pwt.png" alt="how_to_store_values_uniformly_in_pwt"></p>
-<p>这个问题的答案是，Swift使用一个特殊存储布局叫存在容器(Existential Container)。</p>
-<p><img src="/images/the_existential_container.png" alt="the_existential_container"></p>
-<p>存在容器内的前三个字是留给valueBuffer的。小类型，比如我们的<code>Point</code>类型只需要两个字，刚好能放进valueBuffer中。</p>
-<p><img src="/images/the_existential_container_less_words.png" alt="the_existential_container_less_words"></p>
-<p>而<code>Line</code>类型需要四个字，该把它放在哪呢？在这种情况下，Swift会在堆上分配内存，把值存入堆中，并将这块内存的地址指针存储在存在容器中。</p>
-<p><img src="/images/the_existential_container_large_words.png" alt="the_existential_container_large_words"></p>
-<p>现在 你看到了<code>Point</code>和<code>Line</code>之间的不同点，因此，存在容器无论如何得管理这个不同点，那么该如何实现呢？</p>
-<p>嗯，答案是，还是基于表的机制，在这个示例中，我们叫它 值证明表(Value Witness Table)。值证明表会管理值的有效期。</p>
-<p>在程序中，每种类型都有一张表。现在，通过观察局部变量的有效期来看下这个表是如何运作的。</p>
-<p>在协议类型的局部变量有效期的开始，Swift 在那个表内部调用了分配函数。在这个函数中，因为这个例子有一个<code>Line</code>值证明表，我们将在堆上分配内存，并给该内存存一个指针，存在容器的valueBuffer内。</p>
-<p><img src="/images/allocation_of_vwt.png" alt="allocation_of_vwt"></p>
-<p>下一步 Swift要将初始化局部变量的原始值复制到存在容器中，我们在这里有一个<code>Point</code>，所以值证明表的复制条目会做出正确的判断并把它在堆中分配的值复制到valueBuffer中。如果是<code>Line</code>则将值复制到valueBuffer存储的指针对应的堆内存上。</p>
-<p><img src="/images/copy_of_vwt.png" alt="copy_of_vwt"></p>
-<p>我们现在是在局部变量有效期的最后阶段，Swift会调用值证明表的 <code>destruct</code> 条目，这将递减可能包含在类型中的值的引用计数。</p>
-<p><img src="/images/destruct_of_vwt.png" alt="destruct_of_vwt"></p>
-<p>在最后，Swift会调用表中的<code>deallocate</code>函数，这将释放在堆上为值分配的内存。</p>
-<p><img src="/images/deallocate_of_vwt.png" alt="deallocate_of_vwt"></p>
-<p>那么，我们已经看到了 Swift 处理不同种类的值的一般性机制。但无论如何它仍需要进入这些表，对吧？</p>
-<p>嗯，答案很明显,在存在容器(Existential Container)中含有对值证明表(Value Witness Table)的引用。</p>
-<p><img src="/images/vwt_reference_in_existential_container.png" alt="vwt_reference_in_existential_container"></p>
-<p>如何进入协议证明表(Protocol Witness Table)呢？它是在存在容器中进行引用的。</p>
-<p><img src="/images/pwt_reference_in_existential_container.png" alt="pwt_reference_in_existential_container"></p>
-<p>我们已经了解了 Swift 管理协议类型的机制，现在我们来看个例子，看看运行中的存在容器。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Protocol Types </span></span><br><span class="line"><span class="hljs-comment">// The Existential Container in action </span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">drawACopy</span><span class="hljs-params">(local : Drawable)</span></span> &#123; </span><br><span class="line">    local.draw() </span><br><span class="line">&#125; </span><br><span class="line"><span class="hljs-keyword">let</span> val : <span class="hljs-type">Drawable</span> = <span class="hljs-type">Point</span>() </span><br><span class="line">drawACopy(val)</span><br></pre></td></tr></table></figure>
-<p>在这个例子中，我们有一个函数，把协议类型参数当做局部参数，并在局部参数上执行<code>draw</code>方法。 程序会创建一个<code>Drawable</code>的局部变量，并用<code>Point</code>类型对其进行初始化。然后把这个局部变量作为参数传给一个<code>drawACopy</code>函数调用。</p>
-<p>为了显示Swift编译器为我们生成的代码，在这个例子中，我将使用Swift作为伪代码注释。</p>
-<p>那么，对于存在容器(Existential Container)而言，下面这个结构体存储了<code>valueBuffer</code>的三个字，还有一个值证明表(VWT)和协议证明表(PWT)的引用。</p>
-<p><img src="/images/struct_of_existential_container_drawable.png" alt="struct_of_existential_container_drawable"></p>
-<p>当drawACopy函数调用执行时，它会接收实参并把它传给函数。在生成的代码中我们看到，Swift 把存在容器作为实参传给了函数，当函数开始执行时，函数为那个形参创建了一个局部变量，并给它赋了一个实参。</p>
-<p>在所生成的代码中，Swift将在栈上分配一个存在容器。</p>
-<p><img src="/images/exist_cont_drawable_pass_to_function.png" alt="exist_cont_drawable_pass_to_function"></p>
-<p>然后，它将从实参存在容器中读取值证明表和协议证明表，并在局部实参容器中对字段进行初始化。</p>
-<p><img src="/images/acess_pwt_and_vwt_from_exist_cont.png" alt="acess_pwt_and_vwt_from_exist_cont"></p>
-<p>下一步，它将调用值证明函数分配<code>valueBuffer</code>，如果必要的话还会复制值。在这个例子中，我们传了一个<code>Point</code>，所以就不需要任何动态堆式分配了，这个函数只是从实参中把值复制到局部存在容器的<code>valueBuffer</code>中。然而，如果我们传一个<code>Line</code>，这个函数将会分配堆内存，并在堆中复制值。</p>
-<p><img src="/images/allocate_buffer_and_copy_value.png" alt="allocate_buffer_and_copy_value"></p>
-<p>下一步执行<code>draw</code>方法，Swift 会从存在容器字段中查询协议证明表(PWT)，在那个表的固定偏移中查询<code>draw</code>方法，并跳到那个实现。这里还有另一个值证明(VWT)调用，就是<code>projectBuffer</code>。<code>draw</code>方法把值的地址当成了它的输入。如果这里正好能放进<code>valueBuffer</code>的小值，返回的地址为存在容器的开始，若我们有一个大值不适合放进<code>valueBuffer</code>，那个地址就是在堆上分配的内存的开始。</p>
-<p>然后<code>draw</code>方法执行完毕。</p>
-<p><img src="/images/search_in_pwt_and_project_buffer.png" alt="search_in_pwt_and_project_buffer"></p>
-<p>现在，程序执行到函数的末端，也就是说为形参创建的局部变量超出了适用范围，所以Swift调用值证明函数来<code>destruct</code>这个局部变量，如果值还有引用的话，这将递减引用计数，并且如果分配了<code>valueBuffer</code>，同样会释放缓冲区。</p>
-<p>函数执行完毕，移除了栈，同时也移除了在堆栈上创建的局部存在容器。</p>
-<p>一个简单的调用实际做了这么多事情。这些代价都是花在需要动态判断具体struct的信息和跳转到对应的方法上的。</p>
-<p>这项工作是使结合的值类型,如结构体<code>Point</code>和结构体<code>Line</code>还有协议获得动态行为、动态多态性，我们可以存储一条线和一个点在<code>Drawable</code>的协议类型的数组中。如果你需要这个多态性，一切都值得你付出。</p>
-<h3 id="Protocol-Type-Stored-Properties"><a href="#Protocol-Type-Stored-Properties" class="headerlink" title="Protocol Type Stored Properties"></a>Protocol Type Stored Properties</h3><p>我们知道，Swift中Class的实例和属性都存储在堆区，Struct实例在栈区，如果包含指针属性则存储在堆区，Protocol Type如何存储属性？Small Number通过Existential Container内联实现，大数存在堆区。如何处理Copy呢？</p>
-<p><img src="/images/copy_mechanism_in_big_number_struct.png" alt="copy_mechanism_in_big_number_struct"></p>
-<p><img src="/images/expensive_copies_of_large_values.png" alt="expensive_copies_of_large_values"></p>
-<p>所以当出现大数的struct值时，会将新的Exsitential Container的<code>valueBuffer</code>指向同一个value即创建指针引用，但是如果要改变值怎么办?我们知道Struct值的修改和Class不同，Copy是不应该影响原实例的值的。</p>
-<p>这里直接使用引用语义会引发非计划的状态共享问题。<br><img src="/images/references_fit_in_the_value_buffer.png" alt="references_fit_in_the_value_buffer"></p>
-<p>这里用到了一个技术叫做<code>Indirect Storage With Copy-On-Write</code>，即优先使用内存指针。通过提高内存指针的使用，来降低堆区内存的初始化。降低内存消耗。在需要修改值的时候，会先检测引用计数检测，如果有大于1的引用计数，则开辟新内存，创建新的实例。在对内容进行变更的时候，会开启一块新的内存，伪代码如下：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LineStorage</span> </span>&#123; <span class="hljs-keyword">var</span> x1, y1, x2, y2:<span class="hljs-type">Double</span> &#125;</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Line</span> :<span class="hljs-title">Drawable</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> storage: <span class="hljs-type">LineStorage</span></span><br><span class="line">    </span><br><span class="line">    <span class="hljs-keyword">init</span>() &#123; </span><br><span class="line">        storage = <span class="hljs-type">LineStorage</span>(<span class="hljs-type">Point</span>(), <span class="hljs-type">Point</span>()) </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span> &#123; … &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-keyword">mutating</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> !isUniquelyReferencedNonObjc(&amp;storage) &#123; <span class="hljs-comment">//如何存在多份引用，则开启新内存，否则直接修改</span></span><br><span class="line">            storage = <span class="hljs-type">LineStorage</span>(storage)</span><br><span class="line">        &#125;</span><br><span class="line">        storage.start = ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/copy_using_indirect_storage.png" alt="copy_using_indirect_storage"></p>
-<h3 id="Protocol-Type-多态总结"><a href="#Protocol-Type-多态总结" class="headerlink" title="Protocol Type 多态总结"></a>Protocol Type 多态总结</h3><ul>
-<li><p>支持Protocol Type的动态多态（Dynamic Polymorphism）行为。</p>
-</li>
-<li><p>通过使用Witness Table和Existential Container来实现。</p>
-</li>
-<li><p>对于大数的拷贝可以通过Indirect Storage间接存储来进行优化。</p>
-</li>
-</ul>
-<p>说到动态多态Dynamic Polymorphism，我们就要问了，什么是静态多态Static Polymorphism，看看下面示例：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Drawing a copy</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">Drawable</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">drawACopy</span><span class="hljs-params">(local: Drawable)</span></span> &#123;</span><br><span class="line">    local.draw()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> line = <span class="hljs-type">Line</span>()</span><br><span class="line">drawACopy(line)</span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"><span class="hljs-keyword">let</span> point = <span class="hljs-type">Point</span>()</span><br><span class="line">drawACopy(point)</span><br></pre></td></tr></table></figure>
-<p>这种情况我们就可以用到泛型Generic code来实现，进行进一步优化。</p>
-<h2 id="Generic"><a href="#Generic" class="headerlink" title="Generic"></a>Generic</h2><p>我们接下来会讨论泛型属性的存储方式和泛型方法是如何分派的。泛型和Protocol Type的区别在于：</p>
-<ul>
-<li>泛型支持的是静态多态。</li>
-<li>每个调用上下文只有一种类型。查看下面的示例，foo和bar方法是同一种类型。</li>
-<li>在调用链中会通过类型降级进行类型取代。</li>
-</ul>
-<p>对于以下示例：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">foo</span>&lt;T: Drawable&gt;<span class="hljs-params">(local: T)</span></span> &#123;</span><br><span class="line">    bar(local)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">bar</span>&lt;T: Drawable&gt;<span class="hljs-params">(local: T)</span></span> &#123; … &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> point = <span class="hljs-type">Point</span>()</span><br><span class="line">foo(point)</span><br></pre></td></tr></table></figure>
-<p>分析方法foo和bar的调用过程：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">foo(point) --&gt; foo&lt;<span class="hljs-type">T</span> = <span class="hljs-type">Point</span>&gt;(point)   <span class="hljs-comment">//在方法执行时，Swift将泛型T绑定为调用方使用的具体类型，这里为Point</span></span><br><span class="line">bar(local) --&gt; bar&lt;<span class="hljs-type">T</span> = <span class="hljs-type">Point</span>&gt;(local) <span class="hljs-comment">//在调用内部bar方法时，会使用foo已经绑定的变量类型Point，可以看到，泛型T在这里已经被降级，通过类型Point进行取代</span></span><br></pre></td></tr></table></figure>
-<p>泛型方法调用的具体实现为：</p>
-<ul>
-<li>同一种类型的任何实例，都共享同样的实现，即使用同一个Protocol Witness Table。</li>
-<li>使用Protocol/Value Witness Table。</li>
-<li>每个调用上下文只有一种类型：这里没有使用Existential Container(当会在栈上分配<code>valueBuffer</code>存储值)，而是将Protocol/Value Witness Table作为调用方的额外参数进行传递。</li>
-<li>变量初始化和方法调用，都使用传入的VWT和PWT来执行。</li>
-</ul>
-<p>看到这里，我们并不觉得泛型比Protocol Type有什么更快的特性，泛型如何更快呢?静态多态前提下可以进行进一步的优化，称为特定泛型优化。</p>
-<p>泛型特化</p>
-<ul>
-<li>静态多态：在调用栈中只有一种类型。 Swift使用只有一种类型的特点，来进行类型降级取代。</li>
-<li>类型降级后，产生特定类型的方法。</li>
-<li>为泛型的每个类型创造对应的方法。这时候你可能会问，那每一种类型都产生一个新的方法，会生成更多的代码？</li>
-<li>静态多态下进行特定优化 specialization 。 因为是静态多态。所以可以进行很强大的优化，比如进行内联实现，并且通过获取上下文来进行更进一步的优化。从而降低方法数量。优化后可以更精确和具体。</li>
-</ul>
-<p>例如：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">min</span>&lt;T: Comparable&gt;<span class="hljs-params">(x: T, y: T)</span></span> -&gt; <span class="hljs-type">T</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> y &lt; x ? y : x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>从普通的泛型展开如下，因为要支持所有类型的min方法，所以需要对泛型类型进行计算，包括初始化地址、内存分配、生命周期管理等。除了对value的操作，还要对方法进行操作。这是一个非常复杂庞大的工程。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">min</span>&lt;T:Comparable&gt;<span class="hljs-params">(x: T, y: T, FTable: FunctionTable)</span></span> -&gt; <span class="hljs-type">T</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> xCopy = <span class="hljs-type">FTable</span>.copy(x)</span><br><span class="line">  <span class="hljs-keyword">let</span> yCopy = <span class="hljs-type">FTable</span>.copy(y)</span><br><span class="line">  <span class="hljs-keyword">let</span> m = <span class="hljs-type">FTable</span>.lessThan(yCopy， xCopy) ? y :x</span><br><span class="line">  <span class="hljs-type">FTable</span>.release(x)</span><br><span class="line">  <span class="hljs-type">FTable</span>.release(y)</span><br><span class="line">  <span class="hljs-keyword">return</span> m</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在确定入参类型时，比如Int，编译器可以通过泛型特化，进行类型取代（Type Substitute），优化为：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">min</span>&lt;Int&gt;<span class="hljs-params">(x: Int, y: Int)</span></span> -&gt; <span class="hljs-type">Int</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> y &lt; x ? y :x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>泛型特化specilization是何时发生的?</p>
-<p>在使用特定优化时，调用方需要进行类型推断，这里需要知晓类型的上下文，例如类型的定义和内部方法实现。如果调用方和类型是单独编译的，就无法在调用方推断类型的内部实行，就无法使用特定优化，保证这些代码一起进行编译，这里就用到了whole module optimization。而whole module optimization是对于调用方和被调用方的方法在不同文件时，对其进行泛型特化优化的前提。</p>
-<p>泛型进一步优化<br>特定泛型的进一步优化：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Pair</span>&lt;<span class="hljs-title">T</span>: <span class="hljs-title">Drawable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">init</span>(<span class="hljs-number">_</span> f: <span class="hljs-type">T</span>， <span class="hljs-number">_</span> s: <span class="hljs-type">T</span>) &#123;</span><br><span class="line">        first = f</span><br><span class="line">        second = s</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">var</span> first: <span class="hljs-type">T</span></span><br><span class="line">    <span class="hljs-keyword">var</span> second: <span class="hljs-type">T</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> pairOfLines = <span class="hljs-type">Pair</span>(<span class="hljs-type">Line</span>(), <span class="hljs-type">Line</span>())</span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"><span class="hljs-keyword">let</span> pairOfPoint = <span class="hljs-type">Pair</span>(<span class="hljs-type">Point</span>(), <span class="hljs-type">Point</span>())</span><br></pre></td></tr></table></figure>
-<p>在用到多种泛型，且确定泛型类型不会在运行时修改时，就可以对成对泛型的使用进行进一步优化。</p>
-<p>优化的方式是将泛型的内存分配由指针指定，变为内存内联，不再有额外的堆初始化消耗。请注意，因为进行了存储内联，已经确定了泛型特定类型的内存分布，泛型的内存内联不能存储不同类型。所以再次强调此种优化只适用于在运行时不会修改泛型类型，即不能同时支持一个方法中包含<code>Line</code>和<code>Point</code>两种类型。</p>
-<p><img src="/images/generic_stored_properties_inline.png" alt="generic_stored_properties_inline"></p>
-<h2 id="Summary-1"><a href="#Summary-1" class="headerlink" title="Summary"></a>Summary</h2><p><img src="/images/specialized_generices_struct_type.png" alt="specialized_generices_struct_type"></p>
-<p><img src="/images/specialized_generices_class_type.png" alt="specialized_generices_class_type"></p>
-<p><img src="/images/specialized_generices_small_value.png" alt="specialized_generices_small_value"></p>
-<p><img src="/images/specialized_generices_large_value.png" alt="specialized_generices_large_value"></p>
-<p><img src="/images/specialized_generices_summary.png" alt="specialized_generices_summary"></p>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/04/06/understanding-swift-performance/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -771,7 +438,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7444 个字)
+                    1 小时 读完 (大约 7445 个字)
                 </span>
                 
                 
@@ -793,279 +460,16 @@
 </ol>
 <p>相对于线程和锁来说，GCD 提供了一个更加易用的模板，从而避免发生并发问题。</p>
 <p>在了解GCD之前，我们需要了解一些跟并发和线程的概念。</p>
-<h3 id="Concurrency-并发"><a href="#Concurrency-并发" class="headerlink" title="Concurrency 并发"></a>Concurrency 并发</h3><p>iOS应用中包含一个或者多个线程，这些线程由系统的调度器彼此独立的管理。每个线程可以被并发的执行，但是如何实现并发却是由系统决定的。</p>
-<p><img src="/images/Concurrency_vs_Parallelism.png" alt="Concurrency_vs_Parallelism.png"></p>
-<p>单核设备通过 时间切片(time-slicing) 的方式来实现并发，它们运行在一个线程上，当切换其它线程时就执行上下文切换。这种切换一般进行得非常快，让用户感觉像是同时在运行多个线程一样。</p>
-<p>而在多核设备上，可以通过并行的方式同时执行多个线程。</p>
-<p>GCD 建立在线程之上，它负责管理共享线程池。使用 GCD，我们可以添加code block或者工作项(work items)来调度队列，GCD 决定执行它们的线程。</p>
-<p>所以，虽然你可以使用 GCD 的接口来编写并发代码，但是 GCD 才是真正决定是否使用并行实现的人。并行要求并发，但是并发并不一定能够保证并行。</p>
-<p>更深一层地说，并发设计其实是结构的设计。如果你带着 GCD 的思维去编写代码，你就得小心地设计代码的结构，暴露的接口要考虑可以同时执行和不可以同时执行的代码。</p>
-<p>根本上来说，并发(concurrency)是关于结构而并行(parallelism)是关于执行。</p>
-<h3 id="Queues-队列"><a href="#Queues-队列" class="headerlink" title="Queues 队列"></a>Queues 队列</h3><p>GCD 通过<code>DispatchQueue</code>类来操作调度队列。当我们提交工作项单元到队列中，GCD将以FIFO顺序执行它们，它会保证第一个任务是第一个启动的。</p>
-<p>调度队列本身是线程安全的，因此你可以同时从多个线程访问它们。当了解调度队列如何为代码提供线程安全时，你就可以认识到GCD的好处是显而易见的。关键是要选择正确类型的调度队列和正确的调度函数，将你的工作提交到队列。</p>
-<p>队列可以是并行(serial)或者串行(concurrent)的。<br>DispatchQueue的默认初始化方法创建的是一个同步队列，如果要创建并行队列，需要在<code>attributes</code>中声明<code>concurrent</code>。第一个参数表示队列的标签，这个标签在调试器中是可见的。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 同步队列</span></span><br><span class="line"><span class="hljs-keyword">let</span> serialQueue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"queuename"</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 并发队列</span></span><br><span class="line"><span class="hljs-keyword">let</span> concurrentQueue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"queuename"</span>, attributes: .concurrent)</span><br></pre></td></tr></table></figure>
-<p>串行可以保证在任何给定时间只运行一个任务，由 GCD 来控制执行的时间点，你也无法知道一个任务结束和下一个任务开始之间的时间量。</p>
-<p><img src="/images/Serial-Queue-Swift.png" alt="Serial-Queue-Swift"></p>
-<p>而并发队列允许多个任务同时运行。队列保证它们以添加的顺序来执行，但是它们会以任何可能的顺序完成。</p>
-<p><img src="/images/Concurrent-Queue-Swift.png" alt="Concurrent-Queue-Swift"></p>
-<p>何时开始任务完全取决于 GCD。如果一个任务的执行时间与另一个任务的执行时间重叠，则由 GCD 决定是否应该在不同的核心上运行，如果是单核设备，则执行上下文切换以运行不同的任务。</p>
-<p>下面通过代码来看下串行和并发的区别：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> serialDispatchQueue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"custom_queue"</span>)</span><br><span class="line"></span><br><span class="line">serialDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 1 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 1 is end"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">serialDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 2 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 2 is end"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">serialDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 3 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"serialDispatchQueue async 3 is end"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-string">"🤠Welcome to the main thread from serialDispatchQueue"</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// output: </span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 1 is begin.</span></span><br><span class="line"><span class="hljs-comment">// 🤠Welcome to the main thread from serialDispatchQueue</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 1 is end</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 2 is begin.</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 2 is end</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 3 is begin.</span></span><br><span class="line"><span class="hljs-comment">// serialDispatchQueue async 3 is end</span></span><br></pre></td></tr></table></figure>
-<p>关于并发：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> concurrentDispatchQueue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"custom_queue"</span>, attributes: .concurrent)</span><br><span class="line"></span><br><span class="line">concurrentDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"concurrentDispatchQueue async 1 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"concurrentDispatchQueue async 1 is over."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">concurrentDispatchQueue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"concurrentDispatchQueue async 2 is begin."</span>)</span><br><span class="line">    sleep(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"concurrentDispatchQueue async 2 is over."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-string">"🤠Welcome to the main thread from concurrentDispatchQueue"</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// output:</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 1 is begin.</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 2 is begin.</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 3 is begin.</span></span><br><span class="line"><span class="hljs-comment">// 🤠Welcome to the main thread from concurrentDispatchQueue</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 1 is over.</span></span><br><span class="line"><span class="hljs-comment">// concurrentDispatchQueue async 2 is over.</span></span><br><span class="line"><span class="hljs-comment">//  concurrentDispatchQueue async 3 is over.</span></span><br></pre></td></tr></table></figure>
-<h3 id="Synchronous-vs-Asynchronous-同步与异步"><a href="#Synchronous-vs-Asynchronous-同步与异步" class="headerlink" title="Synchronous vs. Asynchronous  同步与异步"></a>Synchronous vs. Asynchronous  同步与异步</h3><p>使用GCD，我们可以同步或异步分配任务。</p>
-<p>任务完成后，同步函数会将控制权返回给调用者。 您可以通过调用<code>DispatchQueue.sync（execute :)</code>来同步调度工作单元。</p>
-<p>异步函数立即返回，命令任务开始但不等待它完成。 因此，异步函数不会阻塞当前执行线程继续执行下一个函数。 您可以通过调用<code>DispatchQueue.async（execute :)</code>来异步调度工作单元。</p>
-<h4 id="GCD-提供了三种主要类型的队列："><a href="#GCD-提供了三种主要类型的队列：" class="headerlink" title="GCD 提供了三种主要类型的队列："></a>GCD 提供了三种主要类型的队列：</h4><ul>
-<li>Main queue 主队列，在主线程上运行，是一个串行队列</li>
-<li>Global queues 全局队列，整个系统共享的并发队列。全局队列有四种不同的优先级：<code>high</code>,<code>default</code>,<code>low</code>和<code>background</code>。<code>background</code>优先级最低，在任何I/O活动中受到限制，以最大限度地减少对系统地负面影响。</li>
-<li>Custom queue 自定义队列，由开发创建的队列，可以是串行或者并发的队列。而在这个队列上的请求最终会在全局队列中的一个上执行。</li>
-</ul>
-<p>而将任务发送到全局并发队列时，不直接指定优先级，而是指定服务质量(QoS)属性。QoS用来标志任务的重要性，并指导GCD赋予任务优先级。</p>
-<p><img src="/images/gcd_using_a_quality_of_service.png" alt="gcd_using_a_quality_of_service"></p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">queue.async(qos: .background) &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Maintenance work"</span>)</span><br><span class="line">&#125;</span><br><span class="line">queue.async(qos: .userInitiated) &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(“<span class="hljs-type">Button</span> tapped”)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面介绍一下在创建队列时，可以设置的一些更丰富的属性。创建队列的完整方法如下：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">convenience</span> <span class="hljs-keyword">init</span>(label: <span class="hljs-type">String</span>, qos: <span class="hljs-type">DispatchQoS</span> = <span class="hljs-keyword">default</span>, attributes: <span class="hljs-type">DispatchQueue</span>.<span class="hljs-type">Attributes</span> = <span class="hljs-keyword">default</span>, autoreleaseFrequency: <span class="hljs-type">DispatchQueue</span>.<span class="hljs-type">AutoreleaseFrequency</span> = <span class="hljs-keyword">default</span>, target: <span class="hljs-type">DispatchQueue?</span> = <span class="hljs-keyword">default</span>)</span><br></pre></td></tr></table></figure></p>
-<p><code>label</code> 表示队列的标识符，在debug的时候可以通过label来分辨。</p>
-<h4 id="QoS"><a href="#QoS" class="headerlink" title="QoS"></a>QoS</h4><p>队列在执行上是有优先级的，更高的优先级可以享受更多的计算资源，从高到低包括：</p>
-<ul>
-<li>userInteractive 用户交互，表示需要立即完成的任务，用以提供良好的用户体验。将其用于UI更新，事件处理和需要低延迟地小型工作负载。在执行您的应用程序期间，此类中完成的工作总量应该很小。这应该在主线程上运行。</li>
-<li>userInitiated 用户活动 用户从UI启动这些异步任务。当用户等待立即结果以及继续用户交互所需地任务时使用它们。它们在高优先级全局队列中执行。</li>
-<li>utility 表示需要长时间运行的任务，伴有用户可见进度指示器。经常会用来做计算，I/O，网络，持续的数据填充等任务。这个任务节能。</li>
-<li>background 这表示用户不需要直接了解的任务。用于预取，维护和其他不需要用户交互且时间不敏感的任务。这将被映射到后台优先级全局队列。</li>
-</ul>
-<h4 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h4><p>包含两个属性：</p>
-<ul>
-<li>concurrent 标识队列为并发队列</li>
-<li>initiallyInactive 标识队列中的任务需要手动触发（为添加该标识时，向队列中添加任务会自动运行），触发时通过queue.activate()方法</li>
-</ul>
-<h4 id="AutoreleaseFrequency"><a href="#AutoreleaseFrequency" class="headerlink" title="AutoreleaseFrequency"></a>AutoreleaseFrequency</h4><p>这个属性表示 autorelease pool的自动释放频率，autorelease pool 管理着任务对象的内存周期。</p>
-<p>包含三个属性：</p>
-<ul>
-<li>inherit 继承目标队列的该属性</li>
-<li>workItem 跟随每个任务的执行周期进行自动创建和释放</li>
-<li>never 不会自动创建 autorelease pool，需要手动管理</li>
-</ul>
-<p>一般任务采用 .workItem 就够了，特殊任务如在任务内部大量重复创建对象的操作可选择 .never属性手动创建 autorelease pool。</p>
-<h4 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h4><p>这个属性设置的是一个队列的目标队列，即实际将该队列的任务放入指定队列中运行。目标队列最终约束了队列优先级等属性。</p>
-<p>在程序中手动创建的队列，其实最后都指向系统自带的 主队列 或 全局并发队列。</p>
-<p>你也许会问，为什么不直接将任务添加至系统队列中，而是自定义队列，因为这样的好处是可以将任务进行分组管理。如单独阻塞队列中的任务，而不是阻塞系统队列中的全部任务。如果阻塞了目标队列，所有指向它的原队列也将被阻塞。</p>
-<p>在 Swift 3 及之后，对目标队列的设置进行了约束，只有两种情况可以显式地设置目标队列（<a href="https://bugs.swift.org/browse/SR-1859" target="_blank" rel="noopener">原因参考</a>）：</p>
-<p>初始化方法中，指定目标队列。<br>初始化方法中，attributes 设定为 initiallyInactive，然后在队列执行 activate() 之前可以指定目标队列。<br>在其他地方都不能再改变目标队列。</p>
-<h3 id="推迟时间后执行"><a href="#推迟时间后执行" class="headerlink" title="推迟时间后执行"></a>推迟时间后执行</h3><p>有时候你并不需要立即将任务加入队列中运行，而是需要等待一段时间后再进入队列中，这时候可以使用 asyncAfter 方法。<br>可以用静态方法now获得当前时间，然后再通过加上一个DispatchTimeInterval枚举来获得一个需要延迟的时间。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> delay = <span class="hljs-type">DispatchTime</span>.now() + <span class="hljs-type">DispatchTimeInterval</span>.seconds(<span class="hljs-number">60</span>)</span><br><span class="line"><span class="hljs-type">DispatchQueue</span>.main.asyncAfter(deadline: delay) &#123; </span><br><span class="line">    <span class="hljs-comment">// 延迟执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里也可以直接加上一个秒数。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> three = <span class="hljs-type">DispatchTime</span>.now() + <span class="hljs-number">3.0</span></span><br></pre></td></tr></table></figure></p>
-<p>因为DispatchTime中自定义了+号。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> +<span class="hljs-params">(time: DispatchTime, seconds: Double)</span></span> -&gt; <span class="hljs-type">DispatchTime</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="同步锁"><a href="#同步锁" class="headerlink" title="同步锁"></a>同步锁</h3><p>如果一段代码所在的进程中有多个线程在同时运行，那么这些线程就有可能会同时运行这段代码。假如多个线程每次运行结果和单线程运行的结果是一样的，而且其他的变量的值也和预期的是一样的，就是线程安全的。<br>由于可读写的全局变量及静态变量（在 Objective-C 中还包括属性和实例变量）可以在不同线程修改，所以这两者也通常是引起线程安全问题的所在。</p>
-<p>注意，pthread_mutex_t，pthread_rwlock_t 和 OSSpinLock 是值类型，而不是引用类型。这意味着如果你用 = 进行赋值操作，实际上会复制一个副本。这会造成严重的后果，因为这些类型无法复制！如果你不小心复制了它们中的任意一个，这个副本无法使用，如果使用可能会直接崩溃。这些类型的 pthread 函数会假定它们的内存地址与初始化时一样，因此如果将它们移动到其他地方就可能会出问题。OSSpinLock 不会崩溃，但复制操作会生成一个完全独立的锁，这不是你想要的。</p>
-<p>如果使用这些类型，就必须注意不要去复制它们，无论是显式的使用 = 操作符还是隐式地操作。<br>例如，将它们嵌入到结构中或在闭包中捕获它们。</p>
-<p>另外，由于锁本质上是可变对象，需要用 var 来声明它们。</p>
-<p>其他锁都是是引用类型，它们可以随意传递，并且可以用 let 声明。</p>
-<p>在 Swift 中可以使用 Darwin 中传统的锁的方式。<br>但是 pthread 类型很难在 swift 中使用。它们在被定义为不透明的结构体中包含了一堆存储变量。所以，很不建议在 Swift 中使用这一类型的锁。</p>
-<p><img src="/images/gcd_traditional_c_locks.png" alt="gcd_traditional_c_locks"></p>
-<p>如果想要使用传统类型的锁，我们可以使用<code>Foundation.Lock</code>, 因为不同于传统的基于C语言锁的结构，它是一个类，因此不会产生之前提到的那个问题。</p>
-<p><img src="/images/gcd_correct_use_of_traditional_locks.png" alt="gcd_correct_use_of_traditional_locks"></p>
-<p>同时我们推荐使用调度队列来进行同步</p>
-<p><img src="/images/gcd_use_gcd_for_synchronization.png" alt="gcd_use_gcd_for_synchronization"></p>
-<p>如何使用调度队列来实现同步：</p>
-<p><img src="/images/gcd_use_explicit_synchronization.png" alt="gcd_use_explicit_synchronization"></p>
-<p>同时，可以使用预设条件来确保代码运行在特定的队列中运行。</p>
-<p><img src="/images/gcd_preconditions.png" alt="gcd_preconditions"></p>
-<h3 id="DispatchGroup"><a href="#DispatchGroup" class="headerlink" title="DispatchGroup"></a>DispatchGroup</h3><p>当有多个任务需要处理时，你可以异步的一个个处理这些任务， 你还可以将它们组合在一起然后等待这个组合工作的结束。</p>
-<p>DispatchGroup相当于一系列任务的松散集合，它可以来自相同或者不同队列，扮演者组织者的角色。它可以通知外部队列，组内的任务是否都已完成。或者阻塞当前的线程，直到组内的任务都完成。所有适合组内执行的任务都可以使用任务组，且任务组更适合集合异步任务(如果都是同步任务，直接使用串行队列即可)。</p>
-<p><img src="/images/gcd_chaining_vs_grouping_work.png" alt="gcd_chaining_vs_grouping_work"></p>
-<p>通过创建的DispatchGroup对象，当你向调度器提交工作的时候，可以向异步调用增加这个group作为一个可选的参数。你可以向这个group添加更多的工作以及在不同的队列中使用同一个group将它们联系起来。</p>
-<p>每次向group提交工作，它都会增加需要完成的项目的数量。最后当你提交了所有的工作，可以让group在所有工作被完成时在指定的队列上通知你。</p>
-<p><img src="/images/gcd_grouping_work_together.png" alt="gcd_grouping_work_together"></p>
-<p>有两种方式加入任务组：</p>
-<ul>
-<li>添加任务时指定任务组</li>
-</ul>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> group = <span class="hljs-type">DispatchGroup</span>()</span><br><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>.global()</span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>使用 group.enter(), group.leave() 配对方法，标识任务加入任务组。<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> group = <span class="hljs-type">DispatchGroup</span>()</span><br><span class="line">group.enter()</span><br><span class="line">queue.async() &#123;</span><br><span class="line">    <span class="hljs-comment">// do something</span></span><br><span class="line">    group.leave()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>两种加入方式在对任务处理的特性上是没有区别的，只是便利之处不同。如果任务所在的队列是自己创建或系统队列，那么直接使用第一种方式直接加入即可。如果任务是由系统或第三方的API创建的，由于无法获取对应的队列，只能使用第二种方式将任务加入组内，例如将 URLSession 的 addDataTask 方法加入任务组中。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">URLSession</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">addDataTask</span><span class="hljs-params">(to group: DispatchGroup,</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">                     with request: URLRequest,</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">                     completionHandler: @escaping <span class="hljs-params">(Data?, URLResponse?, Error?)</span></span></span> -&gt; <span class="hljs-type">Void</span>) -&gt; <span class="hljs-type">URLSessionDataTask</span> &#123;</span><br><span class="line">            group.enter() <span class="hljs-comment">// 进入任务组</span></span><br><span class="line">            <span class="hljs-keyword">return</span> dataTask(with: request) &#123; (data, response, error) <span class="hljs-keyword">in</span></span><br><span class="line">                completionHandler(data, response, error)</span><br><span class="line">                group.leave() <span class="hljs-comment">// 离开任务组</span></span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们也可以等待任务组中的任务全部完成后，可以统一对外发送通知，有两种方式：</p>
-<ul>
-<li><p>group.notify() 方法，它可以在所有任务完成后通知指定队列并执行一个指定任务，这个通知的操作是异步的（意味着通知后续的代码不需要等待任务，可以继续执行）：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> group = <span class="hljs-type">DispatchGroup</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> queueBook = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"book"</span>)</span><br><span class="line">queueBook.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something 1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> queueVideo = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"video"</span>)</span><br><span class="line">queueVideo.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something 2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group.notify(queue: <span class="hljs-type">DispatchQueue</span>.main) &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"all task done"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-string">"do something else."</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 执行结果</span></span><br><span class="line"><span class="hljs-comment">// do something else.</span></span><br><span class="line"><span class="hljs-comment">// do something 1(任务 1、2 完成顺序不固定)</span></span><br><span class="line"><span class="hljs-comment">// do something 2</span></span><br><span class="line"><span class="hljs-comment">// all task done</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>group.wait() 方法， 它会在所有任务完成后再执行当前线程中后续的代码，因此这个操作是有阻塞作用。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> group = <span class="hljs-type">DispatchGroup</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> queueBook = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"book"</span>)</span><br><span class="line">queueBook.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something 1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> queueVideo = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"video"</span>)</span><br><span class="line">queueVideo.async(group: group) &#123;</span><br><span class="line">    <span class="hljs-comment">// do something 2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group.wait()</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-string">"do something else."</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 执行结果</span></span><br><span class="line"><span class="hljs-comment">// do something 1(任务 1、2 完成顺序不固定)</span></span><br><span class="line"><span class="hljs-comment">// do something 2</span></span><br><span class="line"><span class="hljs-comment">// do something else.</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>wait 方法中还可以指定具体的时间，它表示将等待不超过这个时间，如果任务组在指定时间之内完成则立即恢复当前线程，否则将等到时间结束时再恢复当前线程。</p>
-<ul>
-<li><p>方式1，使用 DispatchTime，它表示一个时间间隔，精确到纳秒（1/1000,000,000 秒）：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> waitTime = <span class="hljs-type">DispatchTime</span>.now() + <span class="hljs-number">2.0</span> <span class="hljs-comment">// 表示从当前时间开始后 2 秒，数字字面量也可以改为使用 TimeInterval 类型变量</span></span><br><span class="line">group.wait(timeout: waitTime)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>方式2，使用 DispatchWallTime，它表示当前的绝对时间戳，精确到微秒（1/1000,000 秒），通常使用字面量即可设置延时时间，也可以使用 timespec 结构体来设置一个精确的时间戳，具体参见附录章节的《时间相关的结构体说明 - DispatchWallTime》：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用字面量设置</span></span><br><span class="line"><span class="hljs-keyword">var</span> wallTime = <span class="hljs-type">DispatchWallTime</span>.now() + <span class="hljs-number">2.0</span> <span class="hljs-comment">// 表示从当前时间开始后 2 秒，数字字面量也可以改为使用 TimeInterval 类型变量</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h4><p>DispatchSemaphore 是传统计数信号量的封装，用来控制资源被多任务访问的情况。<br>简单来说就是控制访问资源的数量，比如系统有两个资源可以被利用，同时有三个线程要访问，只能允许两个线程访问，第三个应当等待资源被释放后再访问。例如，控制同一时间写文件的任务数量、控制端口访问数量、控制下载任务数量等。</p>
-<p>信号量的使用非常的简单：</p>
-<ul>
-<li>首先创建一个初始数量的信号对象</li>
-<li>使用 wait 方法让信号量减 1，再安排任务。如果此时信号量仍大于或等于 0，则任务可执行，如果信号量小于 0，则任务需要等待其他地方释放信号。</li>
-<li>任务完成后，使用 signal 方法增加一个信号量。</li>
-<li>等待信号有两种方式：永久等待、可超时的等待。</li>
-</ul>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>(</span><br><span class="line">    label: <span class="hljs-string">"com.sinkingsoul.DispatchQueueTest.concurrentQueue"</span>,</span><br><span class="line">    attributes: .concurrent)</span><br><span class="line"><span class="hljs-keyword">let</span> semaphore = <span class="hljs-type">DispatchSemaphore</span>(value: <span class="hljs-number">2</span>) <span class="hljs-comment">// 设置数量为 2 的信号量</span></span><br><span class="line"></span><br><span class="line">semaphore.wait()</span><br><span class="line">queue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 1 start"</span>)</span><br><span class="line">    sleep(<span class="hljs-number">2</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 1 finish"</span>)</span><br><span class="line">    semaphore.signal()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">semaphore.wait()</span><br><span class="line">queue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 2 start"</span>)</span><br><span class="line">    sleep(<span class="hljs-number">2</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 2 finish"</span>)</span><br><span class="line">    semaphore.signal()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">semaphore.wait()</span><br><span class="line">queue.async &#123;</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 3 start"</span>)</span><br><span class="line">    sleep(<span class="hljs-number">2</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Task 3 finish"</span>)</span><br><span class="line">    semaphore.signal()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 运行结果：</span></span><br><span class="line"><span class="hljs-comment">// Task 1 start</span></span><br><span class="line"><span class="hljs-comment">// Task 2 start</span></span><br><span class="line"><span class="hljs-comment">// Task 1 finish</span></span><br><span class="line"><span class="hljs-comment">// Task 2 finish</span></span><br><span class="line"><span class="hljs-comment">// Task 3 start</span></span><br><span class="line"><span class="hljs-comment">// Task 3 finish</span></span><br></pre></td></tr></table></figure>
-<p>运行结果中可以看到任务 3 在前两个任务完成后才开始运行。</p>
-<h4 id="DispatchWorkItem"><a href="#DispatchWorkItem" class="headerlink" title="DispatchWorkItem"></a>DispatchWorkItem</h4><p>DispatchQueue执行操作除了直接传递一个闭包外，还可以传入一个DispatchWorkItem。 DispatchWorkItem 的初始化方法可以配置 QoS 和 DispatchWorkItemFlags, 但是这两个参数都有默认参数，所以也可以只传入一个闭包。</p>
-<p>DispatchWorkItemFlags 枚举中 assignCurrentContext 表示 QoS 根据创建时的 context 决定，这个 workItem 会从负责执行该任务的调度队列或者线程继承其QoS设置。</p>
-<p><img src="/images/gcd_dispatch_work_item.png" alt="gcd_dispatch_work_item"></p>
-<p>另外，DispatchWorkItem 也有 wait 方法，调用会等待这个 workItem 执行完。</p>
-<p><img src="/images/gcd_waiting_for_work_items.png" alt="gcd_waiting_for_work_items"></p>
-<p>DispatchWorkItemFlags 枚举中还有其他选项，如 barrier, detached, enforceQos, inheritQos, noQos。</p>
-<p>.barrier: 如果DispatchWorkItem被提交到.concurrent并发队列，那么这个DispatchWorkItem中的操作会具有独占性(防止此DispatchWorkItem中的block内的操作与其他操作同时执行)。执行该任务时，它会先等待队列中已有的任务全部执行完成，然后它再执行，在它之后加入的任务也必须等栅栏任务执行完成后才能执行。</p>
-<p><img src="/images/gcd_dispatch_work_item_flags_barrier.png" alt="gcd_dispatch_work_item_flags_barrier"></p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"BarrierWorkItem"</span>, attributes: .concurrent)</span><br><span class="line">queue.async &#123;</span><br><span class="line">    sleep(<span class="hljs-number">4</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"async task 1 finish."</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> task = <span class="hljs-type">DispatchWorkItem</span>(flags: .barrier) &#123;</span><br><span class="line">    sleep(<span class="hljs-number">2</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"barrier task finish."</span>)</span><br><span class="line">&#125;</span><br><span class="line">queue.async(execute: task)</span><br><span class="line">queue.async &#123;</span><br><span class="line">    sleep(<span class="hljs-number">1</span>)</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"async task 2 finish."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//async task 1 finish.</span></span><br><span class="line"><span class="hljs-comment">//barrier task finish.</span></span><br><span class="line"><span class="hljs-comment">//async task 2 finish.</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>.detached 表明DispatchWorkItem会无视当前执行上下文的参数。</li>
-<li>.noQos 不指定QoS，由调用线程或队列来指定。</li>
-<li>.inheritQos 表明DispatchWorkItem会采用队列的QoS class，而不是当前的。</li>
-<li>.enforceQos 表明DispatchWorkItem会采用当前的QoS class，而不是队列的。</li>
-</ul>
-<h3 id="DispatchSource"><a href="#DispatchSource" class="headerlink" title="DispatchSource"></a>DispatchSource</h3><p>Dispatch Source是GCD中的一个基本类型，从字面意思可称为调度源，它的作用是当有一些特定的较底层的系统事件发生时，调度源会捕捉到这些事件，然后可以做其他的逻辑处理，调度源有多种类型，分别监听对应类型的系统事件。</p>
-<p>可监听的对象的具体类型：</p>
-<ul>
-<li>Timer Dispatch Source：定时调度源。</li>
-<li>Signal Dispatch Source：监听UNIX信号调度源，比如监听代表挂起指令的SIGSTOP信号。</li>
-<li>Descriptor Dispatch Source：监听文件相关操作和Socket相关操作的调度源。</li>
-<li>Process Dispatch Source：监听进程相关状态的调度源。</li>
-<li>Mach port Dispatch Source：监听Mach相关事件的调度源。</li>
-<li>Custom Dispatch Source：监听自定义事件的调度源。</li>
-</ul>
-<p>下面以文件监听为例看下使用方法，下面例子中监听了一个指定目录下文件的写入事件，创建监听主要有几个步骤：</p>
-<ul>
-<li>通过 makeFileSystemObjectSource 方法创建 source</li>
-<li>通过 setEventHandler 设定事件处理程序，setCancelHandler 设定取消监听的处理。</li>
-<li>执行 resume() 方法开始接收事件</li>
-</ul>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>.global()</span><br><span class="line"><span class="hljs-keyword">let</span> filePath = <span class="hljs-string">"..."</span></span><br><span class="line"><span class="hljs-keyword">let</span> fileURL = <span class="hljs-type">URL</span>(fileURLWithPath: filePath)</span><br><span class="line"><span class="hljs-keyword">let</span> fd = <span class="hljs-keyword">open</span>(fileURL.path, <span class="hljs-type">O_EVTONLY</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> source = <span class="hljs-type">DispatchSource</span>.makeFileSystemObjectSource(fileDescriptor: fd, eventMask: .write, queue: queue)</span><br><span class="line">source.setEventHandler(handler: closure)</span><br><span class="line">source.setCancelHandler &#123;</span><br><span class="line">    close(fd)</span><br><span class="line">&#125;</span><br><span class="line">source.resume()</span><br></pre></td></tr></table></figure>
-<p><img src="/images/gcd_dispatch_source_cancellation.png" alt="gcd_dispatch_source_cancellation"></p>
-<p>DispatchSourceTimer 的例子：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printTime</span><span class="hljs-params">(withComment comment: String)</span></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> date = <span class="hljs-type">Date</span>()</span><br><span class="line">    <span class="hljs-keyword">let</span> formatter = <span class="hljs-type">DateFormatter</span>()</span><br><span class="line">    </span><br><span class="line">    formatter.dateFormat = <span class="hljs-string">"yyyy-MM-dd HH:mm:ss"</span></span><br><span class="line">    </span><br><span class="line">    <span class="hljs-built_in">print</span>(comment + <span class="hljs-string">": "</span> + formatter.string(from: date))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> timer = <span class="hljs-type">DispatchSource</span>.makeTimerSource()</span><br><span class="line">timer.schedule(deadline: .now() + .seconds(<span class="hljs-number">10</span>),</span><br><span class="line">               repeating: .seconds(<span class="hljs-number">5</span>),</span><br><span class="line">               leeway: .seconds(<span class="hljs-number">5</span>))</span><br><span class="line">timer.setEventHandler &#123;</span><br><span class="line">    printTime(withComment: <span class="hljs-string">"hello world"</span>)</span><br><span class="line">&#125;</span><br><span class="line">timer.activate()</span><br><span class="line">printTime(withComment: <span class="hljs-string">"3"</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 运行结果：</span></span><br><span class="line"><span class="hljs-comment">// 3: 2019-04-25 16:43:53</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:03</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:08</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:13</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:18</span></span><br><span class="line"><span class="hljs-comment">// hello world: 2019-04-25 16:44:23</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="表明DispatchWorkItem会采用当前的QoS"><a href="#表明DispatchWorkItem会采用当前的QoS" class="headerlink" title="表明DispatchWorkItem会采用当前的QoS"></a>表明DispatchWorkItem会采用当前的QoS</h3><p>DispatchIO 对象提供一个操作文件描述符的通道。简单讲就是你可以利用多线程异步高效的读写文件。</p>
-<p>发起读写操作一般步奏如下：</p>
-<ul>
-<li>创建 DispatchIO 对象，或者说创建一个通道，并设置结束处理闭包。</li>
-<li>调用 read/write 方法。</li>
-<li>调用 close 方法关闭通道。</li>
-<li>在 clone 方法后系统将自动调用结束处理闭包。</li>
-</ul>
-<p>初始化方法</p>
-<p>一般使用两种方式初始化： 文件描述符，或者文件路径</p>
-<p>文件描述符方式</p>
-<p>文件描述符使用 open 方法创建： <code>open(_ path: UnsafePointer&lt;CChar&gt;, _ oflag: Int32, _ mode: mode_t) -&gt; Int32</code>, 第一个参数是 UnsafePointer<int8> 类型的路径，oflag 、mode 指文件的操作权限，一个是系统 API 级的，一个是文件系统级的，可选项如下:</int8></p>
-<p>oflag：</p>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>备注</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>O_RDONLY</td>
-<td>以只读方式打开文件</td>
-<td>此三种读写类型只能有一种</td>
-</tr>
-<tr>
-<td>O_WRONLY</td>
-<td>以只写方式打开文件</td>
-<td>此三种读写类型只能有一种</td>
-</tr>
-<tr>
-<td>O_RDWR</td>
-<td>以读和写的方式打开文件</td>
-<td>此三种读写类型只能有一种</td>
-</tr>
-<tr>
-<td>O_CREAT</td>
-<td>打开文件，如果文件不存在则创建文件</td>
-<td>创建文件时会使用Mode参数与Umask配合设置文件权限</td>
-</tr>
-<tr>
-<td>O_EXCL</td>
-<td>如果已经置O_CREAT且文件存在，则强制open()失败</td>
-<td>可以用来检测多个进程之间创建文件的原子操作</td>
-</tr>
-<tr>
-<td>O_TRUNC</td>
-<td>将文件的长度截为0</td>
-<td>无论打开方式是RD,WR,RDWR，只要打开就会把文件清空</td>
-</tr>
-<tr>
-<td>O_APPEND</td>
-<td>强制write()从文件尾开始不care当前文件偏移量所处位置，只会在文件末尾开始添加</td>
-<td>如果不使用的话，只会在文件偏移量处开始覆盖原有内容写文件</td>
-</tr>
-</tbody>
-</table>
-<p>mode：包含 User、Group、Other 三个组对应的权限掩码。</p>
-<table>
-<thead>
-<tr>
-<th>User</th>
-<th>Group</th>
-<th>Other</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>S_IRWXU</td>
-<td>S_IRWXG</td>
-<td>S_IRWXO</td>
-<td>可读、可写、可执行</td>
-</tr>
-<tr>
-<td>S_IRUSR</td>
-<td>S_IRGRP</td>
-<td>S_IROTH</td>
-<td>可读</td>
-</tr>
-<tr>
-<td>S_IWUSR</td>
-<td>S_IWGR</td>
-<td>S_IWOTH</td>
-<td>可写</td>
-</tr>
-<tr>
-<td>S_IXUSR</td>
-<td>S_IXGRP</td>
-<td>S_IXOTH</td>
-<td>可执行</td>
-</tr>
-</tbody>
-</table>
-<p>创建的通道有两种类型：</p>
-<p>连续数据流：<code>DispatchIO.StreamType.stream</code>，这个方式是对文件从头到尾完整操作的。<br>随机片段数据：<code>DispatchIO.StreamType.random</code>，这个方式是在文件的任意一个位置（偏移量）开始操作的。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> filePath: <span class="hljs-type">NSString</span> = <span class="hljs-string">"test.zip"</span></span><br><span class="line"><span class="hljs-comment">// 创建一个可读写的文件描述符</span></span><br><span class="line"><span class="hljs-keyword">let</span> fileDescriptor = <span class="hljs-keyword">open</span>(filePath.utf8String!, (<span class="hljs-type">O_RDWR</span> | <span class="hljs-type">O_CREAT</span> | <span class="hljs-type">O_APPEND</span>), (<span class="hljs-type">S_IRWXU</span> | <span class="hljs-type">S_IRWXG</span>))</span><br><span class="line"><span class="hljs-keyword">let</span> queue = <span class="hljs-type">DispatchQueue</span>(label: <span class="hljs-string">"com.sinkingsoul.DispatchQueueTest.serialQueue"</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> cleanupHandler: (<span class="hljs-type">Int32</span>) -&gt; <span class="hljs-type">Void</span> = &#123; errorNumber <span class="hljs-keyword">in</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> io = <span class="hljs-type">DispatchIO</span>(type: .stream, fileDescriptor: fileDescriptor, queue: queue, cleanupHandler: cleanupHandler)</span><br></pre></td></tr></table></figure>
-<p>文件路径方式</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> io = <span class="hljs-type">DispatchIO</span>(type: .stream, path: filePath.utf8String!, oflag: (<span class="hljs-type">O_RDWR</span> | <span class="hljs-type">O_CREAT</span> | <span class="hljs-type">O_APPEND</span>), mode: (<span class="hljs-type">S_IRWXU</span> | <span class="hljs-type">S_IRWXG</span>), queue: queue, cleanupHandler: cleanupHandler)</span><br></pre></td></tr></table></figure>
-<p>数据块大小阀值<br>DispatchIO 支持多线程操作的原因之一就是它将文件拆分为数据块进行并行操作，你可以设置数据块大小的上下限，系统会采取合适的大小，使用这两个方法即可：setLimit(highWater: Int)、setLimit(lowWater: Int)，单位是 byte。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.setLimit(highWater: <span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>)</span><br></pre></td></tr></table></figure></p>
-<p>数据块如果设置小一点（如 1M），则可以节省 App 的内存，如果内存足够则可以大一点换取更快速度。在进行读写操作时，有一个性能问题需要注意，如果同时读写的话一般分两个通道，且读到一个数据块就立即写到另一个数据块中，那么写通道的数据块上限不要小于读通道的，否则会造成内存大量积压无法及时释放。</p>
-<p>读操作<br>方法示例：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ioRead.read(offset: <span class="hljs-number">0</span>, length: <span class="hljs-type">Int</span>.<span class="hljs-built_in">max</span>, queue: ioReadQueue) &#123; doneReading, data, error <span class="hljs-keyword">in</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (error &gt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">            <span class="hljs-built_in">print</span>(<span class="hljs-string">"读取发生错误了，错误码：\(error)"</span>)</span><br><span class="line">            <span class="hljs-keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> (data != <span class="hljs-literal">nil</span>) &#123;</span><br><span class="line">            <span class="hljs-comment">// 使用数据</span></span><br><span class="line">       &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> (doneReading) &#123;</span><br><span class="line">           ioRead.close()</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>offset 指定读取的偏移量，如果通道是 stream 类型，值不起作用，写为 0 即可，将从文件开头读起；如果是 random 类型，则指相对于创建通道时文件的起始位置的偏移量。</p>
-<p>length 指定读取的长度，如果是读取文件全部内容，设置 Int.max 即可，否则设置一个小于文件大小的值（单位是 byte）。</p>
-<p>每读取到一个数据块都会调用你设置的处理闭包，系统会提供三个入参给你：结束标志、本次读取到的数据块、错误码：</p>
-<p>在所有数据读取完成后，会额外再调用一个闭包，通过结束标志告诉你操作结束了，此时 data 大小是 0，错误码也是 0。<br>如果读取中间发生了错误，则会停止读取，结束标志会被设置为 true，并返回相应的错误码，错误码表参考稍后的【关闭通道】小节：<br>写操作<br>方法示例：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ioWrite.write(offset: <span class="hljs-number">0</span>, data: data!, queue: ioWriteQueue) &#123; doneWriting, data, error <span class="hljs-keyword">in</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (error &gt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">        <span class="hljs-built_in">print</span>(<span class="hljs-string">"写入发生错误了，错误码：\(error)"</span>)</span><br><span class="line">        <span class="hljs-keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> doneWriting &#123;</span><br><span class="line">        <span class="hljs-comment">//...</span></span><br><span class="line">        ioWrite.close()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>写操作与读操作的唯一区别是：每当写完一个数据块时，回调闭包返回的 data 是剩余的全部数据。同时注意如果是 stream 类型，将接着文件的末尾写数据。</p>
-<p>关闭通道<br>当读写正常完成，或者你需要中途结束操作时，需要调用 close 方法，这个方法带一个 DispatchIO.CloseFlags 类型参数，如果不指定将默认值为 <code>DispatchIO.CloseFlags.stop</code>。</p>
-<p>这个方法传入 stop 标志时将会停止所有未完成的读写操作，影响范围是所有 I/O channel，其他 DispatchIO 对象进行中的读写操作将会收到一个 ECANCELED 错误码，rawValue 值是 89，这个错误码是 POSIXError 结构的一个属性，而 POSIXError 又是 NSError 中预定义的一个错误域。</p>
-<p>因此如果要在不同 DispatchIO 对象中并行读取操作互不影响， close 方法标志可以设置一个空值：<code>DispatchIO.CloseFlags()</code>。如果设置了 stop 标志，则要做好不同 IO 之间的隔离，通过任务组的enter、leave、wait 方法可以做到较好的隔离。<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ioWrite.close() <span class="hljs-comment">// 停止标志</span></span><br><span class="line">ioWrite.close(flags: <span class="hljs-type">DispatchIO</span>.<span class="hljs-type">CloseFlags</span>()) <span class="hljs-comment">// 空标志</span></span><br></pre></td></tr></table></figure></p>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/04/03/ios-gcd-understanding/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>

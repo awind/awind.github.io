@@ -15,7 +15,7 @@
 <meta property="og:description" content="Grand Central Dispatch(GCD) 是用来管理并发操作的底层API。  允许将一个程序切分为多个单一任务，然后提交到工作队列中并发或者串行地执行 为多核的并行运算提出了解决方案，自动合理的利用CPU内核（比如双核，四核） 自动的管理线程的生命周期（创建线程、调度任务、销毁线程），完全不需要我们管理，只需要告诉它任务是什么就行 配合Block，使得使用起来更加方便灵活  相对于线">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-05-24T06:00:00.028Z">
+<meta property="og:updated_time" content="2019-05-24T08:36:45.051Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS 多线程的使用与总结">
 <meta name="twitter:description" content="Grand Central Dispatch(GCD) 是用来管理并发操作的底层API。  允许将一个程序切分为多个单一任务，然后提交到工作队列中并发或者串行地执行 为多核的并行运算提出了解决方案，自动合理的利用CPU内核（比如双核，四核） 自动的管理线程的生命周期（创建线程、调度任务、销毁线程），完全不需要我们管理，只需要告诉它任务是什么就行 配合Block，使得使用起来更加方便灵活  相对于线">
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7444 个字)
+                    1 小时 读完 (大约 7445 个字)
                 </span>
                 
                 
@@ -176,6 +176,7 @@
 </ol>
 <p>相对于线程和锁来说，GCD 提供了一个更加易用的模板，从而避免发生并发问题。</p>
 <p>在了解GCD之前，我们需要了解一些跟并发和线程的概念。</p>
+<a id="more"></a>
 <h3 id="Concurrency-并发"><a href="#Concurrency-并发" class="headerlink" title="Concurrency 并发"></a>Concurrency 并发</h3><p>iOS应用中包含一个或者多个线程，这些线程由系统的调度器彼此独立的管理。每个线程可以被并发的执行，但是如何实现并发却是由系统决定的。</p>
 <p><img src="/images/Concurrency_vs_Parallelism.png" alt="Concurrency_vs_Parallelism.png"></p>
 <p>单核设备通过 时间切片(time-slicing) 的方式来实现并发，它们运行在一个线程上，当切换其它线程时就执行上下文切换。这种切换一般进行得非常快，让用户感觉像是同时在运行多个线程一样。</p>
