@@ -2,23 +2,23 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>[LeetCode] 11. 盛最多水的容器 - Phillip的技术博客</title>
+<title>[LeetCode] 9. 回文数 - Phillip的技术博客</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="题目描述给定 n 个非负整数 a1，a2，…，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。 说明：你不能倾斜容器，且 n 的值至少为 2。  图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（">
+    <meta name="description" content="题目判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。 示例 1:12输入: 121输出: true 示例 2:123输入: -121输出: false解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3:123输入: 10输出: false解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶: 你能">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[LeetCode] 11. 盛最多水的容器">
-<meta property="og:url" content="http://yoursite.com/2019/03/01/11-container-with-most-water/index.html">
+<meta property="og:title" content="[LeetCode] 9. 回文数">
+<meta property="og:url" content="http://yoursite.com/2018/08/20/9-palindrome-number/index.html">
 <meta property="og:site_name" content="Phillip的技术博客">
-<meta property="og:description" content="题目描述给定 n 个非负整数 a1，a2，…，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。 说明：你不能倾斜容器，且 n 的值至少为 2。  图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（">
+<meta property="og:description" content="题目判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。 示例 1:12输入: 121输出: true 示例 2:123输入: -121输出: false解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3:123输入: 10输出: false解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶: 你能">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-05-25T03:03:21.424Z">
+<meta property="og:updated_time" content="2019-05-25T03:20:55.158Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[LeetCode] 11. 盛最多水的容器">
-<meta name="twitter:description" content="题目描述给定 n 个非负整数 a1，a2，…，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。 说明：你不能倾斜容器，且 n 的值至少为 2。  图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（">
+<meta name="twitter:title" content="[LeetCode] 9. 回文数">
+<meta name="twitter:description" content="题目判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。 示例 1:12输入: 121输出: true 示例 2:123输入: -121输出: false解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3:123输入: 10输出: false解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶: 你能">
 <meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
 
 
@@ -93,7 +93,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="[LeetCode] 11. 盛最多水的容器" height="28">
+                <img src="/images/logo.svg" alt="[LeetCode] 9. 回文数" height="28">
             
             </a>
         </div>
@@ -144,7 +144,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-03-01T12:32:20.000Z">2019-03-01</time>
+                <time class="level-item has-text-grey" datetime="2018-08-20T05:33:26.000Z">2018-08-20</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/LeetCode/">LeetCode</a>
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 331 个字)
+                    2 分钟 读完 (大约 276 个字)
                 </span>
                 
                 
@@ -163,19 +163,23 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                [LeetCode] 11. 盛最多水的容器
+                [LeetCode] 9. 回文数
             
         </h1>
         <div class="content">
-            <!-- https://leetcode-cn.com/problems/container-with-most-water/ -->
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定 n 个非负整数 a1，a2，…，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。</p>
-<p>说明：你不能倾斜容器，且 n 的值至少为 2。</p>
-<p><img src="/images/question_11.jpg" alt="container-with-most-water"></p>
-<p>图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。</p>
-<p>示例:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,8,6,2,5,4,8,3,7]</span><br><span class="line">输出: 49</span><br></pre></td></tr></table></figure></p>
+            <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。</p>
+<p>示例 1:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: 121</span><br><span class="line">输出: true</span><br></pre></td></tr></table></figure></p>
+<p>示例 2:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: -121</span><br><span class="line">输出: false</span><br><span class="line">解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。</span><br></pre></td></tr></table></figure></p>
+<p>示例 3:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 10</span><br><span class="line">输出: false</span><br><span class="line">解释: 从右向左读, 为 01 。因此它不是一个回文数。</span><br></pre></td></tr></table></figure></p>
+<p>进阶:</p>
+<p>你能不将整数转为字符串来解决这个问题吗？</p>
 <a id="more"></a>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>根据题意，构成容器的大小由长度和高度来确定。<br>设定起始和结束的X轴索引为<code>i</code>和<code>j</code>, 长度则为 <code>j - i</code>, 而高度则由对应的两个高度中的较小的那个来确定。<br>在遍历的时候，要从高度较小的那个向前或者向后进行计算，这样可以找到容易更大的值。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">maxArea</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] height)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">int</span> max = <span class="hljs-number">0</span>;</span><br><span class="line">        <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;</span><br><span class="line">        <span class="hljs-keyword">int</span> j = height.length - <span class="hljs-number">1</span>;</span><br><span class="line">        <span class="hljs-keyword">while</span>(j &gt; i) &#123;</span><br><span class="line">            <span class="hljs-keyword">int</span> result = Math.min(height[i], height[j]) * (j - i);</span><br><span class="line">            max = Math.max(max, result);</span><br><span class="line"></span><br><span class="line">            <span class="hljs-keyword">if</span> (height[i] &lt; height[j]) &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>解法1: 将整数转换为字符数组，通过双指针比较前后字符是否相同来判断</p>
+<p>解法2: 评论区看到的一个方法，将转换的字符串反转之后判断与原字符串是否相等</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>解法1 </p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isPalindrome</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">char</span>[] chars = String.valueOf(x).toCharArray();</span><br><span class="line">        <span class="hljs-keyword">boolean</span> result = <span class="hljs-keyword">true</span>;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; chars.length / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>; i++) &#123;</span><br><span class="line">            <span class="hljs-keyword">int</span> indexComplement = chars.length - i - <span class="hljs-number">1</span>;</span><br><span class="line">            <span class="hljs-keyword">if</span> (indexComplement == i) &#123;</span><br><span class="line">                <span class="hljs-keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">if</span> (chars[indexComplement] != chars[i]) &#123;</span><br><span class="line">                result = <span class="hljs-keyword">false</span>;</span><br><span class="line">                <span class="hljs-keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解法2<br><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isPalindrome</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        StringBuffer sb = <span class="hljs-keyword">new</span> StringBuffer();</span><br><span class="line">        sb.append(x);</span><br><span class="line">        sb.reverse();</span><br><span class="line">        <span class="hljs-keyword">return</span> (<span class="hljs-string">""</span> + x).equals(sb.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
         </div>
         
         
@@ -191,19 +195,12 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/02/22-generate-parentheses/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/02/24/2-add-two-numbers/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">[LeetCode] 22. 括号生成</span>
-            </a>
-        </div>
-        
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/02/24/2-add-two-numbers/">
                 <span class="level-item">[LeetCode] 2. 两数相加</span>
-                <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
+        
         
     </div>
 </div>
@@ -221,7 +218,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="[LeetCode] 11. 盛最多水的容器" height="28">
+                    <img src="/images/logo.svg" alt="[LeetCode] 9. 回文数" height="28">
                 
                 </a>
                 <p class="is-size-7">
