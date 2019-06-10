@@ -141,6 +141,121 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-06-06T11:23:39.000Z">2019-06-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 801 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/06/06/swift-stl-optional/">Swift 标准库阅读笔记 - Optional</a>
+            
+        </h1>
+        <div class="content">
+            <p><code>Optional</code> 是 Swift 重要的语言特性之一，通过引入 <code>Optional</code>， 可以很好的判断变量是否存在 <code>nil</code> 值的情况，可以很好的防止出现因为未处理 <code>nil</code> 而带来的程序崩溃问题。</p>
+<p>下面让我们通过源码来了解一下 Optional 具体的实现逻辑。</p>
+<p><code>Optional</code> 具体的实现是一个包含 <code>.none</code> 和 <code>.some</code> 两个 case 的 enum。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Optional</span>&lt;<span class="hljs-title">Wrapped</span>&gt; : <span class="hljs-title">ExpressibleByNilLiteral</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> <span class="hljs-keyword">none</span> </span><br><span class="line">    <span class="hljs-keyword">case</span> some(<span class="hljs-type">Wrapped</span>)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">init</span>(<span class="hljs-number">_</span> some: <span class="hljs-type">Wrapped</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">self</span> = .some(some)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">init</span>(nilLiteral: ()) &#123;</span><br><span class="line">        <span class="hljs-keyword">self</span> = .<span class="hljs-keyword">none</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>由于 Optional 是多类型的，因此我们通过 <code>&lt;Wrapped&gt;</code> 来声明范型。 </p>
+<p>初始化方法<code>init(_ some:)</code> 可以用来初始化一个非 <code>nil</code> 的实例。 而遵守 <code>ExpressibleByNilLiteral</code> 协议则定义了一个初始化方法<code>init(nilLiteral:)</code>, 可以使用 <code>nil</code> 初始化一个实例。</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/06/06/swift-stl-optional/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-06-02T05:37:26.000Z">2019-06-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    31 分钟 读完 (大约 4678 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/06/02/swift-stl-dictionary/">Swift 标准库阅读笔记 - Dictionary</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="/images/Dictionary-Swift.png" alt="Dictionary-Swift"></p>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p><code>Dictionary</code> 使用两种存储策略： 本地存储(Native Storage) 和 Cocoa 存储方式，这次的分析主要是 native 的部分。</p>
+<p><code>Dictionary</code> 内部只有一个成员变量<code>_variant</code>, 类型是<code>_Varient</code>。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">internal</span> <span class="hljs-keyword">var</span> _varient: _Varient</span><br></pre></td></tr></table></figure>
+<p>关于 <code>_Variant</code> 的定义在文件 <code>DictionaryVarient</code> 中，</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">internal</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">_Variant</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">internal</span> <span class="hljs-keyword">var</span> object: _BridgeStorage&lt;__RawDictionaryStorage&gt;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">init</span>(native: __owned _NativeDictionary&lt;<span class="hljs-type">Key</span>, <span class="hljs-type">Value</span>&gt;) &#123;</span><br><span class="line">            <span class="hljs-keyword">self</span>.object = _BridgeStorage(native: native._storage)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 存储不需要桥接的原生类型</span></span><br><span class="line">        <span class="hljs-keyword">internal</span> <span class="hljs-keyword">var</span> asNative: _NativeDictionary&lt;<span class="hljs-type">Key</span>, <span class="hljs-type">Value</span>&gt; &#123;</span><br><span class="line">            <span class="hljs-keyword">get</span> &#123;</span><br><span class="line">                <span class="hljs-keyword">return</span> _NativeDictionary&lt;<span class="hljs-type">Key</span>, <span class="hljs-type">Value</span>&gt;(object.unflaggedNativeInstance)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">set</span> &#123;</span><br><span class="line">                <span class="hljs-keyword">self</span> = .<span class="hljs-keyword">init</span>(native: newValue)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment">// 存储需要桥接的类型</span></span><br><span class="line">        <span class="hljs-keyword">internal</span> <span class="hljs-keyword">var</span> asCocoa: __CocoaDictionary &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> __CocoaDictionary(object.objCInstance)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时， <code>_Variant</code> 也实现了 <code>_DictionaryBuffer</code> 接口， 用于在检查每个缓冲类型(<code>asNative</code> 与 <code>asCocoa</code>)都实现了需要的操作。</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/06/02/swift-stl-dictionary/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-05-02T07:14:20.000Z">2019-05-02</time>
                 
                 <div class="level-item">
@@ -584,117 +699,6 @@
             <div class="level-start">
                 <div class="level-item">
                 <a class="button is-size-7 is-light" href="/2019/04/24/703-kth-largest-element-in-a-stream/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-04-22T15:01:20.000Z">2019-04-22</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/LeetCode/">LeetCode</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    4 分钟 读完 (大约 592 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/04/22/692-top-k-frequent-words/">[LeetCode] 692. 前K个高频单词</a>
-            
-        </h1>
-        <div class="content">
-            <!-- https://leetcode-cn.com/problems/top-k-frequent-words/ -->
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给一非空的单词列表，返回前 k 个出现次数最多的单词。</p>
-<p>返回的答案应该按单词出现频率由高到低排序。如果不同的单词有相同出现频率，按字母顺序排序。</p>
-<p>示例 1：<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [&quot;i&quot;, &quot;love&quot;, &quot;leetcode&quot;, &quot;i&quot;, &quot;love&quot;, &quot;coding&quot;], k = 2</span><br><span class="line">输出: [&quot;i&quot;, &quot;love&quot;]</span><br><span class="line">解析: &quot;i&quot; 和 &quot;love&quot; 为出现次数最多的两个单词，均为2次。</span><br><span class="line">    注意，按字母顺序 &quot;i&quot; 在 &quot;love&quot; 之前。</span><br></pre></td></tr></table></figure></p>
-<p>示例 2：<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [&quot;the&quot;, &quot;day&quot;, &quot;is&quot;, &quot;sunny&quot;, &quot;the&quot;, &quot;the&quot;, &quot;the&quot;, &quot;sunny&quot;, &quot;is&quot;, &quot;is&quot;], k = 4</span><br><span class="line">输出: [&quot;the&quot;, &quot;is&quot;, &quot;sunny&quot;, &quot;day&quot;]</span><br><span class="line">解析: &quot;the&quot;, &quot;is&quot;, &quot;sunny&quot; 和 &quot;day&quot; 是出现次数最多的四个单词，</span><br><span class="line">    出现次数依次为 4, 3, 2 和 1 次。</span><br></pre></td></tr></table></figure></p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/04/22/692-top-k-frequent-words/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-04-22T11:13:20.000Z">2019-04-22</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/LeetCode/">LeetCode</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    3 分钟 读完 (大约 512 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/04/22/451-sort-characters-by-frequency/">[LeetCode] 451. 根据字符出现频率排序</a>
-            
-        </h1>
-        <div class="content">
-            <!-- https://leetcode-cn.com/problems/sort-characters-by-frequency/ -->
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定一个字符串，请将字符串里的字符按照出现的频率降序排列。</p>
-<p>示例 1:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">&quot;tree&quot;</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line">&quot;eert&quot;</span><br><span class="line"></span><br><span class="line">解释:</span><br><span class="line">&apos;e&apos;出现两次，&apos;r&apos;和&apos;t&apos;都只出现一次。</span><br><span class="line">因此&apos;e&apos;必须出现在&apos;r&apos;和&apos;t&apos;之前。此外，&quot;eetr&quot;也是一个有效的答案。</span><br></pre></td></tr></table></figure></p>
-<p>示例 2:<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入:</span><br><span class="line">&quot;cccaaa&quot;</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line">&quot;cccaaa&quot;</span><br><span class="line"></span><br><span class="line">解释:</span><br><span class="line">&apos;c&apos;和&apos;a&apos;都出现三次。此外，&quot;aaaccc&quot;也是有效的答案。</span><br><span class="line">注意&quot;cacaca&quot;是不正确的，因为相同的字母必须放在一起。</span><br></pre></td></tr></table></figure></p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/04/22/451-sort-characters-by-frequency/#more">阅读更多</a>
                 </div>
             </div>
         </div>

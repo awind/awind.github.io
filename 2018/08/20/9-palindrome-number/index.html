@@ -8,6 +8,7 @@
 
 
     <meta name="description" content="题目判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。 示例 1:12输入: 121输出: true 示例 2:123输入: -121输出: false解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3:123输入: 10输出: false解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶: 你能">
+<meta name="keywords" content="Math">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[LeetCode] 9. 回文数">
 <meta property="og:url" content="http://yoursite.com/2018/08/20/9-palindrome-number/index.html">
@@ -15,7 +16,7 @@
 <meta property="og:description" content="题目判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。 示例 1:12输入: 121输出: true 示例 2:123输入: -121输出: false解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3:123输入: 10输出: false解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶: 你能">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-05-25T03:20:55.158Z">
+<meta property="og:updated_time" content="2019-05-25T03:27:12.034Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[LeetCode] 9. 回文数">
 <meta name="twitter:description" content="题目判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。 示例 1:12输入: 121输出: true 示例 2:123输入: -121输出: false解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3:123输入: 10输出: false解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶: 你能">
@@ -180,6 +181,15 @@
 <figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isPalindrome</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">char</span>[] chars = String.valueOf(x).toCharArray();</span><br><span class="line">        <span class="hljs-keyword">boolean</span> result = <span class="hljs-keyword">true</span>;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; chars.length / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>; i++) &#123;</span><br><span class="line">            <span class="hljs-keyword">int</span> indexComplement = chars.length - i - <span class="hljs-number">1</span>;</span><br><span class="line">            <span class="hljs-keyword">if</span> (indexComplement == i) &#123;</span><br><span class="line">                <span class="hljs-keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">if</span> (chars[indexComplement] != chars[i]) &#123;</span><br><span class="line">                result = <span class="hljs-keyword">false</span>;</span><br><span class="line">                <span class="hljs-keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>解法2<br><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isPalindrome</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        StringBuffer sb = <span class="hljs-keyword">new</span> StringBuffer();</span><br><span class="line">        sb.append(x);</span><br><span class="line">        sb.reverse();</span><br><span class="line">        <span class="hljs-keyword">return</span> (<span class="hljs-string">""</span> + x).equals(sb.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Math/">Math</a>
+                </div>
+            </div>
         </div>
         
         
