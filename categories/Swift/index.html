@@ -152,6 +152,63 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-06-13T08:24:21.000Z">2019-06-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1284 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/06/13/map-flatMap-compactMap-difference/">Swift 中 map &amp; flatMap &amp; compactMap 的区别</a>
+            
+        </h1>
+        <div class="content">
+            <p>Swift 中提供了很多的高阶函数，而其中<code>map</code>，<code>flatMap</code> 与 <code>compactMap</code> 又有许多的相似之处，经常对他们使用的时机有些模糊，今天我们就从标准库实现的角度来看下他们各自的区别以及适用的情况。</p>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>关于它们的定义：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Sequence</span></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">map</span>&lt;T&gt;<span class="hljs-params">(<span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">T</span>) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">T</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">flatMap</span>&lt;SegmentOfResult : Sequence&gt;<span class="hljs-params">(<span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">SegmentOfResult</span>) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">SegmentOfResult</span>.<span class="hljs-type">Element</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">compactMap</span>&lt;ElementOfResult&gt;<span class="hljs-params">(<span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">ElementOfResult?</span>) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">ElementOfResult</span>]</span><br></pre></td></tr></table></figure>
+<p>只是从上面的函数签名来看这三个函数，它们虽然都接受一个 <code>transform</code> 的闭包作为参数，且闭包捕获的参数都为 <code>Sequence</code> 中的元素类型，但是闭包所返回的类型可以与 <code>Sequence</code> 元素的类型不同。<br><code>map</code> 中的闭包返回类型为 <code>T</code>，而 <code>map</code> 函数的返回类型为 <code>[T]</code>。</p>
+<p><code>flatMap</code> 中的闭包的参数同样是 <code>Sequence</code> 中的元素类型，但其返回类型为 <code>SegmentOfResult</code>。在函数体的范型定义中，<code>SegmentOfResult</code> 的类型其实就是是 <code>Sequence</code>。 而<code>flatMap</code> 函数返回的类型是 <code>SegmentOfResult.Element</code> 的数组。从函数的返回值来看，与 <code>map</code> 的区别在于 <code>flatMap</code> 会将 <code>Sequence</code> 中的元素进行”降温”，返回的类型会是 <code>Sequence</code> 中元素类型的数组，而 <code>map</code> 返回的这是闭包返回类型<code>T</code>的数组。</p>
+<p><code>compactMap</code> 闭包参数的返回类型为 <code>ElementOfResult?</code>, 而函数返回类型为 <code>[ElementOfResult]</code>。因此，compactMap 会将闭包返回的 Optional 的类型解包并返回解包后的数组。</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/06/13/map-flatMap-compactMap-difference/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-06-06T11:23:39.000Z">2019-06-06</time>
                 
                 <div class="level-item">

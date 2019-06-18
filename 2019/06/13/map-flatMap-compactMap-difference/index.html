@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>Swift 中 map &amp; flatMap &amp; compactMap 的区别 - Phillip的技术博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="Swift 中提供了很多的高阶函数，而其中map，flatMap 与 compactMap 又有许多的相似之处，经常对他们使用的时机有些模糊，今天我们就从标准库实现的角度来看下他们各自的区别以及适用的情况。 Overview关于它们的定义： 123456// Sequencepublic func map&amp;lt;T&amp;gt;(_ transform: (Element) throws -&amp;gt; T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift 中 map &amp; flatMap &amp; compactMap 的区别">
+<meta property="og:url" content="http://yoursite.com/2019/06/13/map-flatMap-compactMap-difference/index.html">
+<meta property="og:site_name" content="Phillip的技术博客">
+<meta property="og:description" content="Swift 中提供了很多的高阶函数，而其中map，flatMap 与 compactMap 又有许多的相似之处，经常对他们使用的时机有些模糊，今天我们就从标准库实现的角度来看下他们各自的区别以及适用的情况。 Overview关于它们的定义： 123456// Sequencepublic func map&amp;lt;T&amp;gt;(_ transform: (Element) throws -&amp;gt; T">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/og_image.png">
+<meta property="og:updated_time" content="2019-06-18T15:39:35.231Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swift 中 map &amp; flatMap &amp; compactMap 的区别">
+<meta name="twitter:description" content="Swift 中提供了很多的高阶函数，而其中map，flatMap 与 compactMap 又有许多的相似之处，经常对他们使用的时机有些模糊，今天我们就从标准库实现的角度来看下他们各自的区别以及适用的情况。 Overview关于它们的定义： 123456// Sequencepublic func map&amp;lt;T&amp;gt;(_ transform: (Element) throws -&amp;gt; T">
+<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/logo.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Swift 中 map &amp; flatMap &amp; compactMap 的区别" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/awind/">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-06-13T08:24:21.000Z">2019-06-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1284 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Swift 中 map &amp; flatMap &amp; compactMap 的区别
+            
+        </h1>
+        <div class="content">
+            <p>Swift 中提供了很多的高阶函数，而其中<code>map</code>，<code>flatMap</code> 与 <code>compactMap</code> 又有许多的相似之处，经常对他们使用的时机有些模糊，今天我们就从标准库实现的角度来看下他们各自的区别以及适用的情况。</p>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>关于它们的定义：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Sequence</span></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">map</span>&lt;T&gt;<span class="hljs-params">(<span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">T</span>) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">T</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">flatMap</span>&lt;SegmentOfResult : Sequence&gt;<span class="hljs-params">(<span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">SegmentOfResult</span>) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">SegmentOfResult</span>.<span class="hljs-type">Element</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">compactMap</span>&lt;ElementOfResult&gt;<span class="hljs-params">(<span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">ElementOfResult?</span>) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">ElementOfResult</span>]</span><br></pre></td></tr></table></figure>
+<p>只是从上面的函数签名来看这三个函数，它们虽然都接受一个 <code>transform</code> 的闭包作为参数，且闭包捕获的参数都为 <code>Sequence</code> 中的元素类型，但是闭包所返回的类型可以与 <code>Sequence</code> 元素的类型不同。<br><code>map</code> 中的闭包返回类型为 <code>T</code>，而 <code>map</code> 函数的返回类型为 <code>[T]</code>。</p>
+<p><code>flatMap</code> 中的闭包的参数同样是 <code>Sequence</code> 中的元素类型，但其返回类型为 <code>SegmentOfResult</code>。在函数体的范型定义中，<code>SegmentOfResult</code> 的类型其实就是是 <code>Sequence</code>。 而<code>flatMap</code> 函数返回的类型是 <code>SegmentOfResult.Element</code> 的数组。从函数的返回值来看，与 <code>map</code> 的区别在于 <code>flatMap</code> 会将 <code>Sequence</code> 中的元素进行”降温”，返回的类型会是 <code>Sequence</code> 中元素类型的数组，而 <code>map</code> 返回的这是闭包返回类型<code>T</code>的数组。</p>
+<p><code>compactMap</code> 闭包参数的返回类型为 <code>ElementOfResult?</code>, 而函数返回类型为 <code>[ElementOfResult]</code>。因此，compactMap 会将闭包返回的 Optional 的类型解包并返回解包后的数组。</p>
+<a id="more"></a>
+<p>下面分别从源码角度再看下标准库的具体实现方式：</p>
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">map</span>&lt;T&gt;<span class="hljs-params">(</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    <span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">T</span></span><br><span class="line">  ) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">T</span>] &#123;</span><br><span class="line">    <span class="hljs-comment">// underestimatedCount 返回值的大小会略小于或等于当前序列元素的数量</span></span><br><span class="line">    <span class="hljs-keyword">let</span> initialCapacity = underestimatedCount</span><br><span class="line">    <span class="hljs-keyword">var</span> result = <span class="hljs-type">ContiguousArray</span>&lt;<span class="hljs-type">T</span>&gt;()</span><br><span class="line">    <span class="hljs-comment">// 保留当前序列预估容量的存储空间</span></span><br><span class="line">    result.reserveCapacity(initialCapacity)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">var</span> iterator = <span class="hljs-keyword">self</span>.makeIterator()</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// Add elements up to the initial capacity without checking for regrowth.</span></span><br><span class="line">    <span class="hljs-comment">// initialCapacity 会略小于当前序列的数量，因此这一段的遍历可以使用强制解包`interatpr.next()`</span></span><br><span class="line">    <span class="hljs-keyword">for</span> <span class="hljs-number">_</span> <span class="hljs-keyword">in</span> <span class="hljs-number">0</span>..&lt;initialCapacity &#123;</span><br><span class="line">      result.append(<span class="hljs-keyword">try</span> transform(iterator.next()!))</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// Add remaining elements, if any.</span></span><br><span class="line">    <span class="hljs-keyword">while</span> <span class="hljs-keyword">let</span> element = iterator.next() &#123;</span><br><span class="line">      result.append(<span class="hljs-keyword">try</span> transform(element))</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-type">Array</span>(result)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>在上面 map 的实现中，主要做了以下几件事：</p>
+<ul>
+<li>首先根据序列中的 <code>underestimatedCount</code> 和变换的目标类型 <code>T</code>，初始化一个 <code>result</code> 的数组来存放结果。</li>
+<li>通过 <code>iterator</code> 遍历序列中的每一个元素，并调用 <code>transform</code> 闭包对元素进行变换。</li>
+<li>将把变换后的结果保存结果数组中。</li>
+</ul>
+<p>因此，经过 <code>map</code> 变换的 <code>Sequence</code> 就不再是一个简单的序列了，而是一个数组。我们只能对有限序列使用map进行变换。</p>
+<blockquote>
+<p><code>ContiguousArray</code> 和名字所暗示的不同，它其实是 Swift 中最简单的数组类型。相比标准的数组，它可以有更好的性能表现，而即便没有，也至少可以提供与 <code>Array</code> 相同性能水平的表现。同时也暴露出相同的接口。</p>
+</blockquote>
+<h2 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">flatMap</span>&lt;SegmentOfResult : Sequence&gt;<span class="hljs-params">(</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    <span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">SegmentOfResult</span></span><br><span class="line">  ) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">SegmentOfResult</span>.<span class="hljs-type">Element</span>] &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> result: [<span class="hljs-type">SegmentOfResult</span>.<span class="hljs-type">Element</span>] = []</span><br><span class="line">    <span class="hljs-keyword">for</span> element <span class="hljs-keyword">in</span> <span class="hljs-keyword">self</span> &#123;</span><br><span class="line">      result.append(contentsOf: <span class="hljs-keyword">try</span> transform(element))</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> result</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>对于 flatMap 的实现，我们可以看出，它做了以下几件事情：</p>
+<ul>
+<li>初始化一个名为 <code>result</code> 的新数组，用于存放结果。</li>
+<li>遍历自己的元素，对于每个元素，调用闭包的转换函数 <code>transform</code> 进行转换。</li>
+<li>将转换的结果，使用 <code>appendContentsOf</code> 方法，将结果放入 <code>result</code> 数组中。</li>
+</ul>
+<p>而这个 appendContentsOf 方法，即是把数组中的元素取出来，放入新数组。</p>
+<h2 id="compactMap"><a href="#compactMap" class="headerlink" title="compactMap"></a>compactMap</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">compactMap</span>&lt;ElementOfResult&gt;<span class="hljs-params">(</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    <span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">ElementOfResult?</span></span><br><span class="line">  ) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">ElementOfResult</span>] &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">try</span> _compactMap(transform)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">_compactMap</span>&lt;ElementOfResult&gt;<span class="hljs-params">(</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    <span class="hljs-number">_</span> transform: <span class="hljs-params">(Element)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">ElementOfResult?</span></span><br><span class="line">  ) <span class="hljs-keyword">rethrows</span> -&gt; [<span class="hljs-type">ElementOfResult</span>] &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> result: [<span class="hljs-type">ElementOfResult</span>] = []</span><br><span class="line">    <span class="hljs-keyword">for</span> element <span class="hljs-keyword">in</span> <span class="hljs-keyword">self</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> newElement = <span class="hljs-keyword">try</span> transform(element) &#123;</span><br><span class="line">        result.append(newElement)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> result</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>而<code>compactMap</code> 的实现则做了以下事情：</p>
+<ul>
+<li>构造一个名为 <code>result</code> 的新数组，用于存放结果。</li>
+<li>遍历自己的元素，对于每个元素，调用闭包的闭包参数 <code>transform</code>，进行转换。</li>
+<li>将转换的结果进行解包，如果有值则使用 <code>append</code> 方法，将结果放入 <code>result</code> 数组中。</li>
+</ul>
+<p>所以，该 <code>compactMap</code> 函数可以过滤闭包执行结果为 <code>nil</code> 的情况，仅收集那些转换后非空的结果。</p>
+<p>如何选择他们使用的时机呢？</p>
+<h2 id="When-to-use-compactMap"><a href="#When-to-use-compactMap" class="headerlink" title="When to use compactMap"></a>When to use <code>compactMap</code></h2><p>当转换闭包返回可选值并且你期望得到的结果为非可选值的序列时，使用 <code>compactMap</code>。</p>
+<p>compactMap 与 map 的区别参考下面的例子：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> scores = [<span class="hljs-string">"1"</span>, <span class="hljs-string">"2"</span>, <span class="hljs-string">"three"</span>, <span class="hljs-string">"four"</span>, <span class="hljs-string">"5"</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> mapped: [<span class="hljs-type">Int?</span>] = scores.<span class="hljs-built_in">map</span> &#123; str <span class="hljs-keyword">in</span> <span class="hljs-type">Int</span>(str) &#125;</span><br><span class="line"><span class="hljs-comment">// [1, 2, nil, nil, 5] - Two nil values as "three" and "four" are strings.</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> compactMapped: [<span class="hljs-type">Int</span>] = scores.compactMap &#123; str <span class="hljs-keyword">in</span> <span class="hljs-type">Int</span>(str) &#125;</span><br><span class="line"><span class="hljs-comment">// [1, 2, 5] - The nil values for "three" and "four" are filtered out.</span></span><br></pre></td></tr></table></figure>
+<p>根据这些不同点，可以归纳出三个函数适用的不同情况，当闭包返回的结果需要是序列类型且期望返回的结果是一维数组时，使用 <code>flatMap</code>, 而需要过滤 <code>transform</code> 结果的可选值时，使用 <code>compactMap</code>。</p>
+<p>如：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> arr = [[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>]]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> result = arr.<span class="hljs-built_in">map</span> &#123; $<span class="hljs-number">0</span> &#125;</span><br><span class="line"><span class="hljs-comment">// [[1, 2, 3], [4, 5]]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> result = arr.flatMap &#123; $<span class="hljs-number">0</span> &#125;</span><br><span class="line"><span class="hljs-comment">// [1, 2, 3, 4, 5]</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-literal">nil</span>, <span class="hljs-literal">nil</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> result = arr.compactMap &#123; $<span class="hljs-number">0</span> &#125;</span><br><span class="line"><span class="hljs-comment">// [1, 2, 3, 4, 5]</span></span><br></pre></td></tr></table></figure>
+<h2 id="When-to-use-flatMap"><a href="#When-to-use-flatMap" class="headerlink" title="When to use flatMap"></a>When to use <code>flatMap</code></h2><p>当对于序列中元素，转换闭包返回的是序列或者集合时，而你期望得到的结果是一维数组时，使用 <code>flatMap</code>。</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> scoresByName = [<span class="hljs-string">"Henk"</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>], <span class="hljs-string">"John"</span>: [<span class="hljs-number">2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>]]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> mapped = scoresByName.<span class="hljs-built_in">map</span> &#123; $<span class="hljs-number">0</span>.value &#125;</span><br><span class="line"><span class="hljs-comment">// [[0, 5, 8], [2, 5, 8]] - An array of arrays</span></span><br><span class="line"><span class="hljs-built_in">print</span>(mapped)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> flatMapped = scoresByName.flatMap &#123; $<span class="hljs-number">0</span>.value &#125;</span><br><span class="line"><span class="hljs-comment">// [0, 5, 8, 2, 5, 8] - flattened to only one array</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其实 <code>s.flatMap(transform)</code> 的结果等同于 <code>Array(s.map(transform).joined())</code>。</p>
+</blockquote>
+<h2 id="compactMap-vs-flatMap"><a href="#compactMap-vs-flatMap" class="headerlink" title="compactMap vs flatMap"></a>compactMap vs flatMap</h2><p>当在序列元素上使用转换闭包，且返回值为<code>Optional</code> 类型时，使用 <code>compactMap</code>, 其他情况下 <code>map</code> 与 <code>flatMap</code> 都可以得到你所想要的结果。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/06/swift-stl-optional/">
+                <span class="level-item">Swift 标准库阅读笔记 - Optional</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Swift 中 map &amp; flatMap &amp; compactMap 的区别" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 Phillip&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
