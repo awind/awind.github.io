@@ -141,6 +141,66 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-08-06T11:23:39.000Z">2019-08-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    32 分钟 读完 (大约 4731 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/08/06/swift-what-new-in-swift5/">Swift 5.1 新特性</a>
+            
+        </h1>
+        <div class="content">
+            <p>跟 Swift 5.0 一样， 5.1 的一个重要特性就是模块的稳定性，这使我们可以使用第三方库的同时无需担心它们使用的 Swift 编译器版本。这听起来类似我们在 Swift 5.0 版本中获得的 ABI 稳定性，但是有一个细微的差别： ABI 稳定性解决了 Swift 的运行时差异，而模块稳定性解决了编译时的差异。</p>
+<p>除了这个重要的里程碑之外，我们还获得了许多重要的语言的改进，在本文中，我就介绍它们并提供代码示例，以便你可以看到它们的运行情况。</p>
+<p>PS: 如果你错过了 Swift 5.1 的所有新功能，请从这里开始： <a href="https://www.hackingwithswift.com/articles/126/whats-new-in-swift-5-1" target="_blank" rel="noopener">Swift 5.0 中的新功能</a></p>
+<ul>
+<li><h2 id="对成员逐一构造器的大量改进"><a href="#对成员逐一构造器的大量改进" class="headerlink" title="对成员逐一构造器的大量改进"></a>对成员逐一构造器的大量改进</h2></li>
+</ul>
+<p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0242-default-values-memberwise.md" target="_blank" rel="noopener">SE-0242</a> 对 Swift 最常用的功能之一进行了重大改进：结构体的成员构造器。</p>
+<p>在之前版本的 Swift 中，会自动创建一个成员构造器来接受与结构属性匹配的参数，如下所示：</p>
+<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">User</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> name: <span class="hljs-type">String</span></span><br><span class="line">    <span class="hljs-keyword">var</span> loginCount: <span class="hljs-type">Int</span> = <span class="hljs-number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> piper = <span class="hljs-type">User</span>(name: <span class="hljs-string">"Piper Chapman"</span>, loginCount: <span class="hljs-number">0</span>)</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/08/06/swift-what-new-in-swift5/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-06-24T13:12:04.000Z">2019-06-24</time>
                 
                 <div class="level-item">
