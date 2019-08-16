@@ -1,173 +1,229 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
+
+<!-- Head tag -->
 <head><meta name="generator" content="Hexo 3.8.0">
+
     <meta charset="utf-8">
-<title>Swift 5.1 新特性 - Phillip的技术博客</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!--Description-->
 
-
-    <meta name="description" content="原文地址：What’s new in Swift 5.1 原文作者：Paul Hudson   跟 Swift 5.0 一样， 5.1 的一个重要特性就是模块的稳定性，这使我们可以使用第三方库的同时无需担心它们使用的 Swift 编译器版本。这听起来类似我们在 Swift 5.0 版本中获得的 ABI 稳定性，但是有一个细微的差别： ABI 稳定性解决了 Swift 的运行时差异，而模块稳定性">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Swift 5.1 新特性">
-<meta property="og:url" content="http://yoursite.com/2019/08/06/swift-what-new-in-swift5/index.html">
-<meta property="og:site_name" content="Phillip的技术博客">
-<meta property="og:description" content="原文地址：What’s new in Swift 5.1 原文作者：Paul Hudson   跟 Swift 5.0 一样， 5.1 的一个重要特性就是模块的稳定性，这使我们可以使用第三方库的同时无需担心它们使用的 Swift 编译器版本。这听起来类似我们在 Swift 5.0 版本中获得的 ABI 稳定性，但是有一个细微的差别： ABI 稳定性解决了 Swift 的运行时差异，而模块稳定性">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-08-04T15:28:19.797Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Swift 5.1 新特性">
-<meta name="twitter:description" content="原文地址：What’s new in Swift 5.1 原文作者：Paul Hudson   跟 Swift 5.0 一样， 5.1 的一个重要特性就是模块的稳定性，这使我们可以使用第三方库的同时无需担心它们使用的 Swift 编译器版本。这听起来类似我们在 Swift 5.0 版本中获得的 ABI 稳定性，但是有一个细微的差别： ABI 稳定性解决了 Swift 的运行时差异，而模块稳定性">
-<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
-
-
-
-
-
-
-
-<link rel="icon" href="/images/logo.svg">
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
-
-
-    
-    
-    
-    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
     
 
     
+        <meta name="description" content="原文地址：What’s new in Swift 5.1
+原文作者：Paul Hudson
+
+
+跟 Swift 5.0 一样， 5.1 的一个重要特性就是模块的稳定性，这使我们可以使用第三方库的同时无需担心它们使用的 Swift 编译器版本。这听起来类似我们在 Swift 5.0 版本中获得的 ABI 稳定性，但是有一个细微的差别： ABI 稳定性解决了 Swift 的运行时差异，而模块稳定性解决了编译时的差异。
+除了这个重要的里程碑之外，我们还获得了许多重要的语言的改进，在本文中，我就介绍它们并提供代码示例，以便你可以看到它们的运行情况。
+PS: 如果你错过了 Swift 5.1 的所有新功能，请从这里开始： Swift 5.0 中的新功能
+
+对成员逐一构造器的大量改进
+
+SE-0242 对 Swift 最常用的功能之一进行了重大改进：结构体的成员构造器。
+在之前版本的 Swift 中，会自动创建一个成员构造器来接受与结构属性匹配的参数，如下所示：
+123456struct User &amp;#123;    var name: String    var loginCount: Int = 0&amp;#125;let piper = User(name: &#34;Piper Chapman&#34;, loginCount: 0)">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Phillip">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Swift 5.1 新特性">
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="原文地址：What’s new in Swift 5.1
+原文作者：Paul Hudson
+
+
+跟 Swift 5.0 一样， 5.1 的一个重要特性就是模块的稳定性，这使我们可以使用第三方库的同时无需担心它们使用的 Swift 编译器版本。这听起来类似我们在 Swift 5.0 版本中获得的 ABI 稳定性，但是有一个细微的差别： ABI 稳定性解决了 Swift 的运行时差异，而模块稳定性解决了编译时的差异。
+除了这个重要的里程碑之外，我们还获得了许多重要的语言的改进，在本文中，我就介绍它们并提供代码示例，以便你可以看到它们的运行情况。
+PS: 如果你错过了 Swift 5.1 的所有新功能，请从这里开始： Swift 5.0 中的新功能
+
+对成员逐一构造器的大量改进
+
+SE-0242 对 Swift 最常用的功能之一进行了重大改进：结构体的成员构造器。
+在之前版本的 Swift 中，会自动创建一个成员构造器来接受与结构属性匹配的参数，如下所示：
+123456struct User &amp;#123;    var name: String    var loginCount: Int = 0&amp;#125;let piper = User(name: &#34;Piper Chapman&#34;, loginCount: 0)">
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="Phillip的技术博客">
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article">
+    
+
+    <!--Page Cover-->
     
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+        <meta property="og:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
+    
+
+        <meta name="twitter:card" content="summary_large_image">
+
     
 
     
+        <meta name="twitter:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
     
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+    <!-- Title -->
+    
+    <title>Swift 5.1 新特性 - Phillip的技术博客</title>
 
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 
-    
-    
-    
-    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
 
-<link rel="stylesheet" href="/css/back-to-top.css">
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-    
-    
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet">
 
-    
-    
-    
-    
-
-    
-    
-<link rel="stylesheet" href="/css/progressbar.css">
-<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
-
-    
-    
-    
-
-    
-    
+    <!-- Google Analytics -->
     
 
 
-<link rel="stylesheet" href="/css/style.css">
+    <!-- favicon -->
+    
+
 </head>
-<body class="is-1-column">
-    <nav class="navbar navbar-main">
-    <div class="container">
-        <div class="navbar-brand is-flex-center">
-            <a class="navbar-item navbar-logo" href="/">
-            
-                <img src="/images/logo.svg" alt="Swift 5.1 新特性" height="28">
-            
-            </a>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Phillip的技术博客</a>
         </div>
-        <div class="navbar-menu">
-            
-            <div class="navbar-start">
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
                 
-                <a class="navbar-item" href="/">Home</a>
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/archives">Archives</a>
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/categories">Categories</a>
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/tags">Tags</a>
+                    <li>
+                        <a href="https://github.com/awind">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/about">About</a>
-                
-            </div>
-            
-            <div class="navbar-end">
-                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Swift 5.1 新特性</h1>
                     
-                    
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/awind/">
+                    <span class="meta">
+                        <!-- Date and Author -->
                         
-                        <i class="fab fa-github"></i>
+                            Posted by Phillip Song on
                         
-                    </a>
-                    
-                
-                
-                
-                <a class="navbar-item search" title="搜索" href="javascript:;">
-                    <i class="fas fa-search"></i>
-                </a>
-                
+                        
+                            2019-08-06
+                        
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-</nav>
-    
-    <section class="section">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-12 has-order-2 column-main"><div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-08-06T11:23:39.000Z">2019-08-06</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+<a href="/categories/Swift/">Swift</a>
+
+                    
                 </div>
-                
-                
-                <span class="level-item has-text-grey">
+                <div class="col-lg-4 col-md-5 post-categories">
                     
-                    
-                    32 分钟 读完 (大约 4763 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+                </div>
             
-                Swift 5.1 新特性
+
+            <!-- Gallery -->
             
-        </h1>
-        <div class="content">
-            <blockquote>
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <blockquote>
 <ul>
 <li>原文地址：<a href="https://www.hackingwithswift.com/articles/182/whats-new-in-swift-5-1" target="_blank" rel="noopener">What’s new in Swift 5.1</a></li>
 <li>原文作者：<a href="https://www.hackingwithswift.com/about" target="_blank" rel="noopener">Paul Hudson</a></li>
@@ -181,32 +237,32 @@
 </ul>
 <p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0242-default-values-memberwise.md" target="_blank" rel="noopener">SE-0242</a> 对 Swift 最常用的功能之一进行了重大改进：结构体的成员构造器。</p>
 <p>在之前版本的 Swift 中，会自动创建一个成员构造器来接受与结构属性匹配的参数，如下所示：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">User</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> name: <span class="hljs-type">String</span></span><br><span class="line">    <span class="hljs-keyword">var</span> loginCount: <span class="hljs-type">Int</span> = <span class="hljs-number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> piper = <span class="hljs-type">User</span>(name: <span class="hljs-string">"Piper Chapman"</span>, loginCount: <span class="hljs-number">0</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> loginCount: <span class="type">Int</span> = <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> piper = <span class="type">User</span>(name: <span class="string">"Piper Chapman"</span>, loginCount: <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>成员构造器在 Swift 5.1 中得到了增强，因此成员构造器对具有默认参数值的属性使用默认参数值。在 <code>User</code> 结构体中，我们给 <code>loginCount</code> 一个默认值 0，这意味着我们可以指定它或将它留给成员初始化器：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> gloria = <span class="hljs-type">User</span>(name: <span class="hljs-string">"Gloria Mendoza"</span>, loginCount: <span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> suzanne = <span class="hljs-type">User</span>(name: <span class="hljs-string">"Suzanne Warren"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> gloria = <span class="type">User</span>(name: <span class="string">"Gloria Mendoza"</span>, loginCount: <span class="number">0</span>)</span><br><span class="line"><span class="keyword">let</span> suzanne = <span class="type">User</span>(name: <span class="string">"Suzanne Warren"</span>)</span><br></pre></td></tr></table></figure>
 <p>这让我们避免重复代码，这总是受欢迎的。</p>
 <ul>
 <li><h2 id="单表达式函数的隐式返回"><a href="#单表达式函数的隐式返回" class="headerlink" title="单表达式函数的隐式返回"></a>单表达式函数的隐式返回</h2></li>
 </ul>
 <p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0255-omit-return.md" target="_blank" rel="noopener">SE-0255</a> 删除了语言中一个小而重要的不一致性： 有返回值的单表达式函数现在可以删除 <code>return</code> 关键字， Swift 将隐式理解它。</p>
 <p>在以前版本的 Swift 中，有返回值的单行闭包可以省略 <code>return</code> 关键字，因为闭包里唯一的代码行必须是返回值的代码。所以，这两段代码是相同的：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> doubled1 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].<span class="hljs-built_in">map</span> &#123; $<span class="hljs-number">0</span> * <span class="hljs-number">2</span> &#125;</span><br><span class="line"><span class="hljs-keyword">let</span> doubled2 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].<span class="hljs-built_in">map</span> &#123; <span class="hljs-keyword">return</span> $<span class="hljs-number">0</span> * <span class="hljs-number">2</span> &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> doubled1 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].<span class="built_in">map</span> &#123; $<span class="number">0</span> * <span class="number">2</span> &#125;</span><br><span class="line"><span class="keyword">let</span> doubled2 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].<span class="built_in">map</span> &#123; <span class="keyword">return</span> $<span class="number">0</span> * <span class="number">2</span> &#125;</span><br></pre></td></tr></table></figure>
 <p>在 Swift 5.1 中，这种行为现在已经扩展到函数： 如果它们包含单个表达式 - 实际上是一段值计算的代码，那么你可以省略 <code>return</code> 关键字，如下所示：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">double</span><span class="hljs-params">(<span class="hljs-number">_</span> number: Int)</span></span> -&gt; <span class="hljs-type">Int</span> &#123;</span><br><span class="line">    number * <span class="hljs-number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">double</span><span class="params">(<span class="number">_</span> number: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">    number * <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这可能会让一些人一开始多看一眼，但我相信随着时间的推移会更习惯这种写法。</p>
 <ul>
 <li><h2 id="全局的-Self"><a href="#全局的-Self" class="headerlink" title="全局的 Self"></a>全局的 <code>Self</code></h2></li>
 </ul>
 <p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0068-universal-self.md" target="_blank" rel="noopener">SE-0068</a> 扩展了 Swift 对 <code>Self</code> 的使用，以便在类，结构体和枚举中使用时引用包含类型。这对于那些需要在运行时确定确切类型的动态类型特别有用。</p>
 <p>例如，请考虑以下代码：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NetworkManager</span> </span>&#123;</span><br><span class="line">    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">var</span> <span class="hljs-title">maximumActiveRequests</span>: <span class="hljs-title">Int</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-number">4</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printDebugData</span><span class="hljs-params">()</span></span> &#123;</span><br><span class="line">        <span class="hljs-built_in">print</span>(<span class="hljs-string">"Maximum network requests: \(NetworkManager.maximumActiveRequests)."</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NetworkManager</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">maximumActiveRequests</span>: <span class="title">Int</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">printDebugData</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Maximum network requests: \(NetworkManager.maximumActiveRequests)."</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>NetworkManager</code> 声明了的静态 <code>maximumActiveRequests</code> 属性，并添加了 <code>printDebugData()</code> 方法来打印静态属性。现在工作正常，但是当 <code>NetworkManager</code> 被子类化时，事情就变得更复杂：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThrottledNetworkManager</span>: <span class="hljs-title">NetworkManager</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">override</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">var</span> <span class="hljs-title">maximumActiveRequests</span>: <span class="hljs-title">Int</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThrottledNetworkManager</span>: <span class="title">NetworkManager</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">maximumActiveRequests</span>: <span class="title">Int</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>该子类更改了 <code>maximumActiveRequests</code>, 以便一次只允许一个请求，但如果我们调用 <code>printDebugData()</code>，它将从其父类打印出该值：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> manager = <span class="hljs-type">ThrottledNetworkManager</span>()</span><br><span class="line">manager.printDebugData()</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> manager = <span class="type">ThrottledNetworkManager</span>()</span><br><span class="line">manager.printDebugData()</span><br></pre></td></tr></table></figure>
 <p>这应该打印出1而不是4，这就是 SE-0068 带来的改变：我们现在可以使用 <code>Self</code> 来引用当前类型。所以，我们可以将 <code>printDebugData()</code> 重写为：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ImprovedNetworkManager</span> </span>&#123;</span><br><span class="line">    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">var</span> <span class="hljs-title">maximumActiveRequests</span>: <span class="hljs-title">Int</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-number">4</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">printDebugData</span><span class="hljs-params">()</span></span> &#123;</span><br><span class="line">        <span class="hljs-built_in">print</span>(<span class="hljs-string">"Maximum network requests: \(Self.maximumActiveRequests)."</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ImprovedNetworkManager</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">maximumActiveRequests</span>: <span class="title">Int</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">printDebugData</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Maximum network requests: \(Self.maximumActiveRequests)."</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这意味着 <code>Self</code> 的工作方式与在早期 Swift 版本中的协议相同。</p>
 <ul>
 <li><h2 id="不透明返回类型"><a href="#不透明返回类型" class="headerlink" title="不透明返回类型"></a>不透明返回类型</h2></li>
@@ -214,19 +270,19 @@
 <p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0244-opaque-result-types.md" target="_blank" rel="noopener">SE-0244</a> 将不透明类型的概念引入 Swift。不透明类型是指我们被告知对象的功能而不知道对象具体是什么类型。</p>
 <p>乍一看，这听起来很像是协议，但不透明的返回类型更进一步的采用了协议的概念，因为他们能够与关联类型进行合作，它们每次都需要在内部使用相同的类型，并且允许我们隐藏实现细节。</p>
 <p>举个例子，如果我们想从 Rebel 基地发射不同种类的战士，我们可以会编写如下代码：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">Fighter</span> </span>&#123; &#125;</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">XWing</span>: <span class="hljs-title">Fighter</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">launchFighter</span><span class="hljs-params">()</span></span> -&gt; <span class="hljs-type">Fighter</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-type">XWing</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> red5 = launchFighter()</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Fighter</span> </span>&#123; &#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">XWing</span>: <span class="title">Fighter</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">launchFighter</span><span class="params">()</span></span> -&gt; <span class="type">Fighter</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">XWing</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> red5 = launchFighter()</span><br></pre></td></tr></table></figure>
 <p>无论谁调用该功能都知道它将返回某种 <code>Fighter</code>，但不知道具体是什么。因此，我们可以添加 <code>struct YWing: Fighter {}</code> 或其他类型，并返回其中任何类型。</p>
 <p>但是有一个问题：如果我们想检查一个特定的战斗机是否是 <code>Red 5</code> 怎么办？你可能认为解决方法是使 <code>Fighter</code> 符合 <code>Equatable</code> 协议，因此我们可以使用 <code>==</code>。但是，只要你这样做，Swift 就会为 <code>launchFighter</code> 函数抛出一个特别可怕的错误： “Protocol <code>Fighter</code> can only be used as a generic constraint because it has <code>Self</code> or associated type requirements.”。</p>
 <p>这里打击我们的就是这个错误的 <code>Self</code> 部分。<code>Equatable</code> 协议必须比较它自身(<code>Self</code>)的两个实例以查看它们是否相同，但是 Swift 不能保证两个相等的东西是远程相同的 - 比如我们可能将一个 <code>Fighter</code> 与一个整数数组进行比较。</p>
 <p>不透明类型解决了这个问题，因为即使我们只看到正在使用的协议，Swift 编译器内部确切知道该协议实际解析的内容 - 它知道他是一个 <code>XWing</code>，一个字符串数组，或者其他什么。</p>
 <p>要返回不透明类型，需要在协议名称前使用关键字 <code>some</code>:</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">launchOpaqueFighter</span><span class="hljs-params">()</span></span> -&gt; some <span class="hljs-type">Fighter</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-type">XWing</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">launchOpaqueFighter</span><span class="params">()</span></span> -&gt; some <span class="type">Fighter</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">XWing</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从调用者的角度来看，仍然可以获得 <code>Fighter</code>，这可能是 <code>XWing</code>，<code>YWing</code> 或其他符合 <code>Fighter</code> 协议的对象。但是从编译器的角度来看，它确切的知道返回的内容，因此它可以确保我们正确的遵循所有的规则。</p>
 <p>例如，考虑一个返回 <code>some Equatable</code> 的函数</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">makeInt</span><span class="hljs-params">()</span></span> -&gt; some <span class="hljs-type">Equatable</span> &#123;</span><br><span class="line">    <span class="hljs-type">Int</span>.random(<span class="hljs-keyword">in</span>: <span class="hljs-number">1</span>...<span class="hljs-number">10</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeInt</span><span class="params">()</span></span> -&gt; some <span class="type">Equatable</span> &#123;</span><br><span class="line">    <span class="type">Int</span>.random(<span class="keyword">in</span>: <span class="number">1</span>...<span class="number">10</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>当我们调用它时，我们所知道的是它是某种 <code>Equatable</code> 值, 但是如果调用它两次，那么我们就可以比较这两个调用的结果，因为 Swift 肯定知道他将是相同的底层类型。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> int1 = makeInt()</span><br><span class="line"><span class="hljs-keyword">let</span> int2 = makeInt()</span><br><span class="line"><span class="hljs-built_in">print</span>(int1 == int2)</span><br></pre></td></tr></table></figure>
-<p>如果我们有第二个返回一些 <code>Equatable</code> 的函数，则不是这样，如下所示：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">makeString</span><span class="hljs-params">()</span></span> -&gt; some <span class="hljs-type">Equatable</span> &#123;</span><br><span class="line">    <span class="hljs-string">"Red"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> int1 = makeInt()</span><br><span class="line"><span class="keyword">let</span> int2 = makeInt()</span><br><span class="line"><span class="built_in">print</span>(int1 == int2)</span><br></pre></td></tr></table></figure>
+<p>如果我们有第二个返回一些 <code>Equatable</code> 的函数，则不是这样，如下所示：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeString</span><span class="params">()</span></span> -&gt; some <span class="type">Equatable</span> &#123;</span><br><span class="line">    <span class="string">"Red"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>从我们的角度来看，即使都返回了 <code>Equatable</code> 类型，我们可以比较两次调用 <code>makeString()</code> 的结果或两次调用 <code>makeInt()</code> 的结果，但 Swift 不会让我们将 <code>makeString()</code> 的返回值与 <code>makeInt()</code> 的返回值进行比较，因为它知道比较一个字符串和一个整数没有任何意义。</p>
 <p>这里一个重要的条件是具有不透明返回类型的函数必须始终返回一个特定类型。 例如，如果我们尝试使用 <code>Bool.random()</code> 随机启动 <code>XWing</code> 或 <code>YWing</code>， 那么 Swift 将拒绝构建我们的代码，因为编译器无法再区别将要返回的类型。</p>
 <p>你可能会认为”如果我们总是需要返回相同的类型，为什么不将函数写成 <code>func launchFighter() -&gt; XWing?</code>“。 虽然这可能有时可以，但它会产生新的问题，例如：</p>
@@ -235,9 +291,9 @@
 <li>我们失去了之后改变主意的能力。使 <code>launchFighter()</code> 只返回 <code>XWing</code> 意味着我们将来不能切换到另一种类型，并且意识到迪士尼依赖星球大战玩具销售会有多大问题！通过返回不透明类型，我们今天可以返回 <code>XWing</code>，然后可以在短时间转移到 <code>BWings</code> - 我们只能在代码的任何给定构建中返回一种，但我们仍然可以灵活地改变主意。</li>
 </ul>
 <p>在某些方面，所有这些听起来都类似与解决了 “<code>Self</code> or associated type requirements” 问题的范型。范型允许我们编写如下代码：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">ImperialFighter</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">init</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TIEFighter</span>: <span class="hljs-title">ImperialFighter</span> </span>&#123; &#125;</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TIEAdvanced</span>: <span class="hljs-title">ImperialFighter</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">launchImperialFighter</span>&lt;T: ImperialFighter&gt;<span class="hljs-params">()</span></span> -&gt; <span class="hljs-type">T</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-type">T</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">ImperialFighter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TIEFighter</span>: <span class="title">ImperialFighter</span> </span>&#123; &#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TIEAdvanced</span>: <span class="title">ImperialFighter</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">launchImperialFighter</span>&lt;T: ImperialFighter&gt;<span class="params">()</span></span> -&gt; <span class="type">T</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">T</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里定义了一个新协议以及两个满足协议的结构体，而 <code>launchImperialFighter()</code> 函数用来使用它们。但是，这里的区别在于，<code>launchImperialFighter()</code> 的调用者可以选择它们获得的战斗机类型，如下：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> fighter1: <span class="hljs-type">TIEFighter</span> = launchImperialFighter()</span><br><span class="line"><span class="hljs-keyword">let</span> fighter2: <span class="hljs-type">TIEAdvanced</span> = launchImperialFighter()</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> fighter1: <span class="type">TIEFighter</span> = launchImperialFighter()</span><br><span class="line"><span class="keyword">let</span> fighter2: <span class="type">TIEAdvanced</span> = launchImperialFighter()</span><br></pre></td></tr></table></figure>
 <p>如果你希望调用者能够选择它们的数据类型，那么范型可以很好的解决问题，但如果你希望函数决定返回类型，那么它们就会失败。</p>
 <p>因此，不透明的结果类型允许我们做几件事：</p>
 <ul>
@@ -250,21 +306,21 @@
 </ul>
 <p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0254-static-subscripts.md" target="_blank" rel="noopener">SE-0254</a> 增加了将下标标记为静态的功能，这意味着它们适用于类型而不是类型的实例。</p>
 <p>当在该类型的所有实例之间共享一组值时，将使用静态属性和方法。例如，如果你有一个集中存储应用程序设置，则可以编写如下代码：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">OldSettings</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">var</span> values = [<span class="hljs-type">String</span>: <span class="hljs-type">String</span>]()</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-number">_</span> name: String)</span></span> -&gt; <span class="hljs-type">String?</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> values[name]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">set</span><span class="hljs-params">(<span class="hljs-number">_</span> name: String, to newValue: String?)</span></span> &#123;</span><br><span class="line">        <span class="hljs-built_in">print</span>(<span class="hljs-string">"Adjusting \(name) to \(newValue ?? "</span><span class="hljs-literal">nil</span><span class="hljs-string">")"</span>)</span><br><span class="line">        values[name] = newValue</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-type">OldSettings</span>.<span class="hljs-keyword">set</span>(<span class="hljs-string">"Captain"</span>, to: <span class="hljs-string">"Gary"</span>)</span><br><span class="line"><span class="hljs-type">OldSettings</span>.<span class="hljs-keyword">set</span>(<span class="hljs-string">"Friend"</span>, to: <span class="hljs-string">"Mooncake"</span>)</span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-type">OldSettings</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">"Captain"</span>) ?? <span class="hljs-string">"Unknown"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">OldSettings</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">var</span> values = [<span class="type">String</span>: <span class="type">String</span>]()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">get</span><span class="params">(<span class="number">_</span> name: String)</span></span> -&gt; <span class="type">String?</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> values[name]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">set</span><span class="params">(<span class="number">_</span> name: String, to newValue: String?)</span></span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Adjusting \(name) to \(newValue ?? "</span><span class="literal">nil</span><span class="string">")"</span>)</span><br><span class="line">        values[name] = newValue</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">OldSettings</span>.<span class="keyword">set</span>(<span class="string">"Captain"</span>, to: <span class="string">"Gary"</span>)</span><br><span class="line"><span class="type">OldSettings</span>.<span class="keyword">set</span>(<span class="string">"Friend"</span>, to: <span class="string">"Mooncake"</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="type">OldSettings</span>.<span class="keyword">get</span>(<span class="string">"Captain"</span>) ?? <span class="string">"Unknown"</span>)</span><br></pre></td></tr></table></figure>
 <p>将字典包装在一个枚举类型中意味着我们可以更仔细的控制访问，并且没有任何 case 的枚举意味着我们不能尝试初始化类型 - 我们不能创建各种设置的实例。</p>
 <p>使用 Swift 5.1，我们现在可以使用静态下标，允许我们将代码重写为：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">NewSettings</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">var</span> values = [<span class="hljs-type">String</span>: <span class="hljs-type">String</span>]()</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">subscript</span>(<span class="hljs-number">_</span> name: <span class="hljs-type">String</span>) -&gt; <span class="hljs-type">String?</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">get</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> values[name]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">set</span> &#123;</span><br><span class="line">            <span class="hljs-built_in">print</span>(<span class="hljs-string">"Adjusting \(name) to \(newValue ?? "</span><span class="hljs-literal">nil</span><span class="hljs-string">")"</span>)</span><br><span class="line">            values[name] = newValue</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-type">NewSettings</span>[<span class="hljs-string">"Captain"</span>] = <span class="hljs-string">"Gary"</span></span><br><span class="line"><span class="hljs-type">NewSettings</span>[<span class="hljs-string">"Friend"</span>] = <span class="hljs-string">"Mooncake"</span></span><br><span class="line"><span class="hljs-built_in">print</span>(<span class="hljs-type">NewSettings</span>[<span class="hljs-string">"Captain"</span>] ?? <span class="hljs-string">"Unknown"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">NewSettings</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">var</span> values = [<span class="type">String</span>: <span class="type">String</span>]()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">subscript</span>(<span class="number">_</span> name: <span class="type">String</span>) -&gt; <span class="type">String?</span> &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> values[name]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Adjusting \(name) to \(newValue ?? "</span><span class="literal">nil</span><span class="string">")"</span>)</span><br><span class="line">            values[name] = newValue</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">NewSettings</span>[<span class="string">"Captain"</span>] = <span class="string">"Gary"</span></span><br><span class="line"><span class="type">NewSettings</span>[<span class="string">"Friend"</span>] = <span class="string">"Mooncake"</span></span><br><span class="line"><span class="built_in">print</span>(<span class="type">NewSettings</span>[<span class="string">"Captain"</span>] ?? <span class="string">"Unknown"</span>)</span><br></pre></td></tr></table></figure>
 <p>像这样的自定义下标总是可以用于类型的实例，这种改进使得静态或类下标称为可能。</p>
 <ul>
 <li><h2 id="Warnings-for-ambiguous-none-cases"><a href="#Warnings-for-ambiguous-none-cases" class="headerlink" title="Warnings for ambiguous none cases"></a>Warnings for ambiguous <code>none</code> cases</h2></li>
 </ul>
 <p>Swift 的 optional 类型的实现是 <code>some</code> 和 <code>none</code> 两种 case 的枚举。如果我们创建一个没有 case 的枚举，然后将它包装在一个可选项中，就会产生混淆的可能性。</p>
 <p>例如：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">BorderStyle</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> <span class="hljs-keyword">none</span></span><br><span class="line">    <span class="hljs-keyword">case</span> solid(thickness: <span class="hljs-type">Int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">BorderStyle</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">none</span></span><br><span class="line">    <span class="keyword">case</span> solid(thickness: <span class="type">Int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>用作非可选项，这一直是明确的：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> border1: <span class="hljs-type">BorderStyle</span> = .<span class="hljs-keyword">none</span></span><br><span class="line"><span class="hljs-built_in">print</span>(border1)</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> border1: <span class="type">BorderStyle</span> = .<span class="keyword">none</span></span><br><span class="line"><span class="built_in">print</span>(border1)</span><br></pre></td></tr></table></figure>
 <p>这将打印出 “none”。 但是如果我们为枚举使用一个可选类型 - 如果我们不知道使用什么边框样式，那么我们就遇到了问题： </p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> border2: <span class="hljs-type">BorderStyle?</span> = .<span class="hljs-keyword">none</span></span><br><span class="line"><span class="hljs-built_in">print</span>(border2)</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> border2: <span class="type">BorderStyle?</span> = .<span class="keyword">none</span></span><br><span class="line"><span class="built_in">print</span>(border2)</span><br></pre></td></tr></table></figure>
 <p>这会打印出 “nil”，因为 Swift 假定 <code>.none</code> 表示可选项为空，而不是可选的值为 <code>BorderStyle.none</code>。</p>
 <p>在 Swift 5.1 中，这种混乱现在会打印出一个警告：“Assuming you mean <code>Optional.none</code>; did you mean <code>BorderStyle.none</code> instead? “ 这可以避免破坏源兼容性的错误，但至少告诉开发人员他们的代码可能并不完全意味着他们的想法。</p>
 <ul>
@@ -272,7 +328,7 @@
 </ul>
 <p>Swift 一直很聪明，可以处理 switch/case 模式匹配中的字符串与整数的可选和非可选值之间的匹配，但在 Swift 5.1 之前没有扩展到枚举中。</p>
 <p>好吧，在 Swift 5.1 中我们现在可以使用 switch/case 模式匹配来匹配可选和非可选，如下所示：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">BuildStatus</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> starting</span><br><span class="line">    <span class="hljs-keyword">case</span> inProgress</span><br><span class="line">    <span class="hljs-keyword">case</span> complete</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> status: <span class="hljs-type">BuildStatus?</span> = .inProgress</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">switch</span> status &#123;</span><br><span class="line"><span class="hljs-keyword">case</span> .inProgress:</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Build is starting…"</span>)</span><br><span class="line"><span class="hljs-keyword">case</span> .complete:</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Build is complete!"</span>)</span><br><span class="line"><span class="hljs-keyword">default</span>:</span><br><span class="line">    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Some other build status"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">BuildStatus</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> starting</span><br><span class="line">    <span class="keyword">case</span> inProgress</span><br><span class="line">    <span class="keyword">case</span> complete</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> status: <span class="type">BuildStatus?</span> = .inProgress</span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> status &#123;</span><br><span class="line"><span class="keyword">case</span> .inProgress:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Build is starting…"</span>)</span><br><span class="line"><span class="keyword">case</span> .complete:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Build is complete!"</span>)</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Some other build status"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Swift 能够直接将可选枚举与非可选枚举 case 进行比较，因此代码将打印出 “Build is starting…”。</p>
 <ul>
 <li><h2 id="Ordered-collection-diffing"><a href="#Ordered-collection-diffing" class="headerlink" title="Ordered collection diffing"></a>Ordered collection diffing</h2></li>
@@ -282,24 +338,24 @@
 <p>为了证明这一点，我们可以创建一个存储分数(score)的数组，计算从一个到另一个的差异，然后循环这些差异并应用到每个分数以使我们的两个集合相同。</p>
 <p>注意： 由于 Swift 在 Apple 的操作系统中发布，因此必须使用 <code>#available</code> 检查这样的新功能，以确保代码在包含新功能的操作系统上运行。对于将在未来的某个时间点，发布在未知地操作系统中的功能，特殊版本号 “9999” 用于表示“我们还不知道实际的数字是什么”。</p>
 <p>下面是代码实例：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> scores1 = [<span class="hljs-number">100</span>, <span class="hljs-number">91</span>, <span class="hljs-number">95</span>, <span class="hljs-number">98</span>, <span class="hljs-number">100</span>]</span><br><span class="line"><span class="hljs-keyword">let</span> scores2 = [<span class="hljs-number">100</span>, <span class="hljs-number">98</span>, <span class="hljs-number">95</span>, <span class="hljs-number">91</span>, <span class="hljs-number">100</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> #available(iOS <span class="hljs-number">9999</span>, *) &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> diff = scores2.difference(from: scores1)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">for</span> change <span class="hljs-keyword">in</span> diff &#123;</span><br><span class="line">        <span class="hljs-keyword">switch</span> change &#123;</span><br><span class="line">        <span class="hljs-keyword">case</span> .remove(<span class="hljs-keyword">let</span> offset, <span class="hljs-number">_</span>, <span class="hljs-number">_</span>):</span><br><span class="line">            scores1.remove(at: offset)</span><br><span class="line">        <span class="hljs-keyword">case</span> .insert(<span class="hljs-keyword">let</span> offset, <span class="hljs-keyword">let</span> element, <span class="hljs-number">_</span>):</span><br><span class="line">            scores1.insert(element, at: offset)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-built_in">print</span>(scores1)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> scores1 = [<span class="number">100</span>, <span class="number">91</span>, <span class="number">95</span>, <span class="number">98</span>, <span class="number">100</span>]</span><br><span class="line"><span class="keyword">let</span> scores2 = [<span class="number">100</span>, <span class="number">98</span>, <span class="number">95</span>, <span class="number">91</span>, <span class="number">100</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> #available(iOS <span class="number">9999</span>, *) &#123;</span><br><span class="line">    <span class="keyword">let</span> diff = scores2.difference(from: scores1)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> change <span class="keyword">in</span> diff &#123;</span><br><span class="line">        <span class="keyword">switch</span> change &#123;</span><br><span class="line">        <span class="keyword">case</span> .remove(<span class="keyword">let</span> offset, <span class="number">_</span>, <span class="number">_</span>):</span><br><span class="line">            scores1.remove(at: offset)</span><br><span class="line">        <span class="keyword">case</span> .insert(<span class="keyword">let</span> offset, <span class="keyword">let</span> element, <span class="number">_</span>):</span><br><span class="line">            scores1.insert(element, at: offset)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(scores1)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>对于更高级的动画，你可以使用更改的第三个值 <code>associatedWith</code>。因此，不是使用 <code>.insert(let offset，let element，_)</code>，而是使用 <code>.insert(let offset，let element，let associatedWith)</code> 来代替。 这使你可以同时跟踪成对地变化：在集合中向下移动两个项目是删除然后插入，但 <code>associatedWith</code> 值将这两个更改绑定在一起，因此将其视为移动。</p>
 <p>您可以使用新的 <code>apply()</code> 方法应用整个集合，而不是手动应用更改，如下所示：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> #available(iOS <span class="hljs-number">9999</span>, *) &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> diff = scores2.difference(from: scores1)</span><br><span class="line">    <span class="hljs-keyword">let</span> result = scores1.applying(diff) ?? []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> #available(iOS <span class="number">9999</span>, *) &#123;</span><br><span class="line">    <span class="keyword">let</span> diff = scores2.difference(from: scores1)</span><br><span class="line">    <span class="keyword">let</span> result = scores1.applying(diff) ?? []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li><h2 id="Creating-uninitialized-arrays"><a href="#Creating-uninitialized-arrays" class="headerlink" title="Creating uninitialized arrays"></a>Creating uninitialized arrays</h2></li>
 </ul>
 <p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0245-array-uninitialized-initializer.md" target="_blank" rel="noopener">SE-0245</a> 为数组引入了一个新的构造器，它不会使用默认值来预填充值。这是以前作为私有 API 提供的，这意味着 Xcode 不会在代码补全时将其列出，当然如果你愿意，你仍然可以使用它 - 如果你愿意为此承担将来撤销相关 API 的风险。</p>
 <p>要使用这个构造器，需要告诉它想要的容量，然后提供一个闭包来填充你需要的值。你提供的闭包将被赋予一个不安全的可变缓冲区指针，你可以在其中赋予你的值，以及第二个 <code>inout</code> 的参数，可让你知道实际使用的值的数量。</p>
 <p>例如，我们可以创建一个包含10个随机整数的数组：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> randomNumbers = <span class="hljs-type">Array</span>&lt;<span class="hljs-type">Int</span>&gt;(unsafeUninitializedCapacity: <span class="hljs-number">10</span>) &#123; buffer, initializedCount <span class="hljs-keyword">in</span></span><br><span class="line">    <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-number">0</span>..&lt;<span class="hljs-number">10</span> &#123;</span><br><span class="line">        buffer[x] = <span class="hljs-type">Int</span>.random(<span class="hljs-keyword">in</span>: <span class="hljs-number">0</span>...<span class="hljs-number">10</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    initializedCount = <span class="hljs-number">10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> randomNumbers = <span class="type">Array</span>&lt;<span class="type">Int</span>&gt;(unsafeUninitializedCapacity: <span class="number">10</span>) &#123; buffer, initializedCount <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">10</span> &#123;</span><br><span class="line">        buffer[x] = <span class="type">Int</span>.random(<span class="keyword">in</span>: <span class="number">0</span>...<span class="number">10</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    initializedCount = <span class="number">10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里有一些规则：</p>
 <ul>
 <li>你不需要使用完所有的容量，但是不可以超过容量。因此，如果要求容量为10，则可以将 <code>initializedCount</code> 设置为 0 到 10， 而不是 11。如果不初始化最终存在于数组中的元素 - 例如，如果将 <code>initializedCount</code> 设置为 5 但实际上没有为元素 0 到 4 提供值 - 那么它们很可能会填充随机数据。这是一个坏主意。</li>
 <li>如果未设置 <code>initializedCount</code>. 则它将为0，因此你指定的任何数据都将丢失。</li>
 </ul>
 <p>现在，我们可以使用 <code>map()</code> 重写上面的代码，如下所示：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> randomNumbers2 = (<span class="hljs-number">0</span>...<span class="hljs-number">9</span>).<span class="hljs-built_in">map</span> &#123; <span class="hljs-number">_</span> <span class="hljs-keyword">in</span> <span class="hljs-type">Int</span>.random(<span class="hljs-keyword">in</span>: <span class="hljs-number">0</span>...<span class="hljs-number">10</span>) &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> randomNumbers2 = (<span class="number">0</span>...<span class="number">9</span>).<span class="built_in">map</span> &#123; <span class="number">_</span> <span class="keyword">in</span> <span class="type">Int</span>.random(<span class="keyword">in</span>: <span class="number">0</span>...<span class="number">10</span>) &#125;</span><br></pre></td></tr></table></figure>
 <p>这虽然更易读，但效率较低：它创建一个范围，创建一个新的空数组，将其调整到正确的数量。在范围内循环，并为每个范围项调用一次闭包。</p>
 <h2 id="More-to-come"><a href="#More-to-come" class="headerlink" title="More to come!"></a>More to come!</h2><p>Swift 5.1 仍处于开发阶段，尽管 <a href="https://swift.org/blog/5-1-release-process/" target="_blank" rel="noopener">Swift 本身的最终分支已经过去</a>，但仍有一些空间可以看到其他一些相关项目的变化。</p>
 <p>同样，这里的重要特征是模块稳定性，我知道团队正在努力做到这一点。他们没有宣布发布日期，尽管他们说由于 Swift 5.0 需要“不寻常的关注和注意”而导致5.1“开发时间明显缩短” - 我猜我们会在 WWDC19 上看到测试版，但显然这不是特定日期的匆忙。</p>
@@ -307,187 +363,59 @@
 <p>这些都是 Swift 的高品质生活改进，但我之所以特别称它们是因为它们都是由社区贡献者修改的：<a href="https://twitter.com/suyashsrijan" target="_blank" rel="noopener">Suyash Srijan</a>。很高兴看到 Swift 的发展继续超越 Apple，而 Suyash 在这两个高度可见的功能上的工作正在帮助 Swift 更轻松，更加一致。</p>
 <p>最重要的是，这个含糊不清的枚举错误被归档为一个初学者错误，这是 Swift 团队专门挑选出来的，以便让人们更容易开始贡献。如果您想亲自探索当前的入门错误，甚至可能会尝试修复它，请访问 <a href="http://bit.ly/starterbugs。" target="_blank" rel="noopener">http://bit.ly/starterbugs。</a></p>
 
-        </div>
-        
-        
-        
-    </div>
-</div>
 
-
-
-
-
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/24/ios-swiftui-first-look/">
-                <span class="level-item">关于 SwiftUI 的初步认识</span>
-                <i class="level-item fas fa-chevron-right"></i>
-            </a>
-        </div>
-        
-    </div>
-</div>
-
-
-</div>
-                
                 
             </div>
-        </div>
-    </section>
-    <footer class="footer">
-    <div class="container">
-        <div class="level">
-            <div class="level-start has-text-centered-mobile">
-                <a class="footer-logo is-block has-mb-6" href="/">
-                
-                    <img src="/images/logo.svg" alt="Swift 5.1 新特性" height="28">
-                
-                </a>
-                <p class="is-size-7">
-                &copy; 2019 Phillip&nbsp;
-                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
-                
-                </p>
-            </div>
-            <div class="level-end">
+
+            <!-- Comments -->
             
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/awind" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2019 Phillip<br></p>
             </div>
         </div>
     </div>
 </footer>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
-<script>moment.locale("zh-CN");</script>
 
 
-    
-    
-    
-    <script src="/js/animation.js"></script>
-    
-
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
-    <script src="/js/gallery.js" defer></script>
-    
-
-    
-    
-
-<div id="outdated">
-    <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
-            my browser now </a></p>
-    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        outdatedBrowser({
-            bgColor: '#f25648',
-            color: '#ffffff',
-            lowerThan: 'flex'
-        });
-    });
-</script>
-
-
-    
-    
-<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    MathJax.Hub.Config({
-        'HTML-CSS': {
-            matchFontHeight: false
-        },
-        SVG: {
-            matchFontHeight: false
-        },
-        CommonHTML: {
-            matchFontHeight: false
-        },
-        tex2jax: {
-            inlineMath: [
-                ['$','$'],
-                ['\\(','\\)']
-            ]
-        }
-    });
-});
-</script>
-
-    
-    
-
-<a id="back-to-top" title="回到顶端" href="javascript:;">
-    <i class="fas fa-chevron-up"></i>
-</a>
-<script src="/js/back-to-top.js" defer></script>
-
-
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
-    <script src="/js/clipboard.js" defer></script>
-    
-
-    
-    
-    
-
-
-<script src="/js/main.js" defer></script>
-
-    
-    <div class="searchbox ins-search">
-    <div class="searchbox-container ins-search-container">
-        <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
-            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="searchbox-result-wrapper ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-    (function (window) {
-        var INSIGHT_CONFIG = {
-            TRANSLATION: {
-                POSTS: '文章',
-                PAGES: '页面',
-                CATEGORIES: '分类',
-                TAGS: '标签',
-                UNTITLED: '(无标题)',
-            },
-            CONTENT_URL: '/content.json',
-        };
-        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-    })(window);
-</script>
-<script src="/js/insight.js" defer></script>
-<link rel="stylesheet" href="/css/search.css">
-<link rel="stylesheet" href="/css/insight.css">
-    
 </body>
+
 </html>

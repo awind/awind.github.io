@@ -1,384 +1,291 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
+
+<!-- Head tag -->
 <head><meta name="generator" content="Hexo 3.8.0">
+
     <meta charset="utf-8">
-<title>Swift 标准库阅读笔记 - Optional - Phillip的技术博客</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!--Description-->
 
-
-    <meta name="description" content="Optional 是 Swift 重要的语言特性之一，通过引入 Optional， 可以很好的判断变量是否存在 nil 值的情况，可以很好的防止出现因为未处理 nil 而带来的程序崩溃问题。 下面让我们通过源码来了解一下 Optional 具体的实现逻辑。 Optional 具体的实现是一个包含 .none 和 .some 两个 case 的 enum。 123456789101112public">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Swift 标准库阅读笔记 - Optional">
-<meta property="og:url" content="http://yoursite.com/2019/06/06/swift-stl-optional/index.html">
-<meta property="og:site_name" content="Phillip的技术博客">
-<meta property="og:description" content="Optional 是 Swift 重要的语言特性之一，通过引入 Optional， 可以很好的判断变量是否存在 nil 值的情况，可以很好的防止出现因为未处理 nil 而带来的程序崩溃问题。 下面让我们通过源码来了解一下 Optional 具体的实现逻辑。 Optional 具体的实现是一个包含 .none 和 .some 两个 case 的 enum。 123456789101112public">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-06-10T15:53:58.684Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Swift 标准库阅读笔记 - Optional">
-<meta name="twitter:description" content="Optional 是 Swift 重要的语言特性之一，通过引入 Optional， 可以很好的判断变量是否存在 nil 值的情况，可以很好的防止出现因为未处理 nil 而带来的程序崩溃问题。 下面让我们通过源码来了解一下 Optional 具体的实现逻辑。 Optional 具体的实现是一个包含 .none 和 .some 两个 case 的 enum。 123456789101112public">
-<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
-
-
-
-
-
-
-
-<link rel="icon" href="/images/logo.svg">
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
-
-
-    
-    
-    
-    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
     
 
     
+        <meta name="description" content="Optional 是 Swift 重要的语言特性之一，通过引入 Optional， 可以很好的判断变量是否存在 nil 值的情况，可以很好的防止出现因为未处理 nil 而带来的程序崩溃问题。
+下面让我们通过源码来了解一下 Optional 具体的实现逻辑。
+Optional 具体的实现是一个包含 .none 和 .some 两个 case 的 enum。
+123456789101112public enum Optional&amp;lt;Wrapped&amp;gt; : ExpressibleByNilLiteral &amp;#123;    case none     case some(Wrapped)    public init(_ some: Wrapped) &amp;#123;        self = .some(some)    &amp;#125;    public init(nilLiteral: ()) &amp;#123;        self = .none    &amp;#125;&amp;#125;
+init由于 Optional 是多类型的，因此我们通过 &amp;lt;Wrapped&amp;gt; 来声明范型。 
+初始化方法init(_ some:) 可以用来初始化一个非 nil 的实例。 而遵守 ExpressibleByNilLiteral 协议则定义了一个初始化方法init(nilLiteral:), 可以使用 nil 初始化一个实例。">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Phillip">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Swift 标准库阅读笔记 - Optional">
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="Optional 是 Swift 重要的语言特性之一，通过引入 Optional， 可以很好的判断变量是否存在 nil 值的情况，可以很好的防止出现因为未处理 nil 而带来的程序崩溃问题。
+下面让我们通过源码来了解一下 Optional 具体的实现逻辑。
+Optional 具体的实现是一个包含 .none 和 .some 两个 case 的 enum。
+123456789101112public enum Optional&amp;lt;Wrapped&amp;gt; : ExpressibleByNilLiteral &amp;#123;    case none     case some(Wrapped)    public init(_ some: Wrapped) &amp;#123;        self = .some(some)    &amp;#125;    public init(nilLiteral: ()) &amp;#123;        self = .none    &amp;#125;&amp;#125;
+init由于 Optional 是多类型的，因此我们通过 &amp;lt;Wrapped&amp;gt; 来声明范型。 
+初始化方法init(_ some:) 可以用来初始化一个非 nil 的实例。 而遵守 ExpressibleByNilLiteral 协议则定义了一个初始化方法init(nilLiteral:), 可以使用 nil 初始化一个实例。">
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="Phillip的技术博客">
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article">
+    
+
+    <!--Page Cover-->
     
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+        <meta property="og:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
+    
+
+        <meta name="twitter:card" content="summary_large_image">
+
     
 
     
+        <meta name="twitter:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
     
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+    <!-- Title -->
+    
+    <title>Swift 标准库阅读笔记 - Optional - Phillip的技术博客</title>
 
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 
-    
-    
-    
-    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
 
-<link rel="stylesheet" href="/css/back-to-top.css">
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-    
-    
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet">
 
-    
-    
-    
-    
-
-    
-    
-<link rel="stylesheet" href="/css/progressbar.css">
-<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
-
-    
-    
-    
-
-    
-    
+    <!-- Google Analytics -->
     
 
 
-<link rel="stylesheet" href="/css/style.css">
+    <!-- favicon -->
+    
+
 </head>
-<body class="is-1-column">
-    <nav class="navbar navbar-main">
-    <div class="container">
-        <div class="navbar-brand is-flex-center">
-            <a class="navbar-item navbar-logo" href="/">
-            
-                <img src="/images/logo.svg" alt="Swift 标准库阅读笔记 - Optional" height="28">
-            
-            </a>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Phillip的技术博客</a>
         </div>
-        <div class="navbar-menu">
-            
-            <div class="navbar-start">
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
                 
-                <a class="navbar-item" href="/">Home</a>
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/archives">Archives</a>
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/categories">Categories</a>
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/tags">Tags</a>
+                    <li>
+                        <a href="https://github.com/awind">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/about">About</a>
-                
-            </div>
-            
-            <div class="navbar-end">
-                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Swift 标准库阅读笔记 - Optional</h1>
                     
-                    
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/awind/">
+                    <span class="meta">
+                        <!-- Date and Author -->
                         
-                        <i class="fab fa-github"></i>
+                            Posted by Phillip Song on
                         
-                    </a>
-                    
-                
-                
-                
-                <a class="navbar-item search" title="搜索" href="javascript:;">
-                    <i class="fas fa-search"></i>
-                </a>
-                
+                        
+                            2019-06-06
+                        
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-</nav>
-    
-    <section class="section">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-12 has-order-2 column-main"><div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-06-06T11:23:39.000Z">2019-06-06</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+<a href="/categories/Swift/">Swift</a>
+
+                    
                 </div>
-                
-                
-                <span class="level-item has-text-grey">
+                <div class="col-lg-4 col-md-5 post-categories">
                     
-                    
-                    5 分钟 读完 (大约 801 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+                </div>
             
-                Swift 标准库阅读笔记 - Optional
+
+            <!-- Gallery -->
             
-        </h1>
-        <div class="content">
-            <p><code>Optional</code> 是 Swift 重要的语言特性之一，通过引入 <code>Optional</code>， 可以很好的判断变量是否存在 <code>nil</code> 值的情况，可以很好的防止出现因为未处理 <code>nil</code> 而带来的程序崩溃问题。</p>
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p><code>Optional</code> 是 Swift 重要的语言特性之一，通过引入 <code>Optional</code>， 可以很好的判断变量是否存在 <code>nil</code> 值的情况，可以很好的防止出现因为未处理 <code>nil</code> 而带来的程序崩溃问题。</p>
 <p>下面让我们通过源码来了解一下 Optional 具体的实现逻辑。</p>
 <p><code>Optional</code> 具体的实现是一个包含 <code>.none</code> 和 <code>.some</code> 两个 case 的 enum。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Optional</span>&lt;<span class="hljs-title">Wrapped</span>&gt; : <span class="hljs-title">ExpressibleByNilLiteral</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> <span class="hljs-keyword">none</span> </span><br><span class="line">    <span class="hljs-keyword">case</span> some(<span class="hljs-type">Wrapped</span>)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">init</span>(<span class="hljs-number">_</span> some: <span class="hljs-type">Wrapped</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">self</span> = .some(some)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">init</span>(nilLiteral: ()) &#123;</span><br><span class="line">        <span class="hljs-keyword">self</span> = .<span class="hljs-keyword">none</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">Optional</span>&lt;<span class="title">Wrapped</span>&gt; : <span class="title">ExpressibleByNilLiteral</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">none</span> </span><br><span class="line">    <span class="keyword">case</span> some(<span class="type">Wrapped</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">init</span>(<span class="number">_</span> some: <span class="type">Wrapped</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span> = .some(some)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">init</span>(nilLiteral: ()) &#123;</span><br><span class="line">        <span class="keyword">self</span> = .<span class="keyword">none</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>由于 Optional 是多类型的，因此我们通过 <code>&lt;Wrapped&gt;</code> 来声明范型。 </p>
 <p>初始化方法<code>init(_ some:)</code> 可以用来初始化一个非 <code>nil</code> 的实例。 而遵守 <code>ExpressibleByNilLiteral</code> 协议则定义了一个初始化方法<code>init(nilLiteral:)</code>, 可以使用 <code>nil</code> 初始化一个实例。</p>
 <a id="more"></a>
-<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">map</span>&lt;U&gt;<span class="hljs-params">(<span class="hljs-number">_</span> transform: <span class="hljs-params">(Wrapped)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">U</span>) <span class="hljs-keyword">rethrows</span> -&gt; <span class="hljs-type">U?</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">switch</span> <span class="hljs-keyword">self</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">case</span> .some(<span class="hljs-keyword">let</span> y):</span><br><span class="line">            <span class="hljs-keyword">return</span> .some(<span class="hljs-keyword">try</span> transform(y))</span><br><span class="line">        <span class="hljs-keyword">case</span> .<span class="hljs-keyword">none</span>:</span><br><span class="line">            <span class="hljs-keyword">return</span> .<span class="hljs-keyword">none</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">map</span>&lt;U&gt;<span class="params">(<span class="number">_</span> transform: <span class="params">(Wrapped)</span></span></span> <span class="keyword">throws</span> -&gt; <span class="type">U</span>) <span class="keyword">rethrows</span> -&gt; <span class="type">U?</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> .some(<span class="keyword">let</span> y):</span><br><span class="line">            <span class="keyword">return</span> .some(<span class="keyword">try</span> transform(y))</span><br><span class="line">        <span class="keyword">case</span> .<span class="keyword">none</span>:</span><br><span class="line">            <span class="keyword">return</span> .<span class="keyword">none</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>Optional</code> 类型执行 <code>map</code> 方法时，如果值为 <code>.none</code> 时，直接返回 <code>nil</code>。如果为 <code>.some(Wrapped)</code> 时，返回 <code>.some(transform(Wrapped))</code>, 即仍会返回 <code>Optional</code> 类型，仍需进行解包。</p>
-<p>可用如下代码验证：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> possibleNumber: <span class="hljs-type">Int?</span> = <span class="hljs-type">Int</span>(<span class="hljs-string">"42"</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> possibleSquare = possibleNumber.<span class="hljs-built_in">map</span> &#123; $<span class="hljs-number">0</span> * $<span class="hljs-number">0</span> &#125;</span><br><span class="line"><span class="hljs-built_in">print</span>(possibleSquare)</span><br><span class="line"><span class="hljs-comment">// "Optional(1764)"</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> noNumber: <span class="hljs-type">Int?</span> = <span class="hljs-literal">nil</span></span><br><span class="line"><span class="hljs-keyword">let</span> noSquare = noNumber.<span class="hljs-built_in">map</span> &#123; $<span class="hljs-number">0</span> * $<span class="hljs-number">0</span> &#125;</span><br><span class="line"><span class="hljs-built_in">print</span>(noSquare)</span><br><span class="line"><span class="hljs-comment">// "nil"</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">flatMap</span>&lt;U&gt;<span class="hljs-params">(<span class="hljs-number">_</span> transform: <span class="hljs-params">(Wrapped)</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">U?</span>) <span class="hljs-keyword">rethrows</span> -&gt; <span class="hljs-type">U?</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">switch</span> <span class="hljs-keyword">self</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">case</span> .some(<span class="hljs-keyword">let</span> y):</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">try</span> transform(y)</span><br><span class="line">        <span class="hljs-keyword">case</span> .<span class="hljs-keyword">none</span>:</span><br><span class="line">            <span class="hljs-keyword">return</span> .<span class="hljs-keyword">none</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可用如下代码验证：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> possibleNumber: <span class="type">Int?</span> = <span class="type">Int</span>(<span class="string">"42"</span>)</span><br><span class="line"><span class="keyword">let</span> possibleSquare = possibleNumber.<span class="built_in">map</span> &#123; $<span class="number">0</span> * $<span class="number">0</span> &#125;</span><br><span class="line"><span class="built_in">print</span>(possibleSquare)</span><br><span class="line"><span class="comment">// "Optional(1764)"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> noNumber: <span class="type">Int?</span> = <span class="literal">nil</span></span><br><span class="line"><span class="keyword">let</span> noSquare = noNumber.<span class="built_in">map</span> &#123; $<span class="number">0</span> * $<span class="number">0</span> &#125;</span><br><span class="line"><span class="built_in">print</span>(noSquare)</span><br><span class="line"><span class="comment">// "nil"</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">flatMap</span>&lt;U&gt;<span class="params">(<span class="number">_</span> transform: <span class="params">(Wrapped)</span></span></span> <span class="keyword">throws</span> -&gt; <span class="type">U?</span>) <span class="keyword">rethrows</span> -&gt; <span class="type">U?</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> .some(<span class="keyword">let</span> y):</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">try</span> transform(y)</span><br><span class="line">        <span class="keyword">case</span> .<span class="keyword">none</span>:</span><br><span class="line">            <span class="keyword">return</span> .<span class="keyword">none</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>而在使用 <code>flatMap</code> 时， 如果值为 <code>nil</code> 时，直接返回 <code>nil</code>， 如果不为 <code>nil</code>，会进行解包并执行闭包。需要注意的是，<code>transform</code> 时是解包值，但 <code>return</code> 返回的还是 <code>Optional</code>。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> possibleNumber: <span class="hljs-type">Int?</span> = <span class="hljs-type">Int</span>(<span class="hljs-string">"42"</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> nonOverflowingSquare = possibleNumber.flatMap &#123; x -&gt; <span class="hljs-type">Int?</span> <span class="hljs-keyword">in</span></span><br><span class="line">    <span class="hljs-keyword">let</span> (result, overflowed) = x.multipliedReportingOverflow(by: x)</span><br><span class="line">    <span class="hljs-keyword">return</span> overflowed ? <span class="hljs-literal">nil</span> : result</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-built_in">print</span>(nonOverflowingSquare)</span><br><span class="line"><span class="hljs-comment">// Prints "Optional(1764)"</span></span><br></pre></td></tr></table></figure>
-<h2 id="UnsafelyUnwrapped"><a href="#UnsafelyUnwrapped" class="headerlink" title="UnsafelyUnwrapped"></a>UnsafelyUnwrapped</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-keyword">var</span> unsafelyUnwrapped: <span class="hljs-type">Wrapped</span> &#123;</span><br><span class="line">    @inline(__always)</span><br><span class="line">    <span class="hljs-keyword">get</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> x = <span class="hljs-keyword">self</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> x</span><br><span class="line">      &#125;</span><br><span class="line">      _debugPreconditionFailure(<span class="hljs-string">"unsafelyUnwrapped of nil optional"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> possibleNumber: <span class="type">Int?</span> = <span class="type">Int</span>(<span class="string">"42"</span>)</span><br><span class="line"><span class="keyword">let</span> nonOverflowingSquare = possibleNumber.flatMap &#123; x -&gt; <span class="type">Int?</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> (result, overflowed) = x.multipliedReportingOverflow(by: x)</span><br><span class="line">    <span class="keyword">return</span> overflowed ? <span class="literal">nil</span> : result</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(nonOverflowingSquare)</span><br><span class="line"><span class="comment">// Prints "Optional(1764)"</span></span><br></pre></td></tr></table></figure>
+<h2 id="UnsafelyUnwrapped"><a href="#UnsafelyUnwrapped" class="headerlink" title="UnsafelyUnwrapped"></a>UnsafelyUnwrapped</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">var</span> unsafelyUnwrapped: <span class="type">Wrapped</span> &#123;</span><br><span class="line">    @inline(__always)</span><br><span class="line">    <span class="keyword">get</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> x = <span class="keyword">self</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">      &#125;</span><br><span class="line">      _debugPreconditionFailure(<span class="string">"unsafelyUnwrapped of nil optional"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>unsafelyUnwrapped</code> 和 强制解包符 <code>!</code> 的功能是相似的，如果为 <code>.none</code> 时会报错。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> possibleNumber: <span class="hljs-type">Int?</span> = <span class="hljs-type">Int</span>(<span class="hljs-string">"42"</span>)</span><br><span class="line"><span class="hljs-built_in">print</span>(possibleNumber.unsafelyUnwrapped)</span><br><span class="line"><span class="hljs-comment">// 42</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> noNumber: <span class="hljs-type">Int?</span> = <span class="hljs-literal">nil</span></span><br><span class="line"><span class="hljs-built_in">print</span>(noNumber.unsafelyUnwrapped)</span><br><span class="line"><span class="hljs-comment">// Fatal error: unsafelyUnwrapped of nil optional</span></span><br></pre></td></tr></table></figure>
-<h2 id="Nil-Coalescing"><a href="#Nil-Coalescing" class="headerlink" title="Nil Coalescing (??)"></a>Nil Coalescing (??)</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">func</span> ?? &lt;T&gt;<span class="hljs-params">(<span class="hljs-keyword">optional</span>: T?, defaultValue: @autoclosure <span class="hljs-params">()</span></span></span> <span class="hljs-keyword">throws</span> -&gt; <span class="hljs-type">T</span>)</span><br><span class="line">    <span class="hljs-keyword">rethrows</span> -&gt; <span class="hljs-type">T</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">switch</span> <span class="hljs-keyword">optional</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">case</span> .some(<span class="hljs-keyword">let</span> value):</span><br><span class="line">    <span class="hljs-keyword">return</span> value</span><br><span class="line">  <span class="hljs-keyword">case</span> .<span class="hljs-keyword">none</span>:</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">try</span> defaultValue()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> possibleNumber: <span class="type">Int?</span> = <span class="type">Int</span>(<span class="string">"42"</span>)</span><br><span class="line"><span class="built_in">print</span>(possibleNumber.unsafelyUnwrapped)</span><br><span class="line"><span class="comment">// 42</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> noNumber: <span class="type">Int?</span> = <span class="literal">nil</span></span><br><span class="line"><span class="built_in">print</span>(noNumber.unsafelyUnwrapped)</span><br><span class="line"><span class="comment">// Fatal error: unsafelyUnwrapped of nil optional</span></span><br></pre></td></tr></table></figure>
+<h2 id="Nil-Coalescing"><a href="#Nil-Coalescing" class="headerlink" title="Nil Coalescing (??)"></a>Nil Coalescing (??)</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">func</span> ?? &lt;T&gt;<span class="params">(<span class="keyword">optional</span>: T?, defaultValue: @autoclosure <span class="params">()</span></span></span> <span class="keyword">throws</span> -&gt; <span class="type">T</span>)</span><br><span class="line">    <span class="keyword">rethrows</span> -&gt; <span class="type">T</span> &#123;</span><br><span class="line">  <span class="keyword">switch</span> <span class="keyword">optional</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> .some(<span class="keyword">let</span> value):</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line">  <span class="keyword">case</span> .<span class="keyword">none</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">try</span> defaultValue()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面就是我们在解包时常用的 <code>??</code> 操作符，它强制要求可能为 <code>nil</code> 的变量放在左边， 默认值写在右边。当 <code>Optional</code>为 <code>.none</code> 的时候，则返回 <code>defaultValue</code> 的值。</p>
-<h2 id="amp"><a href="#amp" class="headerlink" title="== &amp; !="></a>== &amp; !=</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> ~=<span class="hljs-params">(lhs: _OptionalNilComparisonType, rhs: Wrapped?)</span></span> -&gt; <span class="hljs-type">Bool</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">switch</span> rhs &#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> .some:</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br><span class="line">    <span class="hljs-keyword">case</span> .<span class="hljs-keyword">none</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> ==<span class="hljs-params">(lhs: Wrapped?, rhs: _OptionalNilComparisonType)</span></span> -&gt; <span class="hljs-type">Bool</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">switch</span> lhs &#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> .some:</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br><span class="line">    <span class="hljs-keyword">case</span> .<span class="hljs-keyword">none</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> !=<span class="hljs-params">(lhs: Wrapped?, rhs: _OptionalNilComparisonType)</span></span> -&gt; <span class="hljs-type">Bool</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">switch</span> lhs &#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> .some:</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span></span><br><span class="line">    <span class="hljs-keyword">case</span> .<span class="hljs-keyword">none</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="amp"><a href="#amp" class="headerlink" title="== &amp; !="></a>== &amp; !=</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> ~=<span class="params">(lhs: _OptionalNilComparisonType, rhs: Wrapped?)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> rhs &#123;</span><br><span class="line">    <span class="keyword">case</span> .some:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="keyword">none</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> ==<span class="params">(lhs: Wrapped?, rhs: _OptionalNilComparisonType)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> lhs &#123;</span><br><span class="line">    <span class="keyword">case</span> .some:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="keyword">none</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> !=<span class="params">(lhs: Wrapped?, rhs: _OptionalNilComparisonType)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> lhs &#123;</span><br><span class="line">    <span class="keyword">case</span> .some:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="keyword">none</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其中重载的一些操作符，用来比较 <code>Optional</code> 类型与 <code>nil</code> 进行， 即我们进行判空时调用的方法。</p>
-<h2 id="ObjectiveCBridgeable"><a href="#ObjectiveCBridgeable" class="headerlink" title="_ObjectiveCBridgeable"></a>_ObjectiveCBridgeable</h2><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">associatedtype</span> _ObjectiveCType : <span class="hljs-type">AnyObject</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/// Convert `self` to Objective-C.</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">_bridgeToObjectiveC</span><span class="hljs-params">()</span></span> -&gt; _ObjectiveCType</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">_forceBridgeFromObjectiveC</span><span class="hljs-params">(</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    <span class="hljs-number">_</span> source: _ObjectiveCType,</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    result: <span class="hljs-keyword">inout</span> <span class="hljs-keyword">Self</span>?</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">  )</span></span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-meta">@discardableResult</span></span><br><span class="line">  <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">_conditionallyBridgeFromObjectiveC</span><span class="hljs-params">(</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    <span class="hljs-number">_</span> source: _ObjectiveCType,</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    result: <span class="hljs-keyword">inout</span> <span class="hljs-keyword">Self</span>?</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">  )</span></span> -&gt; <span class="hljs-type">Bool</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">_unconditionallyBridgeFromObjectiveC</span><span class="hljs-params">(<span class="hljs-number">_</span> source: _ObjectiveCType?)</span></span></span><br><span class="line">      -&gt; <span class="hljs-type">Self</span></span><br></pre></td></tr></table></figure>
+<h2 id="ObjectiveCBridgeable"><a href="#ObjectiveCBridgeable" class="headerlink" title="_ObjectiveCBridgeable"></a>_ObjectiveCBridgeable</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">associatedtype</span> _ObjectiveCType : <span class="type">AnyObject</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/// Convert `self` to Objective-C.</span></span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">_bridgeToObjectiveC</span><span class="params">()</span></span> -&gt; _ObjectiveCType</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">_forceBridgeFromObjectiveC</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="number">_</span> source: _ObjectiveCType,</span></span></span><br><span class="line"><span class="function"><span class="params">    result: <span class="keyword">inout</span> <span class="keyword">Self</span>?</span></span></span><br><span class="line"><span class="function"><span class="params">  )</span></span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@discardableResult</span></span><br><span class="line">  <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">_conditionallyBridgeFromObjectiveC</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="number">_</span> source: _ObjectiveCType,</span></span></span><br><span class="line"><span class="function"><span class="params">    result: <span class="keyword">inout</span> <span class="keyword">Self</span>?</span></span></span><br><span class="line"><span class="function"><span class="params">  )</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">_unconditionallyBridgeFromObjectiveC</span><span class="params">(<span class="number">_</span> source: _ObjectiveCType?)</span></span></span><br><span class="line">      -&gt; <span class="type">Self</span></span><br></pre></td></tr></table></figure>
 <p>实现的目的主要用来 Swift 跟 Objective C 中类型进行桥接。Swift 的 <code>Array</code> 和 <code>Dictionary</code> 等遵守这个协议的类型可以转换成OC中对应的 <code>NSArray</code> 和 <code>NSDictionary</code> 类型。</p>
 <p>上面就是对 <code>Optional</code> 类型的源码分析，可以看出实现十分巧妙，通过 <code>enum</code> 类型的特性便实现了 <code>Optional</code> 所需要的功能。</p>
 
-        </div>
-        
-        
-        
-    </div>
-</div>
 
-
-
-
-
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/06/13/map-flatMap-compactMap-difference/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Swift 中 map &amp; flatMap &amp; compactMap 的区别</span>
-            </a>
-        </div>
-        
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/02/swift-stl-dictionary/">
-                <span class="level-item">Swift 标准库阅读笔记 - Dictionary</span>
-                <i class="level-item fas fa-chevron-right"></i>
-            </a>
-        </div>
-        
-    </div>
-</div>
-
-
-</div>
-                
                 
             </div>
-        </div>
-    </section>
-    <footer class="footer">
-    <div class="container">
-        <div class="level">
-            <div class="level-start has-text-centered-mobile">
-                <a class="footer-logo is-block has-mb-6" href="/">
-                
-                    <img src="/images/logo.svg" alt="Swift 标准库阅读笔记 - Optional" height="28">
-                
-                </a>
-                <p class="is-size-7">
-                &copy; 2019 Phillip&nbsp;
-                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
-                
-                </p>
-            </div>
-            <div class="level-end">
+
+            <!-- Comments -->
             
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/awind" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2019 Phillip<br></p>
             </div>
         </div>
     </div>
 </footer>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
-<script>moment.locale("zh-CN");</script>
 
 
-    
-    
-    
-    <script src="/js/animation.js"></script>
-    
-
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
-    <script src="/js/gallery.js" defer></script>
-    
-
-    
-    
-
-<div id="outdated">
-    <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
-            my browser now </a></p>
-    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        outdatedBrowser({
-            bgColor: '#f25648',
-            color: '#ffffff',
-            lowerThan: 'flex'
-        });
-    });
-</script>
-
-
-    
-    
-<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    MathJax.Hub.Config({
-        'HTML-CSS': {
-            matchFontHeight: false
-        },
-        SVG: {
-            matchFontHeight: false
-        },
-        CommonHTML: {
-            matchFontHeight: false
-        },
-        tex2jax: {
-            inlineMath: [
-                ['$','$'],
-                ['\\(','\\)']
-            ]
-        }
-    });
-});
-</script>
-
-    
-    
-
-<a id="back-to-top" title="回到顶端" href="javascript:;">
-    <i class="fas fa-chevron-up"></i>
-</a>
-<script src="/js/back-to-top.js" defer></script>
-
-
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
-    <script src="/js/clipboard.js" defer></script>
-    
-
-    
-    
-    
-
-
-<script src="/js/main.js" defer></script>
-
-    
-    <div class="searchbox ins-search">
-    <div class="searchbox-container ins-search-container">
-        <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
-            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="searchbox-result-wrapper ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-    (function (window) {
-        var INSIGHT_CONFIG = {
-            TRANSLATION: {
-                POSTS: '文章',
-                PAGES: '页面',
-                CATEGORIES: '分类',
-                TAGS: '标签',
-                UNTITLED: '(无标题)',
-            },
-            CONTENT_URL: '/content.json',
-        };
-        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-    })(window);
-</script>
-<script src="/js/insight.js" defer></script>
-<link rel="stylesheet" href="/css/search.css">
-<link rel="stylesheet" href="/css/insight.css">
-    
 </body>
+
 </html>

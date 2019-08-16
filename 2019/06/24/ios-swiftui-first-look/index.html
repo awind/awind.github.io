@@ -1,184 +1,224 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
+
+<!-- Head tag -->
 <head><meta name="generator" content="Hexo 3.8.0">
+
     <meta charset="utf-8">
-<title>关于 SwiftUI 的初步认识 - Phillip的技术博客</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!--Description-->
 
-
-    <meta name="description" content="SwiftUI 可以在任何 Apple 的平台上用新颖的方式声明用户界面，更简洁快速的创建应用。通过几天的使用，大概对 SwiftUI 有了简单的认识, 下面将简单介绍下 SwiftUI 的特点与使用实例。 Overview声明式的语法声明式编程（Declarative programming）是一种编程范式，与命令式编程相对立。 它描述目标的性质，让计算机明白目标，而非流程。 声明式编程不用告诉">
-<meta property="og:type" content="article">
-<meta property="og:title" content="关于 SwiftUI 的初步认识">
-<meta property="og:url" content="http://yoursite.com/2019/06/24/ios-swiftui-first-look/index.html">
-<meta property="og:site_name" content="Phillip的技术博客">
-<meta property="og:description" content="SwiftUI 可以在任何 Apple 的平台上用新颖的方式声明用户界面，更简洁快速的创建应用。通过几天的使用，大概对 SwiftUI 有了简单的认识, 下面将简单介绍下 SwiftUI 的特点与使用实例。 Overview声明式的语法声明式编程（Declarative programming）是一种编程范式，与命令式编程相对立。 它描述目标的性质，让计算机明白目标，而非流程。 声明式编程不用告诉">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="og:updated_time" content="2019-06-30T12:42:10.162Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于 SwiftUI 的初步认识">
-<meta name="twitter:description" content="SwiftUI 可以在任何 Apple 的平台上用新颖的方式声明用户界面，更简洁快速的创建应用。通过几天的使用，大概对 SwiftUI 有了简单的认识, 下面将简单介绍下 SwiftUI 的特点与使用实例。 Overview声明式的语法声明式编程（Declarative programming）是一种编程范式，与命令式编程相对立。 它描述目标的性质，让计算机明白目标，而非流程。 声明式编程不用告诉">
-<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
-
-
-
-
-
-
-
-<link rel="icon" href="/images/logo.svg">
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
-
-
-    
-    
-    
-    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
     
 
     
+        <meta name="description" content="SwiftUI 可以在任何 Apple 的平台上用新颖的方式声明用户界面，更简洁快速的创建应用。通过几天的使用，大概对 SwiftUI 有了简单的认识, 下面将简单介绍下 SwiftUI 的特点与使用实例。
+Overview声明式的语法声明式编程（Declarative programming）是一种编程范式，与命令式编程相对立。 它描述目标的性质，让计算机明白目标，而非流程。 声明式编程不用告诉计算机问题领域，从而避免随之而来的副作用。 
+而命令式编程则需要用算法来明确的指出每一步该怎么做。
+SwiftUI 使用了声明式的语法，所以开发者能够十分轻易地描述用户界面应该做什么。例如，编写需要包含文本字段的项目列表时，开发者可以用代码描述每个字段的对齐方式、字体和颜色。代码也比以前更简单，更易于阅读。而 SwiftUI 会根据状态的变化来重新渲染相匹配的视图。
+123456789101112List(landmarks) &amp;#123; landmark in   HStack &amp;#123;      Image(landmark.thumbnail)      Text(landmark.name)      Spacer()            if landmark.isFavorite &amp;#123;         Image(systemName: &#34;star.fill&#34;)            .foregroundColor(.yellow)      &amp;#125;   &amp;#125;&amp;#125;">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Phillip">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="关于 SwiftUI 的初步认识">
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="SwiftUI 可以在任何 Apple 的平台上用新颖的方式声明用户界面，更简洁快速的创建应用。通过几天的使用，大概对 SwiftUI 有了简单的认识, 下面将简单介绍下 SwiftUI 的特点与使用实例。
+Overview声明式的语法声明式编程（Declarative programming）是一种编程范式，与命令式编程相对立。 它描述目标的性质，让计算机明白目标，而非流程。 声明式编程不用告诉计算机问题领域，从而避免随之而来的副作用。 
+而命令式编程则需要用算法来明确的指出每一步该怎么做。
+SwiftUI 使用了声明式的语法，所以开发者能够十分轻易地描述用户界面应该做什么。例如，编写需要包含文本字段的项目列表时，开发者可以用代码描述每个字段的对齐方式、字体和颜色。代码也比以前更简单，更易于阅读。而 SwiftUI 会根据状态的变化来重新渲染相匹配的视图。
+123456789101112List(landmarks) &amp;#123; landmark in   HStack &amp;#123;      Image(landmark.thumbnail)      Text(landmark.name)      Spacer()            if landmark.isFavorite &amp;#123;         Image(systemName: &#34;star.fill&#34;)            .foregroundColor(.yellow)      &amp;#125;   &amp;#125;&amp;#125;">
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="Phillip的技术博客">
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article">
+    
+
+    <!--Page Cover-->
     
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+        <meta property="og:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
+    
+
+        <meta name="twitter:card" content="summary_large_image">
+
     
 
     
+        <meta name="twitter:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
     
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+    <!-- Title -->
+    
+    <title>关于 SwiftUI 的初步认识 - Phillip的技术博客</title>
 
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 
-    
-    
-    
-    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
 
-<link rel="stylesheet" href="/css/back-to-top.css">
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-    
-    
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet">
 
-    
-    
-    
-    
-
-    
-    
-<link rel="stylesheet" href="/css/progressbar.css">
-<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
-
-    
-    
-    
-
-    
-    
+    <!-- Google Analytics -->
     
 
 
-<link rel="stylesheet" href="/css/style.css">
+    <!-- favicon -->
+    
+
 </head>
-<body class="is-1-column">
-    <nav class="navbar navbar-main">
-    <div class="container">
-        <div class="navbar-brand is-flex-center">
-            <a class="navbar-item navbar-logo" href="/">
-            
-                <img src="/images/logo.svg" alt="关于 SwiftUI 的初步认识" height="28">
-            
-            </a>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Phillip的技术博客</a>
         </div>
-        <div class="navbar-menu">
-            
-            <div class="navbar-start">
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
                 
-                <a class="navbar-item" href="/">Home</a>
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/archives">Archives</a>
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/categories">Categories</a>
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/tags">Tags</a>
+                    <li>
+                        <a href="https://github.com/awind">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
                 
-                <a class="navbar-item" href="/about">About</a>
-                
-            </div>
-            
-            <div class="navbar-end">
-                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>关于 SwiftUI 的初步认识</h1>
                     
-                    
-                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/awind/">
+                    <span class="meta">
+                        <!-- Date and Author -->
                         
-                        <i class="fab fa-github"></i>
+                            Posted by Phillip Song on
                         
-                    </a>
-                    
-                
-                
-                
-                <a class="navbar-item search" title="搜索" href="javascript:;">
-                    <i class="fas fa-search"></i>
-                </a>
-                
+                        
+                            2019-06-24
+                        
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-</nav>
-    
-    <section class="section">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-12 has-order-2 column-main"><div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-06-24T13:12:04.000Z">2019-06-24</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Swift/">Swift</a>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+<a href="/categories/Swift/">Swift</a>
+
+                    
                 </div>
-                
-                
-                <span class="level-item has-text-grey">
+                <div class="col-lg-4 col-md-5 post-categories">
                     
-                    
-                    21 分钟 读完 (大约 3157 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+                </div>
             
-                关于 SwiftUI 的初步认识
+
+            <!-- Gallery -->
             
-        </h1>
-        <div class="content">
-            <p>SwiftUI 可以在任何 Apple 的平台上用新颖的方式声明用户界面，更简洁快速的创建应用。通过几天的使用，大概对 SwiftUI 有了简单的认识, 下面将简单介绍下 SwiftUI 的特点与使用实例。</p>
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>SwiftUI 可以在任何 Apple 的平台上用新颖的方式声明用户界面，更简洁快速的创建应用。通过几天的使用，大概对 SwiftUI 有了简单的认识, 下面将简单介绍下 SwiftUI 的特点与使用实例。</p>
 <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><h3 id="声明式的语法"><a href="#声明式的语法" class="headerlink" title="声明式的语法"></a>声明式的语法</h3><p>声明式编程（Declarative programming）是一种编程范式，与命令式编程相对立。 它描述目标的性质，让计算机明白目标，而非流程。 声明式编程不用告诉计算机问题领域，从而避免随之而来的副作用。 </p>
 <p>而命令式编程则需要用算法来明确的指出每一步该怎么做。</p>
 <p>SwiftUI 使用了声明式的语法，所以开发者能够十分轻易地描述用户界面应该做什么。例如，编写需要包含文本字段的项目列表时，开发者可以用代码描述每个字段的对齐方式、字体和颜色。代码也比以前更简单，更易于阅读。而 SwiftUI 会根据状态的变化来重新渲染相匹配的视图。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-type">List</span>(landmarks) &#123; landmark <span class="hljs-keyword">in</span></span><br><span class="line">   <span class="hljs-type">HStack</span> &#123;</span><br><span class="line">      <span class="hljs-type">Image</span>(landmark.thumbnail)</span><br><span class="line">      <span class="hljs-type">Text</span>(landmark.name)</span><br><span class="line">      <span class="hljs-type">Spacer</span>()</span><br><span class="line">      </span><br><span class="line">      <span class="hljs-keyword">if</span> landmark.isFavorite &#123;</span><br><span class="line">         <span class="hljs-type">Image</span>(systemName: <span class="hljs-string">"star.fill"</span>)</span><br><span class="line">            .foregroundColor(.yellow)</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span>(landmarks) &#123; landmark <span class="keyword">in</span></span><br><span class="line">   <span class="type">HStack</span> &#123;</span><br><span class="line">      <span class="type">Image</span>(landmark.thumbnail)</span><br><span class="line">      <span class="type">Text</span>(landmark.name)</span><br><span class="line">      <span class="type">Spacer</span>()</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> landmark.isFavorite &#123;</span><br><span class="line">         <span class="type">Image</span>(systemName: <span class="string">"star.fill"</span>)</span><br><span class="line">            .foregroundColor(.yellow)</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <p><img src="https://docs-assets.developer.apple.com/published/ce3a0b9890/c72f088f-5be9-46ad-9245-1cf8b4c735a0.png" alt="describe_ui"></p>
 <h3 id="可重用的组件"><a href="#可重用的组件" class="headerlink" title="可重用的组件"></a>可重用的组件</h3><p>复杂的界面是由轻量的单一职责的视图构成的。你可以轻易的创建自定义视图在 Apple 的各个平台中共享使用，达到重用的目的。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">FeatureCard</span>: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">   <span class="hljs-keyword">var</span> landmark: <span class="hljs-type">Landmark</span></span><br><span class="line">   </span><br><span class="line">   <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">      landmark.featureImage</span><br><span class="line">         .resizable()</span><br><span class="line">         .aspectRatio(<span class="hljs-number">3</span>/<span class="hljs-number">2</span>, contentMode: .fit)</span><br><span class="line">         .overlay(<span class="hljs-type">TextOverlay</span>(landmark))</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FeatureCard</span>: <span class="title">View</span> </span>&#123;</span><br><span class="line">   <span class="keyword">var</span> landmark: <span class="type">Landmark</span></span><br><span class="line">   </span><br><span class="line">   <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">      landmark.featureImage</span><br><span class="line">         .resizable()</span><br><span class="line">         .aspectRatio(<span class="number">3</span>/<span class="number">2</span>, contentMode: .fit)</span><br><span class="line">         .overlay(<span class="type">TextOverlay</span>(landmark))</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><img src="https://docs-assets.developer.apple.com/published/743b153005/81e4df2d-ac30-46b8-af30-32d0c8f6934e.png" alt="reusable_component"></p>
 <h3 id="简洁的动画使用"><a href="#简洁的动画使用" class="headerlink" title="简洁的动画使用"></a>简洁的动画使用</h3><p>只需要添加一个简单的方法调用就可以创建平滑的动画。 SwiftUI 会在需要的时候自动的计算并设置过场动画。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-type">VStack</span> &#123;</span><br><span class="line">   <span class="hljs-type">Badge</span>()</span><br><span class="line">      .frame(width: <span class="hljs-number">300</span>, height: <span class="hljs-number">300</span>)</span><br><span class="line">      .animation(.basic())</span><br><span class="line">   <span class="hljs-type">Text</span>(name)</span><br><span class="line">      .font(.title)</span><br><span class="line">      .animation(<span class="hljs-type">Animation</span>.basic().delay(<span class="hljs-number">0.2</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">VStack</span> &#123;</span><br><span class="line">   <span class="type">Badge</span>()</span><br><span class="line">      .frame(width: <span class="number">300</span>, height: <span class="number">300</span>)</span><br><span class="line">      .animation(.basic())</span><br><span class="line">   <span class="type">Text</span>(name)</span><br><span class="line">      .font(.title)</span><br><span class="line">      .animation(<span class="type">Animation</span>.basic().delay(<span class="number">0.2</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><img src="https://docs-assets.developer.apple.com/published/d5eb3eeeca/259ae6e6-f216-40d8-a0e6-a4b069bc473a.png" alt="simplify_animations"></p>
 <h3 id="Xcode-中实时预览"><a href="#Xcode-中实时预览" class="headerlink" title="Xcode 中实时预览"></a>Xcode 中实时预览</h3><p>不用运行应用就可以设计，构建和测试你的应用，通过互动预览就可以测试控件以及布局。</p>
 <p><img src="https://docs-assets.developer.apple.com/published/4594e0fd78/916ea707-421e-481d-9418-380e39b7dab2.png" alt="live_preview"></p>
@@ -189,11 +229,11 @@
 <li>只能返回一个需要渲染的视图。视图可以内部包含其它多个视图，但是只能返回其父视图。</li>
 </ol>
 <p>SwiftUI 使用的具体实例：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span>: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">Text</span>(<span class="hljs-string">"Hello World"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ContentView</span>: <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">Text</span>(<span class="string">"Hello World"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>也许你也注意到了例子中 <code>body</code> 的返回值类型 <code>some View</code>, 让我们具体看看 <code>View</code> 协议的定义来理解这么做的原因。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">protocol</span> <span class="hljs-title">View</span> : <span class="hljs-title">_View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">associatedtype</span> <span class="hljs-type">Body</span> : <span class="hljs-type">View</span></span><br><span class="line">    <span class="hljs-keyword">var</span> body: <span class="hljs-type">Self</span>.<span class="hljs-type">Body</span> &#123; <span class="hljs-keyword">get</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">View</span> : <span class="title">_View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">associatedtype</span> <span class="type">Body</span> : <span class="type">View</span></span><br><span class="line">    <span class="keyword">var</span> body: <span class="type">Self</span>.<span class="type">Body</span> &#123; <span class="keyword">get</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这种带有 <code>Self</code> 或者 <code>associatedtype</code> 的 protocol 不能作为类型来使用，只能作为类型约束来使用。这样的话我们就不能这样写：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span>: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> body: <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">Text</span>(<span class="hljs-string">"Hello World"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ContentView</span>: <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> body: <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">Text</span>(<span class="string">"Hello World"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>而在 Swift 5.1 新增加的特性中，Opaque Result Type 为 protocol 作为返回类型提供以下能力：</p>
 <ol>
 <li>语法上隐藏具体实现</li>
@@ -202,38 +242,38 @@
 </ol>
 <p>在 Swift 5.1 中，将返回类型改成 <code>some protocol</code> 的形式, 它向编译器做出保证，每次 body 得到的一定是某一个确定的，遵守 View 协议的类型，而编译器可以自己推断出具体类型。 在协议之前加上 some 后，返回值的类型就对编译器就变成透明的了。</p>
 <p>而且，编译器会检查返回类型是否确定单一，因此下面这种方式也是不行的：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span>: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> body: <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> somecondition &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-type">Text</span>(<span class="hljs-string">"Hello World"</span>)</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-type">Button</span>(action: &#123;&#125;) &#123;</span><br><span class="line">                <span class="hljs-type">Text</span>(<span class="hljs-string">"Tap me"</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ContentView</span>: <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> body: <span class="type">View</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> somecondition &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="type">Text</span>(<span class="string">"Hello World"</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="type">Button</span>(action: &#123;&#125;) &#123;</span><br><span class="line">                <span class="type">Text</span>(<span class="string">"Tap me"</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="视图容器"><a href="#视图容器" class="headerlink" title="视图容器"></a>视图容器</h2><h3 id="VStack-HStack-ZStack"><a href="#VStack-HStack-ZStack" class="headerlink" title="VStack / HStack / ZStack"></a>VStack / HStack / ZStack</h3><p>当需要渲染多个视图时，我们可以将多个视图组合在 <code>HStack</code>, <code>ZStack</code>，<code>ZStack</code> 或者 <code>Group</code> 这种视图容器中。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">HeaderView</span>: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> image: <span class="hljs-type">UIImage</span></span><br><span class="line">    <span class="hljs-keyword">let</span> title: <span class="hljs-type">String</span></span><br><span class="line">    <span class="hljs-keyword">let</span> subtitle: <span class="hljs-type">String</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">VStack</span> &#123;</span><br><span class="line">            <span class="hljs-type">Image</span>(uiImage: image)</span><br><span class="line">            <span class="hljs-type">Text</span>(title)</span><br><span class="line">            <span class="hljs-type">Text</span>(subtitle)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里调用了 <code>VStack</code> 的初始化方法：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">VStack</span>&lt;<span class="hljs-title">Content</span> : <span class="hljs-title">View</span>&gt; : <span class="hljs-title">View</span> </span>&#123; </span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">init</span>(</span><br><span class="line">        alignment: <span class="hljs-type">HorizontalAlignment</span> = .center, </span><br><span class="line">            spacing: <span class="hljs-type">Length?</span> = <span class="hljs-literal">nil</span>,</span><br><span class="line">            @<span class="hljs-type">ViewBuilder</span> content: () -&gt; <span class="hljs-type">Content</span></span><br><span class="line">      ) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">HeaderView</span>: <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> image: <span class="type">UIImage</span></span><br><span class="line">    <span class="keyword">let</span> title: <span class="type">String</span></span><br><span class="line">    <span class="keyword">let</span> subtitle: <span class="type">String</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">VStack</span> &#123;</span><br><span class="line">            <span class="type">Image</span>(uiImage: image)</span><br><span class="line">            <span class="type">Text</span>(title)</span><br><span class="line">            <span class="type">Text</span>(subtitle)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里调用了 <code>VStack</code> 的初始化方法：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">struct</span> <span class="title">VStack</span>&lt;<span class="title">Content</span> : <span class="title">View</span>&gt; : <span class="title">View</span> </span>&#123; </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">init</span>(</span><br><span class="line">        alignment: <span class="type">HorizontalAlignment</span> = .center, </span><br><span class="line">            spacing: <span class="type">Length?</span> = <span class="literal">nil</span>,</span><br><span class="line">            @<span class="type">ViewBuilder</span> content: () -&gt; <span class="type">Content</span></span><br><span class="line">      ) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>初始化方法接收传入的 <code>alignment</code> 和 <code>spacing</code> 参数来控制容器内视图的排列和间距，同时接收一个尾随闭包 <code>() -&gt; Content</code> 来控制容器视图的具体内容。</p>
 <p>你可能也注意到闭包参数是由 <code>@ViewBuilder</code> 修饰的，这里就需要提下 Swift 5.1 的 <code>function builder</code> 特性。</p>
 <p><code>function builder</code> 允许使用闭包实现 Builder 模式，通过将此闭包中定义的表达式传递给构建器类型，提供类似 DSL 的开发体验。而如果没有 <code>function builder</code> 这个功能，我们必须手动创建构建器，以便构建像 <code>VStack</code> 这样的容器实例，为我们提供看起来像这样的代码：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">HeaderView</span>: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> image: <span class="hljs-type">UIImage</span></span><br><span class="line">    <span class="hljs-keyword">let</span> title: <span class="hljs-type">String</span></span><br><span class="line">    <span class="hljs-keyword">let</span> subtitle: <span class="hljs-type">String</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">var</span> builder = <span class="hljs-type">VStackBuilder</span>()</span><br><span class="line">        builder.add(<span class="hljs-type">Image</span>(uiImage: image))</span><br><span class="line">        builder.add(<span class="hljs-type">Text</span>(title))</span><br><span class="line">        builder.add(<span class="hljs-type">Text</span>(subtitle))</span><br><span class="line">        <span class="hljs-keyword">return</span> builder.build()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">HeaderView</span>: <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> image: <span class="type">UIImage</span></span><br><span class="line">    <span class="keyword">let</span> title: <span class="type">String</span></span><br><span class="line">    <span class="keyword">let</span> subtitle: <span class="type">String</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> builder = <span class="type">VStackBuilder</span>()</span><br><span class="line">        builder.add(<span class="type">Image</span>(uiImage: image))</span><br><span class="line">        builder.add(<span class="type">Text</span>(title))</span><br><span class="line">        builder.add(<span class="type">Text</span>(subtitle))</span><br><span class="line">        <span class="keyword">return</span> builder.build()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>那么 <code>function builder</code> 是如何工作的？这一切都始于新的 <code>@functionBuilder</code> 属性（或当前版本的 Xcode beta 中的 <code>@_functionBuilder</code>，因为此功能仍被视为私有实现） - 它将给定类型标记为构建器。</p>
 <p>构建器声明 <code>buildBlock</code> 方法的不同重载，以便为包含各种表达式的闭包提供支持。例如，这里是 SwiftUI 自己的 <code>ViewBuilder</code> 类型的实现，其中有很多接受不同个数参数的 <code>buildBlock</code> 方法，它们将负责将闭包中一一列举的 <code>Text</code> 和其他可能的 <code>View</code> 转换为一个 <code>TupleView</code> 并返回。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@functionBuilder</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ViewBuilder</span> </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// Build a value from an empty closure, resulting in an</span></span><br><span class="line">    <span class="hljs-comment">// empty view in this case:</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">buildBlock</span><span class="hljs-params">()</span></span> -&gt; <span class="hljs-type">EmptyView</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-type">EmptyView</span>()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// Build a single view from a closure that contains a single</span></span><br><span class="line">    <span class="hljs-comment">// view expression:</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">buildBlock</span>&lt;V: View&gt;<span class="hljs-params">(<span class="hljs-number">_</span> view: V)</span></span> -&gt; some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> view</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// Build a combining TupleView from a closure that contains</span></span><br><span class="line">    <span class="hljs-comment">// two view expressions:</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">buildBlock</span>&lt;A: View, B: View&gt;<span class="hljs-params">(<span class="hljs-number">_</span> viewA: A, viewB: B)</span></span> -&gt; some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-type">TupleView</span>((viewA, viewB))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// And so on, and so forth.</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@functionBuilder</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ViewBuilder</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Build a value from an empty closure, resulting in an</span></span><br><span class="line">    <span class="comment">// empty view in this case:</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">buildBlock</span><span class="params">()</span></span> -&gt; <span class="type">EmptyView</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">EmptyView</span>()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Build a single view from a closure that contains a single</span></span><br><span class="line">    <span class="comment">// view expression:</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">buildBlock</span>&lt;V: View&gt;<span class="params">(<span class="number">_</span> view: V)</span></span> -&gt; some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> view</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Build a combining TupleView from a closure that contains</span></span><br><span class="line">    <span class="comment">// two view expressions:</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">buildBlock</span>&lt;A: View, B: View&gt;<span class="params">(<span class="number">_</span> viewA: A, viewB: B)</span></span> -&gt; some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">TupleView</span>((viewA, viewB))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// And so on, and so forth.</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>注意上面的构建器如何显式处理每个闭包变体，因为我们可能在同一个闭包中处理不同种类的 <code>View</code> 实现。如果不是这样，<code>ViewBuilder</code> 可能会使用一个可变参数来处理包含多个表达式的闭包:</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@functionBuilder</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ViewBuilder</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">buildBlock</span><span class="hljs-params">(<span class="hljs-number">_</span> views: View...)</span></span> -&gt; <span class="hljs-type">CombinedView</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-type">CombinedView</span>(views: views)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@functionBuilder</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ViewBuilder</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">buildBlock</span><span class="params">(<span class="number">_</span> views: View...)</span></span> -&gt; <span class="type">CombinedView</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">CombinedView</span>(views: views)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的代码只是一个例子，它甚至不会编译，因为 <code>View</code> 有一个关联类型。</p>
 <p>使用上面的 <code>ViewBuilder</code> 类型，编译器现在将合成一个与其名称匹配的属性（<code>@ViewBuilder</code>） - 然后我们可以使用它来标记我们希望使用新构建器的所有闭包参数：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">VStack</span>&lt;<span class="hljs-title">Content</span>: <span class="hljs-title">View</span>&gt;: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">init</span>(@<span class="hljs-type">ViewBuilder</span> builder: () -&gt; <span class="hljs-type">Content</span>) &#123;</span><br><span class="line">        <span class="hljs-comment">// A function builder closure can be called just like</span></span><br><span class="line">        <span class="hljs-comment">// any other, and the resulting expression can then be</span></span><br><span class="line">        <span class="hljs-comment">// used to, for instance, construct a container view.</span></span><br><span class="line">        <span class="hljs-keyword">let</span> content = builder()</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">VStack</span>&lt;<span class="title">Content</span>: <span class="title">View</span>&gt;: <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">init</span>(@<span class="type">ViewBuilder</span> builder: () -&gt; <span class="type">Content</span>) &#123;</span><br><span class="line">        <span class="comment">// A function builder closure can be called just like</span></span><br><span class="line">        <span class="comment">// any other, and the resulting expression can then be</span></span><br><span class="line">        <span class="comment">// used to, for instance, construct a container view.</span></span><br><span class="line">        <span class="keyword">let</span> content = builder()</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>除了按顺序接受和构建 <code>View</code> 的 <code>buildBlock</code> 以外，<code>ViewBuilder</code> 还实现了两个特殊的方法： <code>buildEither</code> 和 <code>buildIf</code> 。它们分别对应 block 中的 <code>if...else...</code> 语法和 <code>if</code> 的语法。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">buildEither</span>&lt;TrueContent, FalseContent&gt;<span class="hljs-params">(first: TrueContent)</span></span> -&gt;</span><br><span class="line"> <span class="hljs-type">ConditionalContent</span>&lt;<span class="hljs-type">TrueContent</span>, <span class="hljs-type">FalseContent</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">buildEither</span>&lt;TrueContent, FalseContent&gt;<span class="hljs-params">(second: FalseContent)</span></span> -&gt; </span><br><span class="line"> <span class="hljs-type">ConditionalContent</span>&lt;<span class="hljs-type">TrueContent</span>, <span class="hljs-type">FalseContent</span>&gt;</span><br></pre></td></tr></table></figure>
-<p>也就是说，你可以在 <code>VStack</code> 中这样写：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> someCondition: <span class="hljs-type">Bool</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-type">VStack</span>(alignment: .leading) &#123;</span><br><span class="line">    <span class="hljs-type">Text</span>(<span class="hljs-string">"Turtle Rock"</span>)</span><br><span class="line">        .font(.title)</span><br><span class="line">    <span class="hljs-type">Text</span>(<span class="hljs-string">"Joshua Tree National Park"</span>)</span><br><span class="line">        .font(.subheadline)</span><br><span class="line">    <span class="hljs-keyword">if</span> someCondition &#123;</span><br><span class="line">        <span class="hljs-type">Text</span>(<span class="hljs-string">"Condition"</span>)</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-type">Text</span>(<span class="hljs-string">"Not Condition"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">buildEither</span>&lt;TrueContent, FalseContent&gt;<span class="params">(first: TrueContent)</span></span> -&gt;</span><br><span class="line"> <span class="type">ConditionalContent</span>&lt;<span class="type">TrueContent</span>, <span class="type">FalseContent</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">buildEither</span>&lt;TrueContent, FalseContent&gt;<span class="params">(second: FalseContent)</span></span> -&gt; </span><br><span class="line"> <span class="type">ConditionalContent</span>&lt;<span class="type">TrueContent</span>, <span class="type">FalseContent</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>也就是说，你可以在 <code>VStack</code> 中这样写：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> someCondition: <span class="type">Bool</span></span><br><span class="line"></span><br><span class="line"><span class="type">VStack</span>(alignment: .leading) &#123;</span><br><span class="line">    <span class="type">Text</span>(<span class="string">"Turtle Rock"</span>)</span><br><span class="line">        .font(.title)</span><br><span class="line">    <span class="type">Text</span>(<span class="string">"Joshua Tree National Park"</span>)</span><br><span class="line">        .font(.subheadline)</span><br><span class="line">    <span class="keyword">if</span> someCondition &#123;</span><br><span class="line">        <span class="type">Text</span>(<span class="string">"Condition"</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="type">Text</span>(<span class="string">"Not Condition"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>其他的命令式的代码在 <code>VStack</code> 的 content 闭包里是不被接受的，下面这样也不行：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-type">VStack</span>(alignment: .leading) &#123;</span><br><span class="line">    <span class="hljs-comment">// let 语句无法通过 function builder 创建合适的输出</span></span><br><span class="line">    <span class="hljs-keyword">let</span> someCondition = model.condition</span><br><span class="line">    <span class="hljs-keyword">if</span> someCondition &#123;</span><br><span class="line">        <span class="hljs-type">Text</span>(<span class="hljs-string">"Condition"</span>)</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-type">Text</span>(<span class="hljs-string">"Not Condition"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">VStack</span>(alignment: .leading) &#123;</span><br><span class="line">    <span class="comment">// let 语句无法通过 function builder 创建合适的输出</span></span><br><span class="line">    <span class="keyword">let</span> someCondition = model.condition</span><br><span class="line">    <span class="keyword">if</span> someCondition &#123;</span><br><span class="line">        <span class="type">Text</span>(<span class="string">"Condition"</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="type">Text</span>(<span class="string">"Not Condition"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>到目前为止，只有以下三种写法能被接受：</p>
 <ul>
 <li>结果为 <code>View</code> 的语句</li>
 <li><code>if</code> 语句</li>
 <li><code>if...else...</code> 语句</li>
 </ul>
-<h3 id="列表-List"><a href="#列表-List" class="headerlink" title="列表 List"></a>列表 List</h3><h4 id="静态列表"><a href="#静态列表" class="headerlink" title="静态列表"></a>静态列表</h4><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">    <span class="hljs-type">List</span> &#123;</span><br><span class="line">        <span class="hljs-type">LandmarkRow</span>(landmark: [landmarkData[<span class="hljs-number">0</span>]])</span><br><span class="line">        <span class="hljs-type">LandmarkRow</span>(landmark: [landmarkData[<span class="hljs-number">1</span>]])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="列表-List"><a href="#列表-List" class="headerlink" title="列表 List"></a>列表 List</h3><h4 id="静态列表"><a href="#静态列表" class="headerlink" title="静态列表"></a>静态列表</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">    <span class="type">List</span> &#123;</span><br><span class="line">        <span class="type">LandmarkRow</span>(landmark: [landmarkData[<span class="number">0</span>]])</span><br><span class="line">        <span class="type">LandmarkRow</span>(landmark: [landmarkData[<span class="number">1</span>]])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里的 <code>List</code> 和 <code>HStack</code> 或者 <code>VStack</code> 之类的容器类似，接受一个 view builder 并采用 View DSL 的方式列举了两个 <code>LandmarkRow</code>。 </p>
-<h4 id="动态列表"><a href="#动态列表" class="headerlink" title="动态列表"></a>动态列表</h4><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">    <span class="hljs-type">List</span>(landmarkData.identified(by: \.id)) &#123; landmark <span class="hljs-keyword">in</span> </span><br><span class="line">        <span class="hljs-type">LandmarkRow</span>(landmark: landmark)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="动态列表"><a href="#动态列表" class="headerlink" title="动态列表"></a>动态列表</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">    <span class="type">List</span>(landmarkData.identified(by: \.id)) &#123; landmark <span class="keyword">in</span> </span><br><span class="line">        <span class="type">LandmarkRow</span>(landmark: landmark)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>List</code> 同样也可以接受动态方式的输入，这时使用的初始化方法和上面静态的不一样：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">List</span>&lt;<span class="hljs-title">Selection</span>, <span class="hljs-title">Content</span>&gt; <span class="hljs-title">where</span> <span class="hljs-title">Selection</span> : <span class="hljs-title">SelectionManager</span>, <span class="hljs-title">Content</span> : <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">init</span>&lt;<span class="hljs-type">Data</span>, <span class="hljs-type">RowContent</span>&gt;(</span><br><span class="line">        <span class="hljs-number">_</span> data: <span class="hljs-type">Data</span>, action: @escaping (<span class="hljs-type">Data</span>.<span class="hljs-type">Element</span>.<span class="hljs-type">IdentifiedValue</span>) -&gt; <span class="hljs-type">Void</span>,</span><br><span class="line">        rowContent: @escaping (<span class="hljs-type">Data</span>.<span class="hljs-type">Element</span>.<span class="hljs-type">IdentifiedValue</span>) -&gt; <span class="hljs-type">RowContent</span>) </span><br><span class="line">    <span class="hljs-keyword">where</span> </span><br><span class="line">        <span class="hljs-type">Content</span> == <span class="hljs-type">ForEach</span>&lt;<span class="hljs-type">Data</span>, <span class="hljs-type">Button</span>&lt;<span class="hljs-type">HStack</span>&lt;<span class="hljs-type">RowContent</span>&gt;&gt;&gt;, </span><br><span class="line">        <span class="hljs-type">Data</span> : <span class="hljs-type">RandomAccessCollection</span>, </span><br><span class="line">        <span class="hljs-type">RowContent</span> : <span class="hljs-type">View</span>, </span><br><span class="line">        <span class="hljs-type">Data</span>.<span class="hljs-type">Element</span> : <span class="hljs-type">Identifiable</span></span><br><span class="line">        </span><br><span class="line">    <span class="hljs-comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">struct</span> <span class="title">List</span>&lt;<span class="title">Selection</span>, <span class="title">Content</span>&gt; <span class="title">where</span> <span class="title">Selection</span> : <span class="title">SelectionManager</span>, <span class="title">Content</span> : <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">init</span>&lt;<span class="type">Data</span>, <span class="type">RowContent</span>&gt;(</span><br><span class="line">        <span class="number">_</span> data: <span class="type">Data</span>, action: @escaping (<span class="type">Data</span>.<span class="type">Element</span>.<span class="type">IdentifiedValue</span>) -&gt; <span class="type">Void</span>,</span><br><span class="line">        rowContent: @escaping (<span class="type">Data</span>.<span class="type">Element</span>.<span class="type">IdentifiedValue</span>) -&gt; <span class="type">RowContent</span>) </span><br><span class="line">    <span class="keyword">where</span> </span><br><span class="line">        <span class="type">Content</span> == <span class="type">ForEach</span>&lt;<span class="type">Data</span>, <span class="type">Button</span>&lt;<span class="type">HStack</span>&lt;<span class="type">RowContent</span>&gt;&gt;&gt;, </span><br><span class="line">        <span class="type">Data</span> : <span class="type">RandomAccessCollection</span>, </span><br><span class="line">        <span class="type">RowContent</span> : <span class="type">View</span>, </span><br><span class="line">        <span class="type">Data</span>.<span class="type">Element</span> : <span class="type">Identifiable</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>初始化方法接受三个参数：</p>
 <ul>
 <li><code>data</code> 类型要求为：<code>Data : RandomAccessCollection</code>，即要求参数类型为 <code>Array</code></li>
@@ -242,213 +282,78 @@
 </ul>
 <p>而 <code>Data.Element : Identifiable</code> 则是要求 <code>Data.Element</code>(即 <code>Array</code> 中的元素类型) 中存在一个可以辨别出某个实例的且满足 <code>Hashable</code> 的 id。这个 id 将在数据变更时快速定位到变化的数据所对应的 cell，并进行局部的 UI 刷新。</p>
 <h5 id="删除列表项"><a href="#删除列表项" class="headerlink" title="删除列表项"></a>删除列表项</h5><p>SwiftUI 对于列表滑动删除提供了很简便的接口 <code>onDelete(perform:)</code>, 同时需要一个具有能接受要删除多个索引参数的方法:</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">delete</span><span class="hljs-params">(at offsets: IndexSet)</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">delete</span><span class="params">(at offsets: IndexSet)</span></span></span><br></pre></td></tr></table></figure>
 <p>在这个函数中你可以循环遍历集合中的每个索引，或者只读取第一个。由于 SwiftUI 正在观察列表的状态，因此你所做的任何更改都将自动反映在您的UI中。</p>
 <p>以下代码将创建一个包含三个项目列表的 <code>ContentView</code> 结构，然后附加一个 <code>onDelete(perform:)</code> 用于删除列表中的任何项目：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span> : <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    @<span class="hljs-type">State</span> <span class="hljs-keyword">var</span> users = [<span class="hljs-string">"Paul"</span>, <span class="hljs-string">"Taylor"</span>, <span class="hljs-string">"Adele"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">NavigationView</span> &#123;</span><br><span class="line">            <span class="hljs-type">List</span> &#123;</span><br><span class="line">                <span class="hljs-type">ForEach</span>(users.identified(by: \.<span class="hljs-keyword">self</span>)) &#123; user <span class="hljs-keyword">in</span></span><br><span class="line">                    <span class="hljs-type">Text</span>(user)</span><br><span class="line">                &#125;</span><br><span class="line">                .onDelete(perform: delete)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">delete</span><span class="hljs-params">(at offsets: IndexSet)</span></span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> first = offsets.first &#123;</span><br><span class="line">            users.remove(at: first)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ContentView</span> : <span class="title">View</span> </span>&#123;</span><br><span class="line">    @<span class="type">State</span> <span class="keyword">var</span> users = [<span class="string">"Paul"</span>, <span class="string">"Taylor"</span>, <span class="string">"Adele"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">NavigationView</span> &#123;</span><br><span class="line">            <span class="type">List</span> &#123;</span><br><span class="line">                <span class="type">ForEach</span>(users.identified(by: \.<span class="keyword">self</span>)) &#123; user <span class="keyword">in</span></span><br><span class="line">                    <span class="type">Text</span>(user)</span><br><span class="line">                &#125;</span><br><span class="line">                .onDelete(perform: delete)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">delete</span><span class="params">(at offsets: IndexSet)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> first = offsets.first &#123;</span><br><span class="line">            users.remove(at: first)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="移动列表项"><a href="#移动列表项" class="headerlink" title="移动列表项"></a>移动列表项</h5><p>同样的我们也可以通过 <code>onMove(perform:)</code> 来处理列表项的移动。而移动的操作需要一个能接受源 <code>IndexSet</code> 和 目标 <code>Int</code> 的参数。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">move</span><span class="hljs-params">(from source: IndexSet, to destination: Int)</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">move</span><span class="params">(from source: IndexSet, to destination: Int)</span></span></span><br></pre></td></tr></table></figure>
 <p>移动多个项目时，最好先移动后面的项目，这样就可以避免移动其他项目且索引混淆。</p>
 <p>我们可以创建一个 <code>ContentView</code> 结构来设置一个包含三个用户名字符串的数组，并要求SwiftUI 调用 <code>move()</code> 方法来移动它们。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span> : <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    @<span class="hljs-type">State</span> <span class="hljs-keyword">var</span> users = [<span class="hljs-string">"Paul"</span>, <span class="hljs-string">"Taylor"</span>, <span class="hljs-string">"Adele"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">NavigationView</span> &#123;</span><br><span class="line">            <span class="hljs-type">List</span> &#123;</span><br><span class="line">                <span class="hljs-type">ForEach</span>(users.identified(by: \.<span class="hljs-keyword">self</span>)) &#123; user <span class="hljs-keyword">in</span></span><br><span class="line">                    <span class="hljs-type">Text</span>(user)</span><br><span class="line">                &#125;</span><br><span class="line">                .onMove(perform: move)</span><br><span class="line">            &#125;</span><br><span class="line">            .navigationBarItems(trailing: <span class="hljs-type">EditButton</span>())</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">move</span><span class="hljs-params">(from source: IndexSet, to destination: Int)</span></span> &#123;</span><br><span class="line">        <span class="hljs-comment">// sort the indexes low to high</span></span><br><span class="line">        <span class="hljs-keyword">let</span> reversedSource = source.sorted()</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// then loop from the back to avoid reordering problems</span></span><br><span class="line">        <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> reversedSource.reversed() &#123; </span><br><span class="line">            <span class="hljs-comment">// for each item, remove it and insert it at the destination</span></span><br><span class="line">            users.insert(users.remove(at: index), at: destination)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ContentView</span> : <span class="title">View</span> </span>&#123;</span><br><span class="line">    @<span class="type">State</span> <span class="keyword">var</span> users = [<span class="string">"Paul"</span>, <span class="string">"Taylor"</span>, <span class="string">"Adele"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">NavigationView</span> &#123;</span><br><span class="line">            <span class="type">List</span> &#123;</span><br><span class="line">                <span class="type">ForEach</span>(users.identified(by: \.<span class="keyword">self</span>)) &#123; user <span class="keyword">in</span></span><br><span class="line">                    <span class="type">Text</span>(user)</span><br><span class="line">                &#125;</span><br><span class="line">                .onMove(perform: move)</span><br><span class="line">            &#125;</span><br><span class="line">            .navigationBarItems(trailing: <span class="type">EditButton</span>())</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">move</span><span class="params">(from source: IndexSet, to destination: Int)</span></span> &#123;</span><br><span class="line">        <span class="comment">// sort the indexes low to high</span></span><br><span class="line">        <span class="keyword">let</span> reversedSource = source.sorted()</span><br><span class="line"></span><br><span class="line">        <span class="comment">// then loop from the back to avoid reordering problems</span></span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> reversedSource.reversed() &#123; </span><br><span class="line">            <span class="comment">// for each item, remove it and insert it at the destination</span></span><br><span class="line">            users.insert(users.remove(at: index), at: destination)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="列表分组"><a href="#列表分组" class="headerlink" title="列表分组"></a>列表分组</h5><p>SwiftUI 的列表视图内置了 section 和 section header 的支持，就像 UIKit 中的<code>UITableView</code> 一样。要在某些单元格周围添加一个 section，首先在其周围放置一个 <code>Section</code>，也可以添加 header 和 footer。</p>
 <p>举个例子，这里有个用于在提醒应用中显示任务数据的 View：</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">TaskRow</span>: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">Text</span>(<span class="hljs-string">"Task data goes here"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TaskRow</span>: <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">Text</span>(<span class="string">"Task data goes here"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们要做的是创建一个包含两个部分的列表视图：一个用于重要任务，一个用于不太重要的任务。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span> : <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">List</span> &#123;</span><br><span class="line">            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">"Important tasks"</span>)) &#123;</span><br><span class="line">                <span class="hljs-type">TaskRow</span>()</span><br><span class="line">                <span class="hljs-type">TaskRow</span>()</span><br><span class="line">                <span class="hljs-type">TaskRow</span>()</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">"Other tasks"</span>)) &#123;</span><br><span class="line">                <span class="hljs-type">TaskRow</span>()</span><br><span class="line">                <span class="hljs-type">TaskRow</span>()</span><br><span class="line">                <span class="hljs-type">TaskRow</span>()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们同样也可以像这样给 section 添加 footer：<br><figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">"Other tasks"</span>), footer: <span class="hljs-type">Text</span>(<span class="hljs-string">"End"</span>)) &#123;</span><br><span class="line">    <span class="hljs-type">TaskRow</span>()</span><br><span class="line">    <span class="hljs-type">TaskRow</span>()</span><br><span class="line">    <span class="hljs-type">TaskRow</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ContentView</span> : <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">List</span> &#123;</span><br><span class="line">            <span class="type">Section</span>(header: <span class="type">Text</span>(<span class="string">"Important tasks"</span>)) &#123;</span><br><span class="line">                <span class="type">TaskRow</span>()</span><br><span class="line">                <span class="type">TaskRow</span>()</span><br><span class="line">                <span class="type">TaskRow</span>()</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">Section</span>(header: <span class="type">Text</span>(<span class="string">"Other tasks"</span>)) &#123;</span><br><span class="line">                <span class="type">TaskRow</span>()</span><br><span class="line">                <span class="type">TaskRow</span>()</span><br><span class="line">                <span class="type">TaskRow</span>()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们同样也可以像这样给 section 添加 footer：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Section</span>(header: <span class="type">Text</span>(<span class="string">"Other tasks"</span>), footer: <span class="type">Text</span>(<span class="string">"End"</span>)) &#123;</span><br><span class="line">    <span class="type">TaskRow</span>()</span><br><span class="line">    <span class="type">TaskRow</span>()</span><br><span class="line">    <span class="type">TaskRow</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h5 id="Group-样式"><a href="#Group-样式" class="headerlink" title="Group 样式"></a>Group 样式</h5><p>跟 <code>UITableView</code> 一样，SwiftUI的列表支持分组以及简单样式。默认为普通样式，但如果要更改为分组，则应在列表中使用 <code>.listStyle(.grouped)</code> 修饰符。</p>
-<figure class="highlight swift hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ExampleRow</span>: <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">Text</span>(<span class="hljs-string">"Example Row"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span> : <span class="hljs-title">View</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> &#123;</span><br><span class="line">        <span class="hljs-type">List</span> &#123;</span><br><span class="line">            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">"Examples"</span>)) &#123;</span><br><span class="line">                <span class="hljs-type">ExampleRow</span>()</span><br><span class="line">                <span class="hljs-type">ExampleRow</span>()</span><br><span class="line">                <span class="hljs-type">ExampleRow</span>()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.listStyle(.grouped)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ExampleRow</span>: <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">Text</span>(<span class="string">"Example Row"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ContentView</span> : <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> body: some <span class="type">View</span> &#123;</span><br><span class="line">        <span class="type">List</span> &#123;</span><br><span class="line">            <span class="type">Section</span>(header: <span class="type">Text</span>(<span class="string">"Examples"</span>)) &#123;</span><br><span class="line">                <span class="type">ExampleRow</span>()</span><br><span class="line">                <span class="type">ExampleRow</span>()</span><br><span class="line">                <span class="type">ExampleRow</span>()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.listStyle(.grouped)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>以上就是对 SwiftUI 简单的认识，还有些动态绑定的总结会放在下一篇中。</p>
 
-        </div>
-        
-        
-        
-    </div>
-</div>
 
-
-
-
-
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/08/06/swift-what-new-in-swift5/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Swift 5.1 新特性</span>
-            </a>
-        </div>
-        
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/19/swift-stl-attributes/">
-                <span class="level-item">Swift 标准库中的 Attributes</span>
-                <i class="level-item fas fa-chevron-right"></i>
-            </a>
-        </div>
-        
-    </div>
-</div>
-
-
-</div>
-                
                 
             </div>
-        </div>
-    </section>
-    <footer class="footer">
-    <div class="container">
-        <div class="level">
-            <div class="level-start has-text-centered-mobile">
-                <a class="footer-logo is-block has-mb-6" href="/">
-                
-                    <img src="/images/logo.svg" alt="关于 SwiftUI 的初步认识" height="28">
-                
-                </a>
-                <p class="is-size-7">
-                &copy; 2019 Phillip&nbsp;
-                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
-                
-                </p>
-            </div>
-            <div class="level-end">
+
+            <!-- Comments -->
             
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/awind" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2019 Phillip<br></p>
             </div>
         </div>
     </div>
 </footer>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
-<script>moment.locale("zh-CN");</script>
 
 
-    
-    
-    
-    <script src="/js/animation.js"></script>
-    
-
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
-    <script src="/js/gallery.js" defer></script>
-    
-
-    
-    
-
-<div id="outdated">
-    <h6>Your browser is out-of-date!</h6>
-    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
-            my browser now </a></p>
-    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        outdatedBrowser({
-            bgColor: '#f25648',
-            color: '#ffffff',
-            lowerThan: 'flex'
-        });
-    });
-</script>
-
-
-    
-    
-<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    MathJax.Hub.Config({
-        'HTML-CSS': {
-            matchFontHeight: false
-        },
-        SVG: {
-            matchFontHeight: false
-        },
-        CommonHTML: {
-            matchFontHeight: false
-        },
-        tex2jax: {
-            inlineMath: [
-                ['$','$'],
-                ['\\(','\\)']
-            ]
-        }
-    });
-});
-</script>
-
-    
-    
-
-<a id="back-to-top" title="回到顶端" href="javascript:;">
-    <i class="fas fa-chevron-up"></i>
-</a>
-<script src="/js/back-to-top.js" defer></script>
-
-
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
-    <script src="/js/clipboard.js" defer></script>
-    
-
-    
-    
-    
-
-
-<script src="/js/main.js" defer></script>
-
-    
-    <div class="searchbox ins-search">
-    <div class="searchbox-container ins-search-container">
-        <div class="searchbox-input-wrapper">
-            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
-            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="searchbox-result-wrapper ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-    (function (window) {
-        var INSIGHT_CONFIG = {
-            TRANSLATION: {
-                POSTS: '文章',
-                PAGES: '页面',
-                CATEGORIES: '分类',
-                TAGS: '标签',
-                UNTITLED: '(无标题)',
-            },
-            CONTENT_URL: '/content.json',
-        };
-        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-    })(window);
-</script>
-<script src="/js/insight.js" defer></script>
-<link rel="stylesheet" href="/css/search.css">
-<link rel="stylesheet" href="/css/insight.css">
-    
 </body>
+
 </html>
