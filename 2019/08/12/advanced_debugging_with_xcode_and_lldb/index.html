@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+
+    
+
+    
+        <meta name="description" content="Swift Debugging Reliability (提升 Swift 调试可用性)从 AST context 获取模块失败的问题在 Xcode 10 中，为了应对这个问题，会为当前的 frame 调用栈创建一个新的 expression evaluator。
+
+Swift Type Resol">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Phillip">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Advanced Debugging with Xcode and LLDB">
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="Swift Debugging Reliability (提升 Swift 调试可用性)从 AST context 获取模块失败的问题在 Xcode 10 中，为了应对这个问题，会为当前的 frame 调用栈创建一个新的 expression evaluator。
+
+Swift Type Resol">
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="Phillip的技术博客">
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article">
+    
+
+    <!--Page Cover-->
+    
+    
+        <meta property="og:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
+    
+
+        <meta name="twitter:card" content="summary_large_image">
+
+    
+
+    
+        <meta name="twitter:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
+    
+
+    <!-- Title -->
+    
+    <title>Advanced Debugging with Xcode and LLDB - Phillip的技术博客</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet">
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Phillip的技术博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/awind">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Advanced Debugging with Xcode and LLDB</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                            Posted by Phillip Song on
+                        
+                        
+                            2019-08-12
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+<a href="/categories/Swift/">Swift</a>
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 id="Swift-Debugging-Reliability-提升-Swift-调试可用性"><a href="#Swift-Debugging-Reliability-提升-Swift-调试可用性" class="headerlink" title="Swift Debugging Reliability (提升 Swift 调试可用性)"></a>Swift Debugging Reliability (提升 Swift 调试可用性)</h2><h3 id="从-AST-context-获取模块失败的问题"><a href="#从-AST-context-获取模块失败的问题" class="headerlink" title="从 AST context 获取模块失败的问题"></a>从 AST context 获取模块失败的问题</h3><p>在 Xcode 10 中，为了应对这个问题，会为当前的 frame 调用栈创建一个新的 expression evaluator。</p>
+<p><img src="https://i.loli.net/2019/08/18/kqdmRgEubwCoP7I.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb_ast_context"></p>
+<h3 id="Swift-Type-Resolution-解决-Swift-类型问题"><a href="#Swift-Type-Resolution-解决-Swift-类型问题" class="headerlink" title="Swift Type Resolution (解决 Swift 类型问题)"></a>Swift Type Resolution (解决 Swift 类型问题)</h3><p>还有一些开发者会遇到在调试的时候无法显示变量类型，打印变量信息的问题，如下图：</p>
+<p><img src="https://i.loli.net/2019/08/18/UpWxFayCf9gqc2B.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb_swift_type_resolution"></p>
+<p>Apple 针对大量的错误报告进行追踪，在 Xcode 10 中修复了这个 bug，调试信息中将不再会出现此类错误。</p>
+<h2 id="一些高级调试技巧-Advanced-Debugging-Tips-and-Tricks"><a href="#一些高级调试技巧-Advanced-Debugging-Tips-and-Tricks" class="headerlink" title="一些高级调试技巧 Advanced Debugging Tips and Tricks"></a>一些高级调试技巧 Advanced Debugging Tips and Tricks</h2><h3 id="配置专用的调试标签页"><a href="#配置专用的调试标签页" class="headerlink" title="配置专用的调试标签页"></a>配置专用的调试标签页</h3><p>在 Xcode 10 中可以设置在触发断点的时候自动新建一个新的 Debug 标签页，通过切换标签页你可以快速的切回到之前工作的页面。</p>
+<p><img src="https://i.loli.net/2019/08/18/vLBUqgyQFez9G1d.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0003.png"></p>
+<h3 id="通过-LLDB-表达式修改程序状态"><a href="#通过-LLDB-表达式修改程序状态" class="headerlink" title="通过 LLDB 表达式修改程序状态"></a>通过 LLDB 表达式修改程序状态</h3><p>LLDB 中通过 <code>expression</code> 命令可以修改程序当前的各种状态，如改变变量的值或者执行一个方法。<code>e</code>、<code>expr</code> 作为简写也可以实现同样的功能。</p>
+<p><img src="https://i.loli.net/2019/08/18/sJHpmTkWfOozUwy.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0001.png"></p>
+<p>可以看到 <code>didReachSelectedHeight</code> 在 <code>expression</code> 语句执行后，被成功改到了 <code>false</code>。</p>
+<h3 id="利用断点和调试命令实时插入代码"><a href="#利用断点和调试命令实时插入代码" class="headerlink" title="利用断点和调试命令实时插入代码"></a>利用断点和调试命令实时插入代码</h3><p>除了直接在调试控制台通过 LLDB 修改 App 状态，我们还可以通过在断点中添加命令来实现相同的功能，并且通过断点来设置调试命令的方式更加方便实用，不用重复手动执行 <code>expression</code> 命令。</p>
+<p>设置一个断点，双击或者右键 <code>Edit Breakpoint</code> 打开编辑框，你可以将多个不同的调试命令按顺序填入 <code>Action</code> 中，就能实现之前同样的功能。另外你可以勾选 <code>Automatically continue after evaluationg actions</code>，可以自动继续执行后续代码，而不会停在这一行。</p>
+<p><img src="https://i.loli.net/2019/08/18/tA9L8knUNzha4iY.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0002.png"></p>
+<p>我们也可以通过这种方法，不用重新编译运行 App 就可以查看修改后的效果，如下：</p>
+<p><img src="https://i.loli.net/2019/08/18/8VqhNpfEAaJjlLI.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0004.png"></p>
+<p>在确认修改正确后，我们就可以将修改应用到代码中。</p>
+<h3 id="在汇编调用栈中打印函数实参"><a href="#在汇编调用栈中打印函数实参" class="headerlink" title="在汇编调用栈中打印函数实参"></a>在汇编调用栈中打印函数实参</h3><p>当前 App 中的 UILabel 内容显示不正确，如果我们想要找到修改这个 UILabel 的代码并查看其中的具体逻辑时，我们应该怎么办呢？</p>
+<p>首先，我们了解一下全局断点，你可以点击在 Breakpoint Navigator 左下角 + 号，然后选择 <code>Symbolic Breakpoint...</code>, 你可以在 Symbol 中输入任何你想监听的函数，如 <code>[UILabel setText:]</code>, 之后所有页面下的所有 UILabel 类型对象在设置 <code>text</code> 属性的时候都会执行该断点。</p>
+<blockquote>
+<p>这里 Symbol 中输入的是 Objective-C 的格式，因为 UIKit 是用 Objective-C 实现的。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2019/08/18/cMg6zQifst1VlNK.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0005.png"></p>
+<p>如下图所示，在 Breakpoint 的下方，显示的是来自调试器的反馈，表明它能够将此断点解析到 UIKit Core 中的某个位置。 某些符号可能解析到多个位置，同样你可以在这里看到它们。如果你没有在这里看到任何条目，表明调试器无法解析你设置的断点，因此断点不会被触发。</p>
+<p><img src="https://i.loli.net/2019/08/18/xHIEOn7SN36Pb2w.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0006.png"></p>
+<p>设置好断点后继续相关操作，就可以看到触发了 <code>[UILabel setText:]</code> 的断点。</p>
+<p><img src="https://i.loli.net/2019/08/18/K5r3VszWgtd8oHY.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0007.png"></p>
+<p>我们并不能查看 UIKit 的源代码，因此在这里，只能看到相关的汇编代码，但即使在一个系统框架的汇编代码中，我们也可以检查传递给函数的参数。只需要知道在这个架构中的调用约定，你就可以检查寄存器以查看参数。我们不需要记住这些寄存器，因为调试器给我们提供了 “伪寄存器” (pseudo-registers)。</p>
+<p>如下图，<code>$arg1</code> 被转换成寄存器保存的第一个参数，这里保存的是当前 <code>UILabel</code> 实例对象。</p>
+<p>如果你对 Objective-C 的消息发送机制比较熟悉的话，你应该知道第二个参数应该是 selector。我们这里并没有看到具体的对象，这是因为 LLDB 并不知道这些参数的具体类型。<br>所以在某些情况下，我们需要对其进行类型转换，之后我们就可以看到此消息的选择器。</p>
+<p>而 <code>$arg3</code> 则是传递给 <code>$arg2</code> 函数的第一个参数，这里即是 <code>setText</code> 的第一个参数。</p>
+<p><img src="https://i.loli.net/2019/08/18/g7sMpyNEtoi3vAL.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0011.png"></p>
+<p>有一些不方便的是，这个断点会在所有调用 <code>[UILabel setText:]</code> 时被触发，是我们没法精确找到需要的出发的位置。因此，我们可以在编辑断点时添加触发的条件，只在 condition 中语句返回 <code>true</code> 时触发。如下：<br><img src="https://i.loli.net/2019/08/18/kq8pWMmgTIyv9tz.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0012.png"></p>
+<h3 id="利用-“breakpoint-set-–one-shot-true”-命令创建一次性断点"><a href="#利用-“breakpoint-set-–one-shot-true”-命令创建一次性断点" class="headerlink" title="利用 “breakpoint set –one-shot true” 命令创建一次性断点"></a>利用 “breakpoint set –one-shot true” 命令创建一次性断点</h3><p>上面我们介绍了全局断点，它能检测到全局的函数调用，如果想监测某一个函数内局部区域的函数调用，这个时候我们可以使用 <code>breakpoint set --one-shot true</code> 命令动态生成一个断点，这个断点将是一次性的，只有在触发之后才会存在，之后会自动删除。</p>
+<p><img src="https://i.loli.net/2019/08/18/2deMisQBXPTxI9q.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0013.png"></p>
+<p>这个断点并不会导致命令执行暂停，它只干了一件事，就是通过命令 <code>breakpoint set --name &quot;[UILabel setText:]&quot;</code> 创建了一个全局断点，加上 <code>--one-shot true</code> 就代表是一次性的断点。</p>
+<p>如上图的情况, 会在我们设置断点的位置创建一个临时的断点，然后继续执行下面的语句。所以之后只会在调用当前函数后触发设置的 <code>[[UILabel setText:]]</code> 断点, 可以帮助我们更准确的找到调用的位置。</p>
+<p>找到错误调用的位置后，我们同样可以使用类似的方式来验证修改。如下图，在下一行新建一个断点来设置新的 <code>valueText</code>, 并且勾选在执行断点语句后自动运行。</p>
+<p><img src="https://i.loli.net/2019/08/18/4OgZvEH1pFjlc9M.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0014.png"></p>
+<h3 id="通过拖拽或-“thread-jupm-–by-1”-命令跳过一行代码"><a href="#通过拖拽或-“thread-jupm-–by-1”-命令跳过一行代码" class="headerlink" title="通过拖拽或 “thread jupm –by 1” 命令跳过一行代码"></a>通过拖拽或 “thread jupm –by 1” 命令跳过一行代码</h3><p>如下图，在调试过程中想直接跳过动画执行的过程，可以在断点触发的位置，直接拖拽红色箭头指向的按钮，拖到哪从哪里开始执行，往上拖可以重复执行之前的代码，往下拖将不执行中间被跳过的代码。</p>
+<p><img src="https://i.loli.net/2019/08/18/1IHECxSDpMuwqZ9.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0015.png"></p>
+<p>在跳过之后，<code>expression jumpAstronaut(animated: false)</code> 即可。</p>
+<p>而当我们想每次经过 <code>jumpAstronaut(animated: true)</code> 时，都自动跳过，就可以使用 <code>thread jump --by 1</code> 来设定经过断点时跳过一行代码, 并且可以同时添加多个 action 来实现后续的操作。<br><img src="https://i.loli.net/2019/08/18/fPR1OLmBiKCVxwN.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0017.png"></p>
+<h3 id="利用-watchpoints-监听变量的变化"><a href="#利用-watchpoints-监听变量的变化" class="headerlink" title="利用 watchpoints 监听变量的变化"></a>利用 watchpoints 监听变量的变化</h3><p>我们可以使用 watchpoints 通过监测内存的变化来监听属性的变化。</p>
+<p>如下图，我们想要监听 <code>GamePlay</code> 中的 <code>attempts</code> 属性，选中想要监听的属性后，点击右键后将弹出窗口，选择 <code>Watch &quot;attempts&quot;</code> 即可监听属性 <code>attempts</code> 的值的改变。需要注意的是，每当重新编译后指针会发生变化，需要重新设置 watchpoints。</p>
+<p><img src="https://i.loli.net/2019/08/18/QSoUNMxCJn9Ekum.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0018.png"></p>
+<p>同样，在找到改变属性变化的位置时，同样可以通过在断点中使用 <code>expression if attempts &gt;= maxAttempts { state = .end }</code> 语句来验证我们的代码修改。</p>
+<p><img src="https://i.loli.net/2019/08/18/6CXeFdIKn7Pkxr2.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0019.png"></p>
+<h3 id="Swift-调用栈中在-LLDB-调试器使用-Obj-C-代码命令"><a href="#Swift-调用栈中在-LLDB-调试器使用-Obj-C-代码命令" class="headerlink" title="Swift 调用栈中在 LLDB 调试器使用 Obj-C 代码命令"></a>Swift 调用栈中在 LLDB 调试器使用 Obj-C 代码命令</h3><p>在日常调试中，使用 LLDB 命令 <code>po [self.view recursiveDescription]</code> 命令来输出页面视图结构是非常方便的，然而我们在 Swift 调用栈中使用这个命令的时候将打印以下错误：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">po <span class="keyword">self</span>.view.recursiveDescription()</span><br><span class="line">error: &lt;<span class="type">EXPR</span>&gt;:<span class="number">3</span>:<span class="number">6</span>: error: value of type '<span class="type">UIView?</span>' has no member 'recursiveDescription'</span><br><span class="line"><span class="keyword">self</span>.view.recursiveDescription()</span><br><span class="line">~~~~~^~~~ ~~~~~~~~~~~~~~~~~~~~</span><br></pre></td></tr></table></figure>
+<p>其实我们可以通过 <code>expression -l objc -O --</code> 命令来使用 Obj-C 代码来输出我们想要的视图结构，记得 <code>self.view</code> 两边一定要加上 ` 符号。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expression -l objc -<span class="type">O</span> -- [`<span class="keyword">self</span>.view` recursiveDescription]</span><br></pre></td></tr></table></figure>
+<p>不知道你们有没有觉得上面这个命令有点长，还好我们可以通过 <code>command alias &lt;alias name&gt; expression -l objc -O —-</code> 为这句命令建立一个别名，之后就可以通过别名来使用相关操作。</p>
+<p><img src="https://i.loli.net/2019/08/18/Qk81XWDES23Nm4L.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0020.png"></p>
+<p>我们也可以使用 <code>po unsafeBitCast(&lt;pstr&gt; , UnsafePointer.self)</code> 命令打印对象描述，而在这里 <code>unsafeBitCast</code> 的优点在于它返回了对应类型的结果，因此我们可以在其上调用我们的函数和属性名称。</p>
+<p><img src="https://i.loli.net/2019/08/18/piAqgF4Qx2bwE65.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0021.png"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(lldb) po <span class="built_in">unsafeBitCast</span>(<span class="number">0x7fb3afc3f480</span>, to: <span class="type">ScoreboardView</span>.<span class="keyword">self</span>)</span><br><span class="line">&lt;<span class="type">Solar_System_iOS</span>.<span class="type">ScoreboardView</span>: <span class="number">0x7fb3afc3f480</span>; frame = (<span class="number">0</span> <span class="number">0</span>; <span class="number">113.667</span> <span class="number">65</span>); layer = &lt;<span class="type">CALayer</span>: <span class="number">0x6000018118a0</span>&gt;&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印frame</span></span><br><span class="line">(lldb) po <span class="built_in">unsafeBitCast</span>(<span class="number">0x7fb3afc3f480</span>, <span class="type">ScoreboardView</span>.<span class="keyword">self</span>).frame</span><br><span class="line">▿ (<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">113.66666666669</span> <span class="number">65.0</span>)</span><br><span class="line">  ▿ origin : (<span class="number">0.0</span>, <span class="number">0.0</span>)</span><br><span class="line">    - x : <span class="number">0.0</span></span><br><span class="line">    - y : <span class="number">0.0</span></span><br><span class="line">  ▿ origin : </span><br><span class="line">  .....</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印中心点坐标</span></span><br><span class="line">(lldb) po <span class="built_in">unsafeBitCast</span>(<span class="number">0x7fb3afc3f480</span>, <span class="type">ScoreboardView</span>.<span class="keyword">self</span>).center</span><br><span class="line">  </span><br><span class="line"><span class="comment">// 设置中心点坐标</span></span><br><span class="line">(lldb) po <span class="built_in">unsafeBitCast</span>(<span class="number">0x7fb3afc3f480</span>, <span class="type">ScoreboardView</span>.<span class="keyword">self</span>).center.y = <span class="number">300</span></span><br></pre></td></tr></table></figure>
+<p>而在上述的例子中，通过 <code>unsafeBitCast</code> 修改了 UI 的坐标值，但是页面不会发生变化，你需要的只是使用 <code>expression CATransaction.flush()</code> 来刷新下你的页面。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(lldb) po <span class="built_in">unsafeBitCast</span>(<span class="number">0x7fb3afc3f480</span>, <span class="type">ScoreboardView</span>.<span class="keyword">self</span>).center.y = <span class="number">300</span></span><br><span class="line"></span><br><span class="line">(lldb) expression <span class="type">CATransaction</span>.flush()</span><br></pre></td></tr></table></figure>
+<h3 id="利用命令别名和脚本添加自定义-LLDB-命令"><a href="#利用命令别名和脚本添加自定义-LLDB-命令" class="headerlink" title="利用命令别名和脚本添加自定义 LLDB 命令"></a>利用命令别名和脚本添加自定义 LLDB 命令</h3><p>当你对 LLDB 命令越来越了解，操作越来越骚的时候，你会发现小小的控制台会限制你的发挥，这个时候你需要一个更大的舞台。<br>现在我要展示如何使用 Python 脚本执行命令，你需要先下载一 个 <a href="https://developer.apple.com/sample-code/wwdc/2018/UseScriptsToAddCustomCommandsToLLDB.zip" target="_blank" rel="noopener">nudge.py</a> ，这是苹果开发工程师为我们准备好的 Python 脚本，它可以帮助我们简单、快速地移动 UI 控件。我们需要将 nudge.py 文件放入你的用户根目录~/nudge.py。</p>
+<p>下一步我们需要在用户根目录下新建一个 ~/.lldbinit 文件，并加入下方命令和别名：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">command script import ~/nudge.py</span><br><span class="line">command alias poc expression -l objc -O --</span><br><span class="line">command alias 🚽 expression -l objc -- (void)[CATransaction flush]</span><br></pre></td></tr></table></figure>
+<p>做完这些，我们就可以来使用我们的自定义命令 <code>nudge x-offset y-offset [view]</code> 了，具体用法如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引用 nudge</span></span><br><span class="line">(lldb) command script <span class="keyword">import</span> ~/nudge.py</span><br><span class="line"><span class="type">The</span> <span class="string">"nudge"</span> command has been installed, type <span class="string">"help nudge"</span> <span class="keyword">for</span> detailed help.</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拿到对象指针</span></span><br><span class="line">(lldb) po myLabel</span><br><span class="line">▿ <span class="type">Optional</span>&lt;<span class="type">UILabel</span>&gt;</span><br><span class="line">  - some : &lt;<span class="type">UILabel</span>: <span class="number">0x7fc04a60fff0</span>; frame = (<span class="number">57</span> <span class="number">141</span>; <span class="number">42</span> <span class="number">21</span>); text = '<span class="type">Label'</span>; opaque = <span class="type">NO</span>; autoresize = <span class="type">RM</span>+<span class="type">BM</span>; userInteractionEnabled = <span class="type">NO</span>; layer = &lt;_UILabelLayer: <span class="number">0x600001d36c10</span>&gt;&gt;</span><br><span class="line">  </span><br><span class="line"><span class="comment">// Y轴向上偏移5</span></span><br><span class="line">(lldb) nudge <span class="number">0</span> -<span class="number">5</span> <span class="number">0x7fc04a60fff0</span></span><br></pre></td></tr></table></figure>
+<p>调整模拟器中控件位置的效果：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/12/163f2c28cf4b078e?imageslim" alt="412_hd_advanced_debugging_with_xcode_and_lldb_nudge"></p>
+<h3 id="LLDB-打印命令"><a href="#LLDB-打印命令" class="headerlink" title="LLDB 打印命令"></a>LLDB 打印命令</h3><p><img src="https://i.loli.net/2019/08/18/ygmMzldfCNt8J6X.png" alt="Screen Shot 2019-08-18 at 11.34.53 PM.png"></p>
+<p><code>p</code> 和 <code>po</code> 命令从别名和执行过程上来看，分别输出的是对象和 LLDB 格式数据。<br>而 <code>frame variable</code> 不同之处的是从当前 frame 调用栈的内存中拿到的值。只接受变量作为参数，不接受表达式。通过 <code>frame variable</code> 命令，可以打印出当前 frame 调用栈的的所有变量。</p>
+<h2 id="深入了解-Xcode-视图调试技巧"><a href="#深入了解-Xcode-视图调试技巧" class="headerlink" title="深入了解 Xcode 视图调试技巧"></a>深入了解 Xcode 视图调试技巧</h2><h3 id="在调试导航栏中快速定位视图位置"><a href="#在调试导航栏中快速定位视图位置" class="headerlink" title="在调试导航栏中快速定位视图位置"></a>在调试导航栏中快速定位视图位置</h3><p>在开发中，我们会频繁使用到 Debug View Hierarchy 查看当前页面视图结构，正常情况下导航栏的 UI 嵌套层级会非常多，让我们无法快速准确找到我们想查看的控件所在的层级。</p>
+<p>其实 Xcode 中已经有快捷方式可以让你快速定位到控件在导航栏中的位置，首先选中你需要查看的控件，然后在导航栏中的 Navigate 选项，展开后选择 Reveal in Debug Navigator, 如下图：</p>
+<p><img src="https://i.loli.net/2019/08/18/Y1MSjC3ihnN9HDA.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0022.png"></p>
+<h3 id="在调试中查看自动布局信息"><a href="#在调试中查看自动布局信息" class="headerlink" title="在调试中查看自动布局信息"></a>在调试中查看自动布局信息</h3><p>在 Debug View Hierarchy 中查看控件的约束只需要启动 Show Contraints 选项，选中任何一个控件都会显示出其拥有的约束。(下图红色箭头指向的即是 Show Contraints)</p>
+<p><img src="https://i.loli.net/2019/08/18/Rrh6IUYM3C71cia.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0024.png"></p>
+<h3 id="显示被裁剪的视图内容"><a href="#显示被裁剪的视图内容" class="headerlink" title="显示被裁剪的视图内容"></a>显示被裁剪的视图内容</h3><p>上图你可能注意到右上方视图的 constraints 有一点奇怪，导致视图没有显示完整，超出页面的部分被剪裁掉了。 这个时候我们需要确认下事实是否如此，我们可以通过开启 Show Clipped Content 选项来进行验证。如下图，红色箭头指向的即是 Show Clipped Content 选项。</p>
+<p><img src="https://i.loli.net/2019/08/18/FmCsqzTKuB3UyHf.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0025.png"></p>
+<p>同样，我们在这里可以直接通过 LLDB 来修改错误的约束。</p>
+<p>在视图结构中选择想要修改的视图约束, 然后在导航栏中的 Edit 中选择 Copy， 打开 LLDB 调试控制台，如下图所示：</p>
+<p><img src="https://i.loli.net/2019/08/18/smeWoSDkKO4adc9.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0026.png"></p>
+<p>跟之前的情况相同，这里同样需要使用 <code>expression CATransaction.flush()</code> 来更新 UI。</p>
+<h3 id="在调试检查器中显示调用栈"><a href="#在调试检查器中显示调用栈" class="headerlink" title="在调试检查器中显示调用栈"></a>在调试检查器中显示调用栈</h3><p>在调试模式下，我们有办法看到每一个控件，每一个约束的创建调用栈，方便我们快速定位到问题的源头。</p>
+<p>在打开 Show Contraints 选项后，你可以找到想要查看的约束并选中，在右边栏的对象检查器的 Backtrace 一栏你可以看到一个调用栈的列表。 如下图，点击右边小箭头就可以跳转到创建该对象的代码处。</p>
+<p><img src="https://i.loli.net/2019/08/18/jKG5UxiBhZM8VoT.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0029.png"></p>
+<p>这项功能是需要手动开启的，你可以通过点击项目 Target -&gt; Edit Scheme.. -&gt; Run -&gt; Diagnostics -&gt; Logging -&gt; 勾选 Malloc Stack 并且切换至 All Allocation and Free History 模式开启此功能。</p>
+<p><img src="https://i.loli.net/2019/08/18/fcBN3HTbUCaMjG8.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0028.png"></p>
+<h3 id="切换深色模式"><a href="#切换深色模式" class="headerlink" title="切换深色模式"></a>切换深色模式</h3><p>在 macOS 10.14 版本下并且安装了 Xcode 10 ，你就可以在开发中使用 Dark Mode 了，你可以在 Xcode 底部的找到一个黑白两色小方块按钮，通过选中这个按钮，你可以切换模拟器 Dark 和 Light 两种外观。如果你的 Macbook 有 Touch Bar 的话，你也可以通过 Touch Bar 上的按钮来切换。</p>
+<p><img src="https://i.loli.net/2019/08/18/3PVwia58y4eCUIq.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0030.png"></p>
+<p>在 StoryBoard 中你可以在底部找到 View as : Light/Dark Appearance 来预览 Dark 和 Light 外观。<br>macOS 开发中选中任意一个 View ，你都可以在右边栏的检查器中找到 Appearance 属性，通过这个属性你可以为这个 View 及其子视图设置固定的外观颜色，且不会随着用户切换 Dark 和 Light 外观而改变颜色。</p>
+<h3 id="在检查器中查看深色模式信息"><a href="#在检查器中查看深色模式信息" class="headerlink" title="在检查器中查看深色模式信息"></a>在检查器中查看深色模式信息</h3><p>在 UI Hierarchy 调试中我们可以在右边栏的检查器中查看 Dark Mode 相关信息，选中一个 UILabel 可以查看该 label 的 Text Color 属性。在 Dark Mode 下一共有 3 中类型颜色：</p>
+<ul>
+<li><p>System Color： 系统推荐颜色 System Color ，可以根据当前外观颜色自适应文字颜色。</p>
+</li>
+<li><p>Named Color：Named Color 需要开发者在 assets catalog 中设置，可以针对 Dark Light 设置不同色值。</p>
+</li>
+<li><p>自定义 RGB 颜色：纯手动设置的自定义 RGB 固定色值。</p>
+</li>
+</ul>
+<p>下图中 detailTitleColor 就是在 asset catalog 中定义的 Named Color。<br><img src="https://i.loli.net/2019/08/18/vbmhTyqCzeVn4PQ.png" alt="412_hd_advanced_debugging_with_xcode_and_lldb-0031.png"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>强大的 LLDB 配合断点使用，让我们的调试手段更加的灵活，掌握这些调试的方法，我们不需要重新编译运行 App 就可以轻松实现修改和验证，减少 Debug 所需要的时间，可以极大的方便我们的开发过程。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/awind" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2019 Phillip<br></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+</body>
+
+</html>
