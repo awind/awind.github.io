@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+
+    
+
+    
+        <meta name="description" content="实例变量，属性成员变量
+
+成员变量的默认修饰是 @protected。
+成员变量不会自动生成 set 和 get 方法，需要自己手动实现。
+成员变量不能用点语法调用，因为没有 set 和 get 方法，只能使用-&amp;gt;调用。
+
+按照惯例，实例变量的名字是以下划线”_”开始的。使用下划线的前缀，可以">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Phillip">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Objective-C Programming 阅读笔记">
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="实例变量，属性成员变量
+
+成员变量的默认修饰是 @protected。
+成员变量不会自动生成 set 和 get 方法，需要自己手动实现。
+成员变量不能用点语法调用，因为没有 set 和 get 方法，只能使用-&amp;gt;调用。
+
+按照惯例，实例变量的名字是以下划线”_”开始的。使用下划线的前缀，可以">
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="Phillip的技术博客">
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article">
+    
+
+    <!--Page Cover-->
+    
+    
+        <meta property="og:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
+    
+
+        <meta name="twitter:card" content="summary_large_image">
+
+    
+
+    
+        <meta name="twitter:image" content="http://yoursite.comhttp://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg">
+    
+
+    <!-- Title -->
+    
+    <title>Objective-C Programming 阅读笔记 - Phillip的技术博客</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet">
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Phillip的技术博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/awind">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Objective-C Programming 阅读笔记</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2020-03-09
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/iOS-Objective-C/">#iOS, Objective-C</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                        
+
+<a href="/categories/iOS/">iOS</a>
+
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 id="实例变量，属性"><a href="#实例变量，属性" class="headerlink" title="实例变量，属性"></a>实例变量，属性</h2><p>成员变量</p>
+<ul>
+<li>成员变量的默认修饰是 <code>@protected</code>。</li>
+<li>成员变量不会自动生成 <code>set</code> 和 <code>get</code> 方法，需要自己手动实现。</li>
+<li>成员变量不能用点语法调用，因为没有 <code>set</code> 和 <code>get</code> 方法，只能使用-&gt;调用。</li>
+</ul>
+<p>按照惯例，实例变量的名字是以下划线”_”开始的。使用下划线的前缀，可以很容易分辨实例变量和局部变量。下划线没有特别的语法意义，它只是实例变量名字的第一个字符。</p>
+<p>属性的特征</p>
+<p>属性有两大概念：<code>ivar</code>（实例变量）、存取方法（access method ＝ getter + setter）。</p>
+<ul>
+<li>属性的默认修饰是 <code>@protected</code>。</li>
+<li>属性会自动生成set和get方法。</li>
+<li>属性用点语法调用，点语法实际上调用的是 <code>set</code>和 <code>get</code> 方法。</li>
+</ul>
+<p>属性修饰：</p>
+<ul>
+<li>nonatomic / atomic -&gt; 原子性</li>
+<li>readonly / readwrite -&gt; 只读 读写属性</li>
+<li>copy -&gt; 可拷贝</li>
+</ul>
+<h2 id="synthesize"><a href="#synthesize" class="headerlink" title="@synthesize"></a><code>@synthesize</code></h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@synthesize</span> mushroom = _mushroom;</span><br></pre></td></tr></table></figure>
+<p><code>@synthesize</code> 指令告诉编译器有一个叫做 <code>_mushroom</code> 的实例变量，它是 <code>mushroom</code> 以及 <code>setMushroom</code> 的实例变量。如果它不存在，就要将它创建出来。</p>
+<p>但如果只写一个 <code>@synthesize</code> 指令，编译器就会警告说 <code>_mushroom</code> 是未经定义的。</p>
+<h2 id="isa-指针"><a href="#isa-指针" class="headerlink" title="isa 指针"></a><code>isa</code> 指针</h2><p><code>NSObject</code> 虽然拥有很多方法，但是只有一个实例变量：<code>isa</code> 指针。任何一个对象的 <code>isa</code> 指针都会指向创建该对象的类。</p>
+<p>给对象发送消息的时候，对象就会查询是否有该消息名的方法。搜索会通过 <code>isa</code> 指针找到该对象的类并查询 “是否有名为消息名的实例方法？” 如果没有，就会继续查询它的父类。以此类推，对象会沿着继承链向上查询，直到找到名为消息名的方法，或到达继承链的顶端（<code>NSObject</code>）为止。</p>
+<h2 id="class-XXXX"><a href="#class-XXXX" class="headerlink" title="@class XXXX"></a><code>@class XXXX</code></h2><p>这行代码的作用是告诉编译器，程序有一个名为 <code>BNRAsset</code> 的类。 当使用 <code>@class</code> 而不是 <code>#import</code> 时，编译器不会查看文件的全部内容，因此处理速度会更快。之所以可以在头文件中使用 <code>@class</code>，是因为编译器不需要知道实现细节就能处理文件中的所有声明。</p>
+<h2 id="类扩展"><a href="#类扩展" class="headerlink" title="类扩展"></a>类扩展</h2><p>不是所有的属性或方法都需要在类的头文件中声明。有的属性或方法只是该类或其实例才需要使用的。设计实现细节的属性或方法最好在<code>类扩展</code>中声明。类扩展是一组私有的声明。只有类和其类实例才能使用在类扩展中声明的属性，实例变量或方法。</p>
+<p>通常，类扩展是添加在类实现文件中，实现方法的 <code>@implementation</code> 之上的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">BNREmployee</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>) <span class="keyword">unsigned</span> <span class="keyword">int</span> officeAlarmCode;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">BNREmployee</span></span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h2 id="ARC"><a href="#ARC" class="headerlink" title="ARC"></a>ARC</h2><ul>
+<li>如果用来创建对象的方法，其方法名是以 <code>alloc</code> 或 <code>new</code> 开头的，或者包含 <code>copy</code>，那么你已经得到了该对象的所有权（即可以假设新对象的 <code>retain</code> 计数是1，而且该对象不在 <code>NSAutoreleasePool</code> 对象中）。你要负责在不需要使用该对象的时候释放。以下是部分常见的，会 “传输” 所有权的方法：<code>alloc</code>(后面总会跟一个 <code>init</code> 方法)，<code>copy</code> 和 <code>mutableCopy</code>。</li>
+<li>通过任何其他途径创建的对象（例如通过便捷方法），你是没有什么所有权的（即可以假设新对象的 <code>retain</code> 计数是 1，而且假设对象已经在 <code>NSAutoreleasePool</code> 对象中。如果没有保留该对象，那么当 <code>NSAutoreleasePool</code> 对象被 “排干” 时，这个对象就会被释放。</li>
+<li>如果你不拥有某个对象，但是要确保该对象能够继续存在，那么可以通过向其发送 <code>retain</code> 消息来获得所有权（这会使 <code>retain</code> 计数加 1）</li>
+<li>当你拥有某个对象并且不再需要该对象的时候，可以向其发送 <code>release</code> 消息或 <code>autorelease</code> 消息（<code>release</code> 消息会使 <code>retain</code> 计数立刻减 1. <code>autorelease</code> 会导致： 当 <code>NSAutoreleasePool</code> 对象被 “排干” 时，再向相应的对象发送 <code>release</code> 消息）</li>
+<li>只要对象还有至少一个拥有方，该对象就会继续存在下去（当该对象的 <code>retain</code> 计数到达 0 时，就会收到 <code>dealloc</code> 消息）。</li>
+</ul>
+<h2 id="与-isEqual"><a href="#与-isEqual" class="headerlink" title="== 与 isEqual"></a>== 与 isEqual</h2><p><code>==</code> 比较两个对象的内存地址</p>
+<p><code>isEqual</code> 是 <code>NSObject</code> 的方法，</p>
+<ul>
+<li>首先会判断指针是否相等</li>
+<li>再判断是否是同类对象或非空 </li>
+<li>再依次判断对象对应的属性是否相等</li>
+</ul>
+<p><code>hash</code> 和 <code>isEqual:</code> 方法都在 NSObject 协议中声明，且彼此关系紧密。实现 <code>hash</code> 方法必须返回一个整型数（NSInterger），作为哈希表结构中的表地址。</p>
+<p>两个对象相等(isEqual: 方法判断的结果)意味着它们有相同的哈希值。如果哈希值相同，两个对象不一定相等。</p>
+<p><code>isEqualToString</code> 是 <code>NSString</code> 的方法</p>
+<h2 id="不可修改对象"><a href="#不可修改对象" class="headerlink" title="不可修改对象"></a>不可修改对象</h2><p>使用不可修改的 collection 可以节约内存提高性能，因为它永远无须拷贝。而对于可修改对象，这可能发生这么一种情况：程序中的其他代码可能在你使用这个可修改对象的时候修改它的内容。为了避免这种情况发生，就需要复制一份私有的拷贝。而每个程序的代码都可能做一份私有的拷贝，这样就可能会有多份一样的对象拷贝。</p>
+<h2 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h2><p>头文件中：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="built_in">NSString</span> <span class="keyword">const</span> *<span class="built_in">NSLocaleCurrencyCode</span>;</span><br></pre></td></tr></table></figure>
+<p><code>const</code> 的意思是在程序的整个运行过程中， <code>NSLocaleCurrencyCode</code> 指针的值不会发生变化。<br><code>extern</code> 的意思是 <code>NSLocaleCurrencyCode</code> 是存在的，但是会在另一个文件中定义。</p>
+<p>实现文件：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> <span class="keyword">const</span> *<span class="built_in">NSLocaleCurrencyCode</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="enum"><a href="#enum" class="headerlink" title="enum"></a>enum</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line">    BlenderSpeedStir = <span class="number">1</span>,</span><br><span class="line">    BlenderSpeedChop = <span class="number">2</span>,</span><br><span class="line">    ....</span><br><span class="line">&#125; BlenderSpeed;</span><br></pre></td></tr></table></figure>
+<p>从 OS X 10.8 和 iOS 6 系统开始，Apple 引入了一种新的 <code>enum</code> 声明语法： <code>NS_ENUM()</code>。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="keyword">int</span>, BlenderSpeed) &#123;</span><br><span class="line">    BlenderSpeedStir,</span><br><span class="line">    BlenderSpeedChop,</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>NS_ENUM()</code> 实际上是一个预处理宏，它带有两个实参：数据类型和名字。 <code>NS_ENUM()</code> 最重要的优点是它可以声明整数数据类型(<code>short</code>, <code>unsigned</code>, <code>long</code>等)。</p>
+<p>如果使用旧的语法，编辑器会为 <code>enum</code> 选择合适的数据类型，通常是 <code>int</code> 类型。如果你的 <code>enum</code> 只需枚举四个常量，那么它们的值是什么都无所谓，就不需要四个字节来存储它。一个字节就可以存储到 255 的整数。 使用 NS_ENUM 声明一个节省内存的 enum:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="keyword">char</span>, BlenderSpeed) &#123;</span><br><span class="line">    BlenderSpeedStir, </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="selector"><a href="#selector" class="headerlink" title="selector"></a><code>selector</code></h2><p>当某个对象收到消息时，会向该对象的类进行查询，检查是否有与消息名称相匹配的方法。该查询过程会沿着继承层次结构向上，直到某个类回应”我有与消息名称相匹配的方法”。</p>
+<p>方法的查询非常快速。如果使用方法的实际名称(可能会很长)进行查询，那么查询速度会很慢。为了提速，编译器会为每个其接触过的方法附上一个唯一的数字。运行时，程序使用的是这个数字，而不是方法名。</p>
+<p>以上提到的代表特定方法名的唯一数字称为选择器(selector)。当一个方法需要一个选择器作为实参，它实际就是需要这个数字。通过编译指令 <code>@selector</code> 可以得到与方法名相应的选择器。</p>
+<h2 id="Block-对象"><a href="#Block-对象" class="headerlink" title="Block 对象"></a>Block 对象</h2><p>Block 对象是一段代码。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"This is an  instruction within a block."</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看上去和 C 函数类似，都是在一个花括号内的一套指令。但是他没有函数名，相应的位置只有一个 <code>^</code> 符号。<code>^</code> 表示这段代码是一个 Block 对象。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> (^devowekuzer)(<span class="keyword">id</span>, <span class="built_in">NSUInteger</span>, <span class="built_in">BOOL</span>*)</span><br></pre></td></tr></table></figure>
+<p>Block 变量的名字(如 <code>devowelizer</code>)是写在括号中，跟在 <code>^</code> 字符后面的。Block 的声明需要包括 Block 的返回类型(<code>void</code>)以及它的实参的类型(<code>id</code>, <code>NSUInteger</code>, <code>BOOL*</code>), 这点类似函数的声明。</p>
+<p>那么 Block 变量是什么类型的呢？ 它不是一个简单的 “block”。它的类型是一个有着三个参数(一个对象指针，一个整数和一个BOOL指针)，并且没有返回值的 Block 对象。</p>
+<p>通过 <code>typdef</code> 可以将某个 Block 对象类型定义为一个新类型，以方便使用。<strong>需要注意的是，不能在方法的实现代码中使用 <code>typedef</code>。</strong> 也就是说，应该在实现文件的顶部，或者头文件内使用 <code>typdef</code>。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> (^ArrayEnumerationBlock)(<span class="keyword">id</span>, <span class="built_in">NSUInteger</span>, <span class="built_in">BOOL</span> *);</span><br></pre></td></tr></table></figure>
+<h2 id="捕获值"><a href="#捕获值" class="headerlink" title="捕获值"></a>捕获值</h2><p>Block 对象通常会(在其代码中)使用外部创建的其他变量(基本类型的变量，或者是指向其他对象的指针)。这些外部创建的变量叫做<strong>外部变量(external variables)</strong>。当值行 Block 对象时，为了确保当下的外部变量能够始终存在，相应的 Block 对象会捕获这些变量。</p>
+<p>对基本类型的变量，捕获意味着程序会拷贝变量的值，并用 Block 对象内的局部变量保存。对指针类型的变量，Block 对象会使用强引用。这意味着凡是 Block 对象用到的对象，都会被保留。所以在相应的 Block 对象被释放前，这些对象一定不会被释放。</p>
+<p>如果需要写一个使用 <code>self</code> 的 Block 对象，就必须要多做几步工作来避免造成强引用循环。考虑一下这个例子，<code>BNREmployee</code> 实例创建了一个 Block 对象，每次执行的时候就会打印出这个 <code>BNREmployee</code> 实例：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">myBlock = ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Employee: %@"</span>, <span class="keyword">self</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>BNREmployee</code> 有一个指向 Block 对象的指针。这个 Block 对象会捕获 <code>self</code>，所以它有一个指向 <code>BNREmployee</code> 实例的指针。现在就陷入强引用循环了。</p>
+<p>为了打破这个强引用循环，可以先在 Block 对象外声明一个 <code>__weak</code> 指针；然后将这个指针指向 Block 对象使用的 <code>self</code>；最后在 Block 对象中使用这个新的指针。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__<span class="keyword">weak</span> BNREmployee *weakSelf = <span class="keyword">self</span>;</span><br><span class="line">myBlock = ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Employee: %@"</span>, weakSelf);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>现在这个 Block 对象对 <code>BNREmployee</code> 实例是弱引用，强引用循环打破了。</p>
+<p>然而，由于是弱引用，所以 <code>self</code> 指向的对象在 Block 执行的时候可能会被释放。</p>
+<p>为了避免这种情况的发生，可以在 Block 对象创建一个对 <code>self</code> 的局部强引用：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">__<span class="keyword">weak</span> BNREmployee *weakSelf = <span class="keyword">self</span>;</span><br><span class="line">myBlock = ^&#123;</span><br><span class="line">    BNREmployee *innerSelf = weakSelf;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Employee: %@"</span>, innerSelf);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>通过创建 <code>innerSelf</code> 强引用，就可以在 Block 和 <code>BNREmployee</code> 实例中再次创建一个强引用循环。但是，由于 <code>innerSelf</code> 引用是针对 Block 内部的，所以只有在 Block 执行的时候他才会执行，而 Block 结束之后就会自动消失。</p>
+<p><strong>修改外部变量</strong></p>
+<p>在 Block 对象中，被捕获的变量是常数，程序无法修改变量所保存的值。<br>如果需要在 Block 对象内修改某个外部变量，则可以在声明相应的外部变量时，在前面加上 <code>__block</code> 关键字。</p>
+<h2 id="生命周期类型"><a href="#生命周期类型" class="headerlink" title="生命周期类型"></a>生命周期类型</h2><p><code>assign</code> 是默认的也是最简单的：存方法会将传入的值直接赋给实例变量。可以使用 <code>assign</code> 特性来保存非对象类型的实例变量。对非对象类型的实例变量来说，因为是默认使用 <code>assign</code> 特性的，所以不需要在属性声明中显式添加 <code>assign</code>。</p>
+<p><code>strong</code> 特性，要求保留传入的对象，并放弃原有对象（如果原有对象不再有其他拥有方，就会被释放）。凡是指向对象的实例变量，通常都应该使用 <code>strong</code> 特性。</p>
+<p><code>weak</code> 特性要求不保留传入的对象。如果该对象被释放，那么相应的实例变量会被自动赋为 nil。这么做可以避免产生悬空指针。悬空指针指向的是不再存在的对象。向悬空指针发送消息通常会导致程序崩溃。相应的存方法会将传入的对象直接赋给实例变量。</p>
+<p><code>unsafe_unretained</code> 特性和 <code>weak</code> 特性类似，要求不保留传入的对象。然而，如果该对象被释放，那么相应的实例变量不会被自动赋为 <code>nil</code>。</p>
+<p><code>copy</code> 特性要求拷贝传入的对象，并将新对象赋给实例变量。 </p>
+<h2 id="copy-和-mutableCopy"><a href="#copy-和-mutableCopy" class="headerlink" title="copy 和 mutableCopy"></a><code>copy</code> 和 <code>mutableCopy</code></h2><p>在OC语法中，提供了Copy语法（Copy/MutableCopy）用于对象的拷贝。其中很容易混淆的是浅拷贝和深拷贝。所谓浅拷贝，即单纯的地址拷贝，并不产生新的对象，而是对原对象的引用计数值加1；而深拷贝，即是对象拷贝，产生新的对象副本，拥有独立的内存空间，引用计数器为1。</p>
+<p>参考： <a href="https://www.jianshu.com/p/3bd9511cc8af" target="_blank" rel="noopener">iOS中的Copy和mutableCopy</a></p>
+<h2 id="Category"><a href="#Category" class="headerlink" title="Category"></a>Category</h2><p>通过使用 Category，程序员可以为任何已有的类添加方法。</p>
+<p>打开 NSString+BNRVowelCounting.h, 为 Category 声明一个方法。该方法会加入 <code>NSString</code> 类，代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">BNRVowelCounting</span>)</span></span><br><span class="line">- (<span class="keyword">int</span>)bnr_vowelCount;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>在 NSString+BNRVowelCounting.m 中实现相应的方法，代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"NSString+BNRVowelCounting.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">BNRVowelCounting</span>)</span></span><br><span class="line">- (<span class="keyword">int</span>)bnr_vowelCount &#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>注意，如果在类中已经存在名称相同的另一个方法，这个使用了 Category 的方法就会替换掉之前存在的方法。</p>
+<p>应该使用 Category 来给已存在的类增加新方法，而不要在 Category 中替换已存在的方法：这种情况下应该创建该类的子类。</p>
+<p>===== </p>
+<p>类扩展的一般用法：</p>
+<p>类扩展即类的 .m 文件中 <code>@implementation</code> 之前开始的部分，所谓的类的 continuous 区域：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">class</span> <span class="title">name</span> ()</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>类扩展的作用本来是用于私有函数的前向声明，但最新编译器无需声明也有相同的效果，因此私有方法可在.m文件中任意位置直接写实现而无需在此处进行前向声明，如果在此处声明函数那么一定要在后面进行实现，否则编译器会给出警告。现在类扩展区域的作用主要是快速定义类的私有属性，即将暴露给外部的属性变量定义在头文件中，而不想暴露给外部的属性则直接定义在类扩展区域。【注意这里的私有属性和私有方法并不是绝对私有的，OC中没有绝对的私有方法和私有变量，因为即使它们隐藏在.m实现文件里不暴露在头文件中，开发者仍然可以利用runtime运行时机制对其暴力访问，只是一般情况可以达到私有的效果】</p>
+<p>Category与扩展（Extension） 的比较</p>
+<p>Category 和 Extension 明显的不同在于后者可以添加属性。另外后者添加的方法是必须要实现的。Extension 可以认为是一个私有的匿名的 Category，因为 Extension 定义在 .m 文件头部，添加的属性和方法都没有暴露在头文件，在不考虑运行时特性的前提下这些扩展属性和方法只能类内部使用，一定程度上可以说是私有的。</p>
+<h2 id="Objective-C-运行时"><a href="#Objective-C-运行时" class="headerlink" title="Objective-C 运行时"></a>Objective-C 运行时</h2><p><strong>内省</strong></p>
+<p>内省(introspection) 是 Objective-C 运行时的一个特性：它能够让对象在程序运行时的时候回答关于自身的问题。 例如，这里有一个 <code>NSObject</code> 方法叫做 <code>respondsToSelector:</code>:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)respondsToSelector:(SEL)aSelector;</span><br></pre></td></tr></table></figure>
+<p>其中的一个实参是一个选择器(一个方法的名字)。如果对象实现了该选择器的名字的方法，就会返回 <code>YES</code>；如果没有实现，则返回 <code>NO</code>。使用 <code>respondsToSelector:</code> 则是内省的例子。</p>
+<p><strong>动态查找并执行方法</strong></p>
+<p>一个运行中的 Objective-C 程序包含了大量的对象，对象直接彼此发送消息。对象发送消息的时候，它会开始搜索要执行的方法，通常会从接收者的 <code>isa</code> 指针指向的类开始进行搜索，然后根据继承层级搜索，直到找到需要的方法。</p>
+<p>动态查找并执行方法构成了 Objective-C 消息发送机制的基础，它也是 Objective-C 运行时的另一大特性。</p>
+<p>查找并执行方法是 C 函数 <code>objc_msgSend()</code> 的工作。这个函数的实参是接受消息的对象，被执行的方法的选择器，以及这个方法的所有实参。</p>
+<p><strong>类以及继承层级的管理</strong></p>
+<p>Objective-C 运行时不仅负责记录正在使用哪些类，还负责记录那些包含到程序中的库以及框架使用的类。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="comment">// 声明一个变量保存注册类的数量</span></span><br><span class="line">        <span class="keyword">unsigned</span>  <span class="keyword">int</span> classCount = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 创建一个指针指向应用当前加载的所有类的列表</span></span><br><span class="line">        <span class="comment">// 通过引用返回注册类的数量</span></span><br><span class="line">        Class *classList = objc_copyClassList(&amp;classCount);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; classCount; i++) &#123;</span><br><span class="line">            Class currentClass = classList[i];</span><br><span class="line">            <span class="built_in">NSString</span> *className = <span class="built_in">NSStringFromClass</span>(currentClass);</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, className);</span><br><span class="line">        &#125;</span><br><span class="line">        free(classList);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>objc_copyClassList() 函数会返回一个由指向类对象的指针组成的 C 数组。按照惯例，调用名字中包含 “copy” 或 “create” 的函数时所采用的内存，例如 <code>objc_copyClassList</code> 函数，如果不再需要，就必须释放。这种情况我们称之为创建规则(create rule)。与之类似，如果调用名字中包含 “get” 的函数时所采用的内存不归你所有，就不必释放。这种情况我们称之为获取规则(get rule)。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *BNRHierarchyForClass(Class cls) &#123;</span><br><span class="line">    <span class="built_in">NSMutableArray</span> *classHierarchy = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (Class c = cls; c != Nil; c = class_getSuperclass(c)) &#123;</span><br><span class="line">        <span class="built_in">NSString</span> *className = <span class="built_in">NSStringFromClass</span>(c);</span><br><span class="line">        [classHierarchy insertObject:className atIndex:<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> classHierarchy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSArray</span> *BNRMethodsForClass(Class cls) &#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> methodCount = <span class="number">0</span>;</span><br><span class="line">    Method *methodList = class_copyMethodList(cls, &amp;methodCount);</span><br><span class="line">    <span class="built_in">NSMutableArray</span> *methodArray = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> m = <span class="number">0</span>; m &lt; methodCount; m++) &#123;</span><br><span class="line">        Method currentMethod = methodList[m];</span><br><span class="line">        SEL methodSelector = method_getName(currentMethod);</span><br><span class="line">        [methodArray addObject:<span class="built_in">NSStringFromSelector</span>(methodSelector)];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> methodArray;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有一个之前没有见过的类型：方法。在这段代码中，方法是一类结构的名字，这类结构的成员包括方法的选择器（SEL 类型的变量）以及一个函数指针（function pointer）—————— 指向执行程序中内存数据段的一大块代码。这个函数指针是 IMP 类型的变量。</p>
+<p>修改后：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="comment">// 创建一个字典数组，每个字典都会保存类的名称，层级以及给定类的方法列表</span></span><br><span class="line">        <span class="built_in">NSMutableArray</span> *runtimeClassesInfo = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">unsigned</span>  <span class="keyword">int</span> classCount = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        Class *classList = objc_copyClassList(&amp;classCount);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; classCount; i++) &#123;</span><br><span class="line">            Class currentClass = classList[i];</span><br><span class="line">            <span class="built_in">NSString</span> *className = <span class="built_in">NSStringFromClass</span>(currentClass);</span><br><span class="line"><span class="comment">//            NSLog(@"%@", className);</span></span><br><span class="line">            <span class="built_in">NSArray</span> *hierarchy = BNRHierarchyForClass(currentClass);</span><br><span class="line">            <span class="built_in">NSArray</span> *methods = BNRMethodsForClass(currentClass);</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">NSDictionary</span> *classInfoDict = @&#123; <span class="string">@"className"</span> : className,</span><br><span class="line">                                             <span class="string">@"hierarchy"</span> : hierarchy,</span><br><span class="line">                                             <span class="string">@"methods"</span> : methods &#125;;</span><br><span class="line">            [runtimeClassesInfo addObject:classInfoDict];</span><br><span class="line">        &#125;</span><br><span class="line">        free(classList);</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">NSSortDescriptor</span> *alphaAsc = [<span class="built_in">NSSortDescriptor</span> sortDescriptorWithKey:<span class="string">@"name"</span> ascending:<span class="literal">YES</span>];</span><br><span class="line">        <span class="built_in">NSArray</span> *sortedArray = [runtimeClassesInfo sortedArrayUsingDescriptors:@[alphaAsc]];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"There are %ld classes registered with this program's Runtime."</span>, sortedArray.count);</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, sortedArray);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>KVO的工作原理</strong></p>
+<p>运行时，如果向某个对象发送 <code>addObserver:forKeyPath:options:context:</code> 消息，那么这个方法可以：</p>
+<ul>
+<li>决定被观察对象的类，并使用 <code>objc_allocateClassPair()</code> 函数给这个类定义一个新的子类。</li>
+<li>改变对象的 isa 指针，让它指向新的子类（高效改变对象的类型）。</li>
+<li>覆盖被观察对象的存取器，发生 KVO 消息。</li>
+</ul>
+<p>例如，一个类的 location 属性的存方法代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)setLocation:(<span class="built_in">NSPoint</span>)location </span><br><span class="line">&#123;</span><br><span class="line">    _location = location;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在新的子类中，存取器会被覆盖如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)setLocation:(<span class="built_in">NSPoint</span>)location</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> willChangeValueForKey:<span class="string">@"location"</span>];</span><br><span class="line">    [<span class="keyword">super</span> setLocation:location];</span><br><span class="line">    [<span class="keyword">self</span> didChangeValueForKey:<span class="string">@"location"</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>子类的存取器实现会调用原始类的实现，然后将它们用简明的 KVO 通知消息封装起来。这些新的类以及方法都会在运行时使用 Objective-C 运行时函数定义。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/awind" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2020 Phillip<br></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+</body>
+
+</html>
